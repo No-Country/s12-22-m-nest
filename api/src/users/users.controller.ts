@@ -32,10 +32,7 @@ export class UsersController {
 
   @Patch(':id')
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    const res = await this.usersService.update(id, updateUserDto)
-    if (res) {
-      return 'User updated'
-    } else return 'User not updated'
+    return await this.usersService.update(id, updateUserDto)
   }
 
   @Delete(':id')

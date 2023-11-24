@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -21,7 +21,8 @@ export class UsersService {
 
     const user = this.userRepository.create({
       ...createUserDto,
-      password: await bcryptjs.hash(createUserDto.password, 8)
+      password: await bcryptjs.hash(createUserDto.password, 8),
+      profileImage: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png'
     })
     return await this.userRepository.save(user)
   }
@@ -57,7 +58,7 @@ export class UsersService {
     return user
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<boolean> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     //check user
     const user = await this.findOneById(id, true)
 
@@ -79,9 +80,9 @@ export class UsersService {
     })
 
     if (updated.affected === 0) {
-      return false
+      throw new InternalServerErrorException('Error updating user')
     }
-    return true
+    return await this.findOneById(id)
   }
 
   async remove(id: number): Promise<boolean> {
