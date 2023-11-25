@@ -1,38 +1,37 @@
 /* eslint-disable @typescript-eslint/indent */
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
 import { AppService } from './app.service'
-import { type Order } from './socket/interfaces'
-import { v4 as uuidv4 } from 'uuid'
-import { SocketGateway } from './socket/socket.gateway'
-import { Socket } from 'socket.io'
-import { SocketDealerService } from './socket/dealer.service'
+import { type Order } from './socket/interfaces/orderRequest.interface'
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly socketGateway: SocketGateway,
-    private readonly socketDealerService: SocketDealerService
-  ) {}
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getOrders(): Order[] {
+    return this.appService.getAll()
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') orderId: string) {
+    return await this.appService.getOne(orderId)
+  }
+
+  @Put(':id')
+  async updateOrder(
+    @Param('id') orderId: string,
+    @Body() body: Partial<Order>
+  ) {
+    return await this.appService.updateOrder(orderId, body)
+  }
 
   @Post('order')
-  async createOrder(
-    @Body() body: Partial<Order>,
-    socket: Socket
-  ): Promise<any> {
-    // Simulamos la creación de una orden
-    const order: Order = {
-      id: uuidv4(),
-      dealer: null,
-      shipAddress: body.shipAddress ?? '',
-      shopAddress: body.shopAddress ?? '',
-      status: 'Pending',
-      step: 1
-    }
+  async createOrder(@Body() body: Partial<Order>): Promise<any> {
+    return await this.appService.createOrder(body)
+  }
 
-    return await this.socketDealerService.handleFindDealer(
-      this.socketGateway.server,
-      order
-    )
+  @Post(':id/nextStep')
+  async nextStep(@Param('id') orderId: string): Promise<any> {
+    return await this.appService.nextStep(orderId)
   }
 }

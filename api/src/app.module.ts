@@ -5,9 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule } from '@nestjs/config'
 import { SocketModule } from './socket/socket.module'
+import { HttpModule } from '@nestjs/axios'
 
 @Module({
   imports: [
+    // Todo: Eliminar HttpModule
+    HttpModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     TypeOrmModule.forRoot({

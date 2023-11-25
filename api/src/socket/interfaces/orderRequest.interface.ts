@@ -1,14 +1,4 @@
-export interface Coordinates {
-  lat: string
-  lon: string
-}
-
-export interface DealerData {
-  coordinates: Coordinates
-  active: boolean
-  taken: boolean
-}
-
+// Todo: Use Order Entity instead of Order interface
 export interface Order {
   id: string
   dealer: string | null
@@ -21,6 +11,6 @@ export interface Order {
 export interface OrderRequest extends Order {
   shipCoordinates: Coordinates
   shopCoordinates: Coordinates
-  shipMapUrl: string
-  shopMapUrl: string
+  shipMapUrl: URL
+  shopMapUrl: URL
 }

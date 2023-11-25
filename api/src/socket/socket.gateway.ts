@@ -2,16 +2,12 @@ import {
   WebSocketGateway,
   type OnGatewayConnection,
   WebSocketServer,
-  SubscribeMessage,
-  MessageBody
+  SubscribeMessage
 } from '@nestjs/websockets'
 import { type Socket, type Server } from 'socket.io'
-import { SocketDealerService } from './dealer.service'
-import { SocketOrderService } from './order.service'
-import { type Order } from './interfaces'
-import { SocketMainService } from './main.service'
-import { AppService } from 'src/app.service'
-import type * as ws from 'ws'
+import { SocketDealerService } from './services/dealer.service'
+import { SocketOrderService } from './services/order.service'
+import { SocketMainService } from './services/main.service'
 
 @WebSocketGateway({ cors: true })
 export class SocketGateway implements OnGatewayConnection {
@@ -20,39 +16,16 @@ export class SocketGateway implements OnGatewayConnection {
   constructor(
     private readonly socketOrderService: SocketOrderService,
     private readonly socketDealerService: SocketDealerService,
-    private readonly socketMainService: SocketMainService,
-    private readonly appService: AppService
+    private readonly socketMainService: SocketMainService
   ) {}
 
   handleConnection(socket: Socket): void {
     this.socketMainService.handleConnection(socket)
   }
 
-  afterInit(server: ws.WebSocketServer) {
-    this.appService
-      .getEventsToEmit()
-      .asObservable()
-      .subscribe({
-        next: (event) => {
-          server.emit(event.name, event.data)
-        }
-      })
-  }
-
   @SubscribeMessage('manageDealer')
   handlemManageDealer(client: any, data: any) {
     this.socketDealerService.handleManageDealer(client, data)
-  }
-
-  @SubscribeMessage('postCreated')
-  handlePostCreatedEvent(@MessageBody() data: any) {
-    // Manejar el evento aquí
-    console.log('Post creado:', data)
-  }
-
-  async handleFindDealer(order: Order) {
-    console.log('findDealer', order)
-    await this.socketDealerService.handleFindDealer(this.server, order)
   }
 
   @SubscribeMessage('updateDealerLocation')
@@ -61,8 +34,13 @@ export class SocketGateway implements OnGatewayConnection {
     await this.socketDealerService.updateDealerLocation(client, data)
   }
 
-  @SubscribeMessage('joinOrder')
-  async handleJoinOrder(client: any, data: any) {
-    await this.socketOrderService.joinOrder(client, data)
+  @SubscribeMessage('joinOrderClient')
+  async handleJoinOrderClient(client: any, data: any) {
+    await this.socketOrderService.joinOrderClient(client, data)
+  }
+
+  @SubscribeMessage('joinOrderDealer')
+  async handleJoinOrderDealer(client: any, data: any) {
+    await this.socketOrderService.joinOrderDealer(client, data)
   }
 }

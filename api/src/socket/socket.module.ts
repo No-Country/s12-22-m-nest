@@ -1,13 +1,14 @@
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { SocketGateway } from './socket.gateway'
 import { HttpModule } from '@nestjs/axios'
-import { SocketMainService } from './main.service'
-import { SocketDealerService } from './dealer.service'
-import { SocketOrderService } from './order.service'
+import { SocketMainService } from './services/main.service'
+import { SocketDealerService } from './services/dealer.service'
+import { SocketOrderService } from './services/order.service'
+import { AppModule } from 'src/app.module'
 import { AppService } from 'src/app.service'
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, forwardRef(() => AppModule)],
   providers: [
     SocketGateway,
     SocketMainService,
@@ -15,6 +16,11 @@ import { AppService } from 'src/app.service'
     SocketOrderService,
     AppService
   ],
-  exports: [SocketMainService, SocketGateway, SocketDealerService]
+  exports: [
+    SocketMainService,
+    SocketGateway,
+    SocketDealerService,
+    SocketOrderService
+  ]
 })
 export class SocketModule {}
