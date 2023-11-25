@@ -4,6 +4,7 @@ import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule } from '@nestjs/config'
+import { SocketModule } from './socket/socket.module'
 
 @Module({
   imports: [
@@ -19,9 +20,11 @@ import { ConfigModule } from '@nestjs/config'
       entities: ['dist/**/*.entity{.ts,.js}'],
       ssl: true,
       synchronize: true
-    })
+    }),
+    SocketModule
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService, SocketModule],
+  exports: [AppModule]
 })
 export class AppModule {}
