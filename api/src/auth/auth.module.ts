@@ -7,7 +7,6 @@ import { UsersService } from 'src/users/users.service'
 import { UsersModule } from 'src/users/users.module'
 import { config } from 'dotenv'
 config()
-console.log('el secret es ', process.env.JWT_SECRET)
 @Module({
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, UsersService],
