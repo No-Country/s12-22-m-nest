@@ -18,48 +18,48 @@ import {
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number
+    id: number
 
   @Column()
   @Transform(({ value }) => value.trim())
   @IsString()
   @MinLength(3)
   @MaxLength(25)
-  firstName: string
+    firstName: string
 
   @Column()
   @Transform(({ value }) => value.trim())
   @IsString()
   @MinLength(3)
   @MaxLength(25)
-  lastName: string
+    lastName: string
 
   @Column()
   @IsEmail()
-  email: string
+    email: string
 
   @Column()
   @IsISO8601()
-  birthdate: Date
+    birthdate: Date
 
   @Column()
   @IsString()
   @MinLength(6)
   @MaxLength(25)
-  password: string
+    password: string
 
   @Column({ nullable: true })
   @IsString()
   @IsOptional()
-  profileImage: string
+    profileImage: string
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date
+    createdAt: Date
 
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP'
   })
-  updatedAt: Date
+    updatedAt: Date
 }
