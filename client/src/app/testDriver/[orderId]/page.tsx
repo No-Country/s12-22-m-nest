@@ -10,6 +10,15 @@ interface Props {
   }
 }
 
+const OrderStatus = [
+  'LookingForDealer',
+  'GoingToShop',
+  'GettingOrder',
+  'GoingToCustomer',
+  'InCustomerPlace',
+  'Delivered'
+]
+
 const Page: FunctionComponent<Props> = ({ params }) => {
   const [currentOrder, setCurrentOrder] = useState({}) as any
 
@@ -78,8 +87,8 @@ const Page: FunctionComponent<Props> = ({ params }) => {
       <h1>Test Driver</h1>
       <h2>Order: {params.orderId}</h2>
       <h3>Status: {currentOrder.status}</h3>
-      <h3>Step: {currentOrder.step}</h3>
-      {currentOrder.step <= 4 && <button onClick={updateOrderStatus}>Next Step</button>}
+      <h3>Step: {OrderStatus[currentOrder.step - 1]}</h3>
+      {currentOrder.step <= 6 && <button onClick={updateOrderStatus}>Next Step</button>}
     </section>
   )
 }

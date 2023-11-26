@@ -9,7 +9,7 @@ interface Order {
   shipAddress: string
   shopAddress: string
   status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
-  step: 1 | 2 | 3 | 4 | 5
+  step: 1 | 2 | 3 | 4 | 5 | 6
 }
 
 interface Coordinates {
@@ -30,9 +30,7 @@ const ConductorComponent: FunctionComponent = () => {
         lat: -34.644018,
         lon: -58.5907331
       },
-      active: true,
-      // Taken debe ser gestionado por el backend
-      taken: false
+      active: true
     })
     // Escuchar el evento 'order-request'
     socket.on('orderRequest', (data: OrderRequest, callback) => {

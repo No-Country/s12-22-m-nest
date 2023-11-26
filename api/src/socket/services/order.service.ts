@@ -1,11 +1,21 @@
-import { Injectable } from '@nestjs/common'
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  forwardRef
+} from '@nestjs/common'
 import { type Socket, type Server } from 'socket.io'
 import { SocketMainService } from './main.service'
 import { type OrderRequest } from '../interfaces/orderRequest.interface'
+import { AppService } from 'src/app.service'
 
 @Injectable()
 export class SocketOrderService {
-  constructor(private readonly socketMainService: SocketMainService) {}
+  constructor(
+    @Inject(forwardRef(() => AppService))
+    private readonly orderService: AppService,
+    private readonly socketMainService: SocketMainService
+  ) {}
 
   private readonly connectedClients = this.socketMainService.connectedClients
 
@@ -16,18 +26,15 @@ export class SocketOrderService {
     return await new Promise<boolean>((resolve) => {
       const driverSocket = this.connectedClients.get(driverSocketId)
       if (driverSocket) {
-        console.log('driverSocket existe', driverSocketId)
         const timeoutId = setTimeout(() => {
           resolve(false)
         }, 60000)
 
         driverSocket.emit('orderRequest', order, (response) => {
-          console.log('response', response)
           clearTimeout(timeoutId)
           resolve(response)
         })
       } else {
-        console.log('driverSocket no existe', driverSocketId)
         resolve(false)
       }
     })
@@ -38,21 +45,26 @@ export class SocketOrderService {
   }
 
   async joinOrderClient(socket: Socket, data: { orderId: string }) {
-    console.log('joinOrderClient', data.orderId)
     await socket.join(data.orderId)
     socket.to(data.orderId).emit('message', 'El cliente se ha unido a la orden')
   }
 
   async joinOrderDealer(socket: Socket, data: { orderId: string }) {
-    // Todo: validar que este dealer lleva la orden
+    const { isAvailable, orderId } =
+      await this.orderService.checkDealerAvailability(
+        socket.handshake.query.userId.toString()
+      )
+
+    if (isAvailable || orderId !== data.orderId) {
+      throw new ConflictException('Dealer does not have this order assigned')
+    }
+
     const isCurrentDealer = true
     if (!isCurrentDealer) {
       return socket.emit('message', 'No tienes permiso para entrar')
     }
-    console.log('joinOrderDealer', data.orderId)
     await socket.join(data.orderId)
     socket.to(data.orderId).emit('message', 'El dealer se ha unido a la orden')
-    // Saludar al repartidor
     socket.emit('message', 'Bienvenido al chat')
   }
 }

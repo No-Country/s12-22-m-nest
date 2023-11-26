@@ -1,14 +1,24 @@
 import { HttpService } from '@nestjs/axios'
-import { Inject, Injectable, forwardRef } from '@nestjs/common'
+import {
+  Inject,
+  Injectable,
+  ServiceUnavailableException,
+  forwardRef
+} from '@nestjs/common'
 import { type Socket, type Server } from 'socket.io'
 import { calculateDistance } from 'src/utils/calculateDistance.utils'
 import { SocketOrderService } from './order.service'
 import { SocketMainService } from './main.service'
 import { findCoordinates } from 'src/utils/findCoordinates.utils'
-import { type DealerData } from '../interfaces/dealerData.interface'
+import {
+  type SockDealer,
+  type DealerData
+} from '../interfaces/dealer.interface'
 import { type Order } from '../interfaces/orderRequest.interface'
-import { formatOrder } from 'src/utils/formatOrder'
+import { formatOrder } from 'src/utils/formatOrder.utils'
 import { AppService } from 'src/app.service'
+import { EnumSteps } from '../interfaces/step.interface'
+import { formatDealerSock } from 'src/utils/formatDealerSock.utils'
 
 @Injectable()
 export class SocketDealerService {
@@ -28,12 +38,14 @@ export class SocketDealerService {
     this.connectedClients.set(clientId, socket)
   }
 
-  handleManageDealer(socket: Socket, data: DealerData) {
-    // TODO: Saber si el dealer tiene una orden asignada
+  async handleManageDealer(socket: Socket, data: DealerData) {
+    const { isAvailable } = await this.orderService.checkDealerAvailability(
+      socket.handshake.query.userId.toString()
+    )
     socket.data = {
       coordinates: data.coordinates,
       active: data.active,
-      taken: false
+      taken: isAvailable
     }
 
     console.log('handleManageDealer', socket.data, socket.id)
@@ -46,35 +58,20 @@ export class SocketDealerService {
   }
 
   async handleFindDealer(socket: Server, order: Order) {
-    console.log('Looking for a dealer', order)
-    const { shopAddress } = order
-    const shopCoordinates = await findCoordinates(this.httpService, shopAddress)
+    const shopCoordinates = await findCoordinates(
+      this.httpService,
+      order.shopAddress
+    )
     const shipCoordinates = await findCoordinates(
       this.httpService,
       order.shipAddress
     )
 
-    const clientsArray = Array.from(this.connectedClients.values())
-
     const orderRequest = formatOrder(order, shipCoordinates, shopCoordinates)
+    const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
+    let currentDealer: SockDealer | null = null
 
-    let currentDealer = {} as any
-    const dealers = clientsArray
-      .filter((client) => {
-        return client.handshake.query.type === 'dealer' && client.data.active
-      })
-      .map((dealer) => {
-        return {
-          sockId: dealer.id,
-          clientId: dealer.handshake.query.userId,
-          coordinates: dealer.data.coordinates,
-          active: dealer.data.active,
-          taken: dealer.data.taken
-        }
-      })
-
-    for (let i = 0; i < dealers.length; i++) {
-      const dealer = dealers[i]
+    for (const dealer of dealers) {
       const distance = calculateDistance(
         parseFloat(shopCoordinates.lat),
         parseFloat(shopCoordinates.lon),
@@ -97,19 +94,17 @@ export class SocketDealerService {
       }
     }
 
-    if (Object.keys(currentDealer).length === 0) {
-      console.log('No hay conductores disponibles')
-      return "There aren't available drivers"
-      // Todo: O se cancela la orden o se pone en espera
+    // TODO: O se cancela la orden o se pone en espera
+    if (currentDealer === null) {
+      throw new ServiceUnavailableException("We couldn't find a dealer")
     }
 
-    const driverSocket = this.connectedClients.get(currentDealer.sockId)
-    await driverSocket.join(order.id)
+    await this.connectedClients.get(currentDealer.sockId).join(order.id)
 
     return await this.orderService.updateOrder(order.id, {
       dealer: currentDealer.clientId,
       status: 'In Progress',
-      step: 2
+      step: EnumSteps.GoingToShop
     })
   }
 }

@@ -24,8 +24,8 @@ export class SocketGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('manageDealer')
-  handlemManageDealer(client: any, data: any) {
-    this.socketDealerService.handleManageDealer(client, data)
+  async handleManageDealer(client: any, data: any) {
+    await this.socketDealerService.handleManageDealer(client, data)
   }
 
   @SubscribeMessage('updateDealerLocation')

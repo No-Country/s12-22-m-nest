@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { orders } from './fakeDb'
 import { type Order } from './socket/interfaces/orderRequest.interface'
-import { formatOrder } from './utils/formatOrder'
+import { formatOrder } from './utils/formatOrder.utils'
 import { HttpService } from '@nestjs/axios'
 import { findCoordinates } from './utils/findCoordinates.utils'
 import { SocketGateway } from './socket/socket.gateway'
 import { SocketDealerService } from './socket/services/dealer.service'
 import { v4 as uuidv4 } from 'uuid'
 import { SocketOrderService } from './socket/services/order.service'
+import { EnumSteps } from './socket/interfaces/step.interface'
 
 @Injectable()
 export class AppService {
@@ -26,7 +27,7 @@ export class AppService {
       shipAddress: body.shipAddress ?? '',
       shopAddress: body.shopAddress ?? '',
       status: 'Pending',
-      step: 1
+      step: EnumSteps.LookingForDealer
     }
 
     orders.push(order)
@@ -89,10 +90,13 @@ export class AppService {
     const index = orders.indexOf(order)
     orders[index] = {
       ...order,
-      step: order.step < 5 ? ((order.step + 1) as 1 | 2 | 3 | 4 | 5) : 5
+      step:
+        order.step < EnumSteps.Delivered
+          ? ((order.step + 1) as 1 | 2 | 3 | 4 | 5 | 6)
+          : EnumSteps.Delivered
     }
 
-    if (orders[index].step === 5) {
+    if (orders[index].step === EnumSteps.Delivered) {
       orders[index].status = 'Delivered'
     }
 
@@ -118,5 +122,17 @@ export class AppService {
     )
 
     return formatedOrder
+  }
+
+  async checkDealerAvailability(dealerId: string) {
+    // Buscamos en las ordenes si el dealer ya está asignado a una orden activa
+    const order = orders.filter(
+      (order) => order.dealer === dealerId && order.status === 'In Progress'
+    )[0]
+
+    return {
+      isAvailable: Boolean(!order),
+      orderId: order?.id
+    }
   }
 }

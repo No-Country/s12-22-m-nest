@@ -1,3 +1,5 @@
+import { type TSteps } from './step.interface'
+
 // Todo: Use Order Entity instead of Order interface
 export interface Order {
   id: string
@@ -5,7 +7,7 @@ export interface Order {
   shipAddress: string
   shopAddress: string
   status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
-  step: 1 | 2 | 3 | 4 | 5
+  step: TSteps
 }
 
 export interface OrderRequest extends Order {
