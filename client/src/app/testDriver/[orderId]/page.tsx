@@ -3,6 +3,8 @@
 import socket from '@/app/socketManager'
 import { useEffect, type FunctionComponent, useState } from 'react'
 import axios from 'axios'
+import TestChatBox from '@/app/testChatBox'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   params: {
@@ -21,20 +23,39 @@ const OrderStatus = [
 
 const Page: FunctionComponent<Props> = ({ params }) => {
   const [currentOrder, setCurrentOrder] = useState({}) as any
+  const [chat, setChat] = useState([]) as any
+  const router = useRouter()
 
   const getOrder = async () => {
     await axios.get('http://localhost:3001/api/' + params.orderId).then((res) => {
       setCurrentOrder(res.data)
+      setChat(res.data.chat)
     })
   }
 
-  const updateOrderStatus = () => {
-    axios.post('http://localhost:3001/api/' + params.orderId + '/nextStep').then((res) => {})
+  const updateOrderStatus = async (): Promise<void> => {
+    await axios.post('http://localhost:3001/api/' + params.orderId + '/nextStep')
+  }
+
+  const getLocation = (): void => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords
+        console.log({ latitude, longitude })
+        socket.emit('updateDealerLocation', {
+          orderId: params.orderId,
+          lat: latitude,
+          lon: longitude
+        })
+      },
+      (error) => {
+        console.error(error.message)
+      }
+    )
   }
 
   useEffect(() => {
     void getOrder()
-
     socket.emit('manageDealer', {
       coordinates: {
         lat: -34.644018,
@@ -57,30 +78,23 @@ const Page: FunctionComponent<Props> = ({ params }) => {
       console.log('message', data)
     })
 
-    const getLocation = (): any => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords
-          console.log({ latitude, longitude })
-          socket.emit('updateDealerLocation', {
-            orderId: params.orderId,
-            lat: latitude,
-            lon: longitude
-          })
-        },
-        (error) => {
-          console.error(error.message)
-        }
-      )
-    }
+    socket.on('updatedChat', (data: any) => {
+      console.log('updatedChat', data)
+      setChat(data)
+    })
 
     getLocation()
     const intervalId = setInterval(getLocation, 10000)
-    // Asegúrate de desconectar el socket cuando el componente se desmonta
     return () => {
       clearInterval(intervalId)
     }
   }, [])
+
+  useEffect(() => {
+    if (currentOrder.status !== 'In Progress') {
+      router.push('/testDriver')
+    }
+  }, [currentOrder])
 
   return (
     <section>
@@ -88,7 +102,16 @@ const Page: FunctionComponent<Props> = ({ params }) => {
       <h2>Order: {params.orderId}</h2>
       <h3>Status: {currentOrder.status}</h3>
       <h3>Step: {OrderStatus[currentOrder.step - 1]}</h3>
-      {currentOrder.step <= 6 && <button onClick={updateOrderStatus}>Next Step</button>}
+      {currentOrder.step <= 5 && (
+        <button
+          onClick={() => {
+            void updateOrderStatus()
+          }}
+        >
+          Next Step
+        </button>
+      )}
+      <TestChatBox messages={chat.messages} mode='dealer' orderId={params.orderId} />
     </section>
   )
 }

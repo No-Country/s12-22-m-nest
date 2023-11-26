@@ -39,16 +39,18 @@ export class SocketDealerService {
   }
 
   async handleManageDealer(socket: Socket, data: DealerData) {
-    const { isAvailable } = await this.orderService.checkDealerAvailability(
-      socket.handshake.query.userId.toString()
-    )
+    const { isAvailable, orderId } =
+      await this.orderService.checkDealerAvailability(
+        socket.handshake.query.userId.toString()
+      )
     socket.data = {
       coordinates: data.coordinates,
       active: data.active,
-      taken: isAvailable
+      taken: !isAvailable
     }
 
     console.log('handleManageDealer', socket.data, socket.id)
+    socket.emit('dealerStatus', { taken: !isAvailable, orderId })
   }
 
   async updateDealerLocation(socket: Socket, data: any) {
@@ -58,6 +60,7 @@ export class SocketDealerService {
   }
 
   async handleFindDealer(socket: Server, order: Order) {
+    console.log('Buscando Dealer')
     const shopCoordinates = await findCoordinates(
       this.httpService,
       order.shopAddress
@@ -80,6 +83,7 @@ export class SocketDealerService {
       )
 
       if (distance <= 5) {
+        console.log('Preguntando a dealer', dealer)
         const acceptOrder = await this.socketOrderService.sendOrderRequest(
           dealer.sockId,
           orderRequest

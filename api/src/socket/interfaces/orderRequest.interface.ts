@@ -8,6 +8,19 @@ export interface Order {
   shopAddress: string
   status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
   step: TSteps
+  chat: Chat
+}
+
+// TODO: Quit
+export interface Chat {
+  id: string
+  messages: Message[]
+}
+
+// TODO: Quit
+export interface Message {
+  sender: string | null
+  body: string
 }
 
 export interface OrderRequest extends Order {

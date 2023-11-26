@@ -8,15 +8,18 @@ import { SocketGateway } from './socket/socket.gateway'
 import { SocketDealerService } from './socket/services/dealer.service'
 import { v4 as uuidv4 } from 'uuid'
 import { SocketOrderService } from './socket/services/order.service'
-import { EnumSteps } from './socket/interfaces/step.interface'
+import { EnumSteps, type TSteps } from './socket/interfaces/step.interface'
+import { SocketChatService } from './socket/services/chat.service'
 
+// Simulamos servicios
 @Injectable()
 export class AppService {
   constructor(
     private readonly httpService: HttpService,
     private readonly socketGateway: SocketGateway,
     private readonly socketDealerService: SocketDealerService,
-    private readonly socketOrderService: SocketOrderService
+    private readonly socketOrderService: SocketOrderService,
+    private readonly socketChatService: SocketChatService
   ) {}
 
   async createOrder(body: Partial<Order>): Promise<any> {
@@ -27,7 +30,11 @@ export class AppService {
       shipAddress: body.shipAddress ?? '',
       shopAddress: body.shopAddress ?? '',
       status: 'Pending',
-      step: EnumSteps.LookingForDealer
+      step: EnumSteps.LookingForDealer,
+      chat: {
+        id: uuidv4(),
+        messages: []
+      }
     }
 
     orders.push(order)
@@ -92,7 +99,7 @@ export class AppService {
       ...order,
       step:
         order.step < EnumSteps.Delivered
-          ? ((order.step + 1) as 1 | 2 | 3 | 4 | 5 | 6)
+          ? ((order.step + 1) as TSteps)
           : EnumSteps.Delivered
     }
 
@@ -134,5 +141,31 @@ export class AppService {
       isAvailable: Boolean(!order),
       orderId: order?.id
     }
+  }
+
+  async addMessage(orderId: string, body: { sender: string; body: string }) {
+    const order = orders.filter((order) => order.id === orderId)[0]
+    const index = orders.indexOf(order)
+    orders[index] = {
+      ...order,
+      chat: {
+        ...order.chat,
+        messages: [
+          ...order.chat.messages,
+          {
+            sender: body.sender,
+            body: body.body
+          }
+        ]
+      }
+    }
+
+    this.socketChatService.updateChat(
+      this.socketGateway.server,
+      orders[index].id,
+      orders[index].chat
+    )
+
+    return orders[index].chat
   }
 }

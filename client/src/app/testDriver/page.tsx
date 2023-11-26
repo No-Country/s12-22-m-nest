@@ -1,7 +1,8 @@
 'use client'
-import React, { type FunctionComponent, useEffect } from 'react'
+import React, { type FunctionComponent, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import socket from '../socketManager'
+import { debounce } from 'lodash'
 
 interface Order {
   id: string
@@ -24,6 +25,24 @@ interface OrderRequest extends Order {
 
 const ConductorComponent: FunctionComponent = () => {
   const router = useRouter()
+
+  const debManageOrder = useMemo(
+    () =>
+      debounce(
+        (data: any, callback: any) => {
+          console.log('orderRequest', data)
+          const accepted = confirm('¿Aceptar el pedido?')
+          callback(accepted)
+          if (accepted) {
+            router.push(`/testDriver/${data.id}`)
+          }
+        },
+
+        1000
+      ),
+    []
+  )
+
   useEffect(() => {
     socket.emit('manageDealer', {
       coordinates: {
@@ -32,20 +51,21 @@ const ConductorComponent: FunctionComponent = () => {
       },
       active: true
     })
-    // Escuchar el evento 'order-request'
+
+    socket.on('dealerStatus', (data: any) => {
+      if (data.taken) {
+        router.push(`/testDriver/${data.orderId}`)
+      }
+    })
+
     socket.on('orderRequest', (data: OrderRequest, callback) => {
-      console.log('orderRequest', data)
-      const accepted = confirm('¿Aceptar el pedido?')
-      console.log('accepted', accepted)
-      const acceptOrder = true
-      callback(acceptOrder)
-      router.push(`/testDriver/${data.id}`)
+      debManageOrder(data, callback)
     })
 
     return () => {}
   }, []) // El array vacío [] garantiza que este efecto solo se ejecute una vez al montar el componente
 
-  return <div>{/* Contenido del componente */}</div>
+  return <div>Esperando orden</div>
 }
 
 export default ConductorComponent

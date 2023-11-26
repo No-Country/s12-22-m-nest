@@ -1,6 +1,7 @@
 import {
   WebSocketGateway,
   type OnGatewayConnection,
+  type OnGatewayDisconnect,
   WebSocketServer,
   SubscribeMessage
 } from '@nestjs/websockets'
@@ -10,7 +11,7 @@ import { SocketOrderService } from './services/order.service'
 import { SocketMainService } from './services/main.service'
 
 @WebSocketGateway({ cors: true })
-export class SocketGateway implements OnGatewayConnection {
+export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server
 
   constructor(
@@ -22,6 +23,13 @@ export class SocketGateway implements OnGatewayConnection {
   handleConnection(socket: Socket): void {
     this.socketMainService.handleConnection(socket)
   }
+
+  handleDisconnect(socket: Socket): void {
+    this.socketMainService.handleDisconnect(socket)
+  }
+
+  // @MessageBody() data: any,
+  // @ConnectedSocket() client: Socket,
 
   @SubscribeMessage('manageDealer')
   async handleManageDealer(client: any, data: any) {

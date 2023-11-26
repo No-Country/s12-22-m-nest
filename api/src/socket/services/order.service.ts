@@ -55,6 +55,7 @@ export class SocketOrderService {
         socket.handshake.query.userId.toString()
       )
 
+    console.log('joinOrderDealer', isAvailable, orderId, data.orderId)
     if (isAvailable || orderId !== data.orderId) {
       throw new ConflictException('Dealer does not have this order assigned')
     }

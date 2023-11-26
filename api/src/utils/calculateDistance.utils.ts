@@ -1,23 +1,22 @@
 import * as geolib from 'geolib'
 
 export function calculateDistance(
-  latitudCliente: number,
-  longitudCliente: number,
-  latitudConductor: number,
-  longitudConductor: number
+  customerLatitude: number,
+  customerLongitude: number,
+  driverLatitude: number,
+  driverLongitude: number
 ): number {
-  const coordenadasCliente = {
-    latitude: latitudCliente,
-    longitude: longitudCliente
-  }
-  const coordenadasConductor = {
-    latitude: latitudConductor,
-    longitude: longitudConductor
+  const customerCoordinates = {
+    latitude: customerLatitude,
+    longitude: customerLongitude
   }
 
-  const distancia = geolib.getDistance(coordenadasCliente, coordenadasConductor)
+  const driverCoordinates = {
+    latitude: driverLatitude,
+    longitude: driverLongitude
+  }
 
-  // La distancia se devuelve en metros, si necesitas kilómetros, puedes convertirla
-  const distanciaEnKilometros = geolib.convertDistance(distancia, 'km')
-  return distanciaEnKilometros
+  const distance = geolib.getDistance(customerCoordinates, driverCoordinates)
+  const distanceInKilometers = geolib.convertDistance(distance, 'km')
+  return distanceInKilometers
 }
