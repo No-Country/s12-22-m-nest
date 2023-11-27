@@ -19,6 +19,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/prefer-nullish-coalescing': 'off',
     '@typescript-eslint/strict-boolean-expressions': 'off',
-    '@typescript-eslint/space-before-function-paren': 'off'
+    '@typescript-eslint/space-before-function-paren': 'off',
+    '@typescript-eslint/member-delimiter-style': 'off'
   }
 }
