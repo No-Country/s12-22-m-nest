@@ -11,8 +11,8 @@ import { SocketOrderService } from './order.service'
 import { SocketMainService } from './main.service'
 import { findCoordinates } from 'src/utils/findCoordinates.utils'
 import {
-  type SockDealer,
-  type DealerData
+  type FormatedSockDealer,
+  type SockDealerData
 } from '../interfaces/dealer.interface'
 import { type Order } from '../interfaces/orderRequest.interface'
 import { formatOrder } from 'src/utils/formatOrder.utils'
@@ -38,7 +38,7 @@ export class SocketDealerService {
     this.connectedClients.set(clientId, socket)
   }
 
-  async handleManageDealer(socket: Socket, data: DealerData) {
+  async handleManageDealer(socket: Socket, data: SockDealerData) {
     const { isAvailable, orderId } =
       await this.orderService.checkDealerAvailability(
         socket.handshake.query.userId.toString()
@@ -72,7 +72,7 @@ export class SocketDealerService {
 
     const orderRequest = formatOrder(order, shipCoordinates, shopCoordinates)
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
-    let currentDealer: SockDealer | null = null
+    let currentDealer: FormatedSockDealer | null = null
 
     for (const dealer of dealers) {
       const distance = calculateDistance(

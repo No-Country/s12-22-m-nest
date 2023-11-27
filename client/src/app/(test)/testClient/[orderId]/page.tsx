@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/member-delimiter-style */
 'use client'
-import socket from '@/app/socketManager'
-import TestChatBox from '@/app/testChatBox'
+import socket from './socket'
+import TestChatBox from '@/app/(test)/_components/ChatBox'
 import axios from 'axios'
 import { useEffect, type FunctionComponent, useState } from 'react'
+import { type Chat, type OrderRequest } from '../../interfaces'
 
 interface Props {
   params: {
@@ -21,10 +22,10 @@ const OrderStatus = [
 ]
 
 const Page: FunctionComponent<Props> = ({ params }) => {
-  const [currentOrder, setCurrentOrder] = useState({}) as any
-  const [chat, setChat] = useState([]) as any
+  const [currentOrder, setCurrentOrder] = useState<OrderRequest | undefined>(undefined)
+  const [chat, setChat] = useState<Chat | undefined>(undefined)
 
-  const getOrder = async () => {
+  const getOrder = async (): Promise<void> => {
     await axios.get('http://localhost:3001/api/' + params.orderId).then((res) => {
       setCurrentOrder(res.data)
       setChat(res.data.chat)
@@ -38,21 +39,21 @@ const Page: FunctionComponent<Props> = ({ params }) => {
       orderId: params.orderId
     })
 
-    socket.on('updateOrder', (data: any) => {
+    socket.on('updateOrder', (data: OrderRequest) => {
       console.log('updateOrder', data)
       setCurrentOrder(data)
     })
 
-    socket.on('message', (data: any) => {
+    socket.on('message', (data: string) => {
       console.log('message', data)
     })
 
-    socket.on('updatedChat', (data: any) => {
+    socket.on('updatedChat', (data: Chat) => {
       console.log('updatedChat', data)
       setChat(data)
     })
 
-    socket.on('updatedDealerLocation', (data: any) => {
+    socket.on('updatedDealerLocation', (data: { orderId: string; lat: number; lon: number }) => {
       console.log('updatedDealerLocation', data)
     })
 
@@ -63,9 +64,9 @@ const Page: FunctionComponent<Props> = ({ params }) => {
     <section>
       <h1>Test Client</h1>
       <h2>Order: {params.orderId}</h2>
-      <h3>Status: {currentOrder.status}</h3>
-      <h3>Step: {OrderStatus[currentOrder.step - 1]}</h3>
-      <TestChatBox messages={chat.messages} mode='client' orderId={params.orderId} />
+      <h3>Status: {currentOrder?.status}</h3>
+      <h3>Step: {currentOrder && OrderStatus[currentOrder.step - 1]}</h3>
+      <TestChatBox messages={chat?.messages ?? []} mode='client' orderId={params.orderId} />
     </section>
   )
 }

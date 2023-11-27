@@ -1,27 +1,10 @@
+/* eslint-disable @typescript-eslint/member-delimiter-style */
 'use client'
-import React, { type FunctionComponent, useEffect, useMemo } from 'react'
+import { type FunctionComponent, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import socket from '../socketManager'
+import socket from './socket'
 import { debounce } from 'lodash'
-
-interface Order {
-  id: string
-  dealer: string | null
-  shipAddress: string
-  shopAddress: string
-  status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
-  step: 1 | 2 | 3 | 4 | 5 | 6
-}
-
-interface Coordinates {
-  lat: string
-  lon: string
-}
-
-interface OrderRequest extends Order {
-  shipCoordinates: Coordinates
-  shopCoordinates: Coordinates
-}
+import { type OrderRequest } from '../interfaces'
 
 const ConductorComponent: FunctionComponent = () => {
   const router = useRouter()
@@ -29,7 +12,7 @@ const ConductorComponent: FunctionComponent = () => {
   const debManageOrder = useMemo(
     () =>
       debounce(
-        (data: any, callback: any) => {
+        (data: OrderRequest, callback: (accepted: boolean) => void) => {
           console.log('orderRequest', data)
           const accepted = confirm('¿Aceptar el pedido?')
           callback(accepted)
@@ -52,7 +35,7 @@ const ConductorComponent: FunctionComponent = () => {
       active: true
     })
 
-    socket.on('dealerStatus', (data: any) => {
+    socket.on('dealerStatus', (data: { taken: boolean; orderId: string }) => {
       if (data.taken) {
         router.push(`/testDriver/${data.orderId}`)
       }

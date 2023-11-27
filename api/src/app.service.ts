@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { orders } from './fakeDb'
+import { orders, users } from './fakeDb'
 import { type Order } from './socket/interfaces/orderRequest.interface'
 import { formatOrder } from './utils/formatOrder.utils'
 import { HttpService } from '@nestjs/axios'
@@ -34,7 +34,23 @@ export class AppService {
       chat: {
         id: uuidv4(),
         messages: []
-      }
+      },
+      clientName: 'Pepe Argento',
+      clientEmail: 'pepeargento@ejemplo.com',
+      shop: 'McDonalds',
+      price: 300,
+      products: [
+        {
+          name: 'Hamburguesa con queso',
+          quantity: 1,
+          price: 100
+        },
+        {
+          name: 'Super Papas',
+          quantity: 2,
+          price: 100
+        }
+      ]
     }
 
     orders.push(order)
@@ -60,7 +76,14 @@ export class AppService {
       order.shipAddress
     )
 
-    return formatOrder(order, shipCoordinates, shopCoordinates)
+    const formatedOrder = formatOrder(order, shipCoordinates, shopCoordinates)
+
+    // TODO: populate dealer
+    formatedOrder.dealer = users.filter(
+      (user) => user.id === formatedOrder.dealer
+    )[0]
+
+    return formatedOrder
   }
 
   async updateOrder(orderId: string, body: Partial<Order>) {
@@ -83,6 +106,11 @@ export class AppService {
       shipCoordinates,
       shopCoordinates
     )
+
+    // TODO: populate dealer
+    formatedOrder.dealer = users.filter(
+      (user) => user.id === formatedOrder.dealer
+    )[0]
 
     this.socketOrderService.updateOrder(
       this.socketGateway.server,
@@ -122,6 +150,11 @@ export class AppService {
       shipCoordinates,
       shopCoordinates
     )
+
+    // TODO: populate dealer
+    formatedOrder.dealer = users.filter(
+      (user) => user.id === formatedOrder.dealer
+    )[0]
 
     this.socketOrderService.updateOrder(
       this.socketGateway.server,

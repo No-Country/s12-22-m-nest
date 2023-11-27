@@ -1,7 +1,9 @@
 import { type Socket } from 'socket.io'
-import { type SockDealer } from 'src/socket/interfaces/dealer.interface'
+import { type FormatedSockDealer } from 'src/socket/interfaces/dealer.interface'
 
-export const formatDealerSock = (clientsArray: Socket[]): SockDealer[] => {
+export const formatDealerSock = (
+  clientsArray: Socket[]
+): FormatedSockDealer[] => {
   const dealers = clientsArray
     .filter((client) => {
       return (

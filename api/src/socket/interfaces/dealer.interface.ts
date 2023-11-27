@@ -1,10 +1,10 @@
-export interface DealerData {
+export interface SockDealerData {
   coordinates: Coordinates
   active: boolean
   taken: boolean
 }
 
-export interface SockDealer {
+export interface FormatedSockDealer {
   sockId: string
   clientId: string
   coordinates: Coordinates
