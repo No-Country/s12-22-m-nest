@@ -1,6 +1,9 @@
 
+import { Order } from "../entities/order.entity";
+import { OmitType } from "@nestjs/mapped-types";
 import { IsString, IsBoolean, IsInt, IsEmail } from "class-validator"
-export class CreateOrderDto {
+
+export class CreateOrderDto extends OmitType(Order, ["_id" as keyof Order] as const){
 
     // @IsString()
     // dealer: string;
