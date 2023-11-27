@@ -4,6 +4,7 @@ import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule } from '@nestjs/config'
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { ConfigModule } from '@nestjs/config'
       entities: ['dist/**/*.entity{.ts,.js}'],
       ssl: true,
       synchronize: true
-    })
+    }),
+    OrderModule
   ],
   controllers: [AppController],
   providers: [AppService]
