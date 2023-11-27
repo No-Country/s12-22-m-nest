@@ -1,34 +1,4 @@
-import { Transform } from 'class-transformer'
-import {
-  IsString,
-  MinLength,
-  MaxLength,
-  IsEmail,
-  Validate
-} from 'class-validator'
-import BirthdateValidator from '../utils/Birthdate.validator'
+import { OmitType } from '@nestjs/mapped-types'
+import { User } from '../entities/user.entity'
 
-export class CreateUserDto {
-  @Transform(({ value }) => value.trim())
-  @IsString()
-  @MinLength(3)
-  @MaxLength(25)
-  firstName: string
-
-  @Transform(({ value }) => value.trim())
-  @IsString()
-  @MinLength(3)
-  @MaxLength(25)
-  lastName: string
-
-  @IsEmail()
-  email: string
-
-  @Validate(BirthdateValidator)
-  birthdate: string
-
-  @IsString()
-  @MinLength(6)
-  @MaxLength(25)
-  password: string
-}
+export class CreateUserDto extends OmitType(User, ['id']) {}

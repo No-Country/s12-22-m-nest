@@ -1,3 +1,12 @@
+import { Transform } from 'class-transformer'
+import {
+  IsEmail,
+  IsISO8601,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength
+} from 'class-validator'
 import {
   Column,
   CreateDateColumn,
@@ -12,21 +21,36 @@ export class User {
   id: number
 
   @Column()
+  @Transform(({ value }) => value.trim())
+  @IsString()
+  @MinLength(3)
+  @MaxLength(25)
   firstName: string
 
   @Column()
+  @Transform(({ value }) => value.trim())
+  @IsString()
+  @MinLength(3)
+  @MaxLength(25)
   lastName: string
 
   @Column()
+  @IsEmail()
   email: string
 
   @Column()
-  birthdate: string
+  @IsISO8601()
+  birthdate: Date
 
-  @Column({ select: false })
+  @Column()
+  @IsString()
+  @MinLength(6)
+  @MaxLength(25)
   password: string
 
   @Column({ nullable: true })
+  @IsString()
+  @IsOptional()
   profileImage: string
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
