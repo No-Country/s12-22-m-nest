@@ -3,7 +3,6 @@ import { JsonWebTokenError, JwtService } from '@nestjs/jwt'
 import type { CreateUserDto } from 'src/users/dto/create-user.dto'
 import { UsersService } from 'src/users/users.service'
 import type { LoginDto } from './dto/login.dto'
-import * as bcrypt from 'bcryptjs'
 import BcryptManager from 'src/users/utils/bcryptManager.utils'
 
 @Injectable()
