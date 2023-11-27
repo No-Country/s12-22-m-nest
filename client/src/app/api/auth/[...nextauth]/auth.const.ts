@@ -31,9 +31,9 @@ const authOptions: NextAuthOptions = {
         }
 
         const user = {
+          id: '1',
           email,
-          password,
-          id: '1' // Change the type of id to string
+          password
         }
 
         return user
