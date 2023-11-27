@@ -4,6 +4,7 @@ import type { CreateUserDto } from 'src/users/dto/create-user.dto'
 import { UsersService } from 'src/users/users.service'
 import type { LoginDto } from './dto/login.dto'
 import * as bcrypt from 'bcryptjs'
+import BcryptManager from 'src/users/utils/bcryptManager.utils'
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
 
   async register(
     createUserDto: CreateUserDto
-  ): Promise<{ user: any; access_token: string }> {
+  ): Promise<{ user: any, access_token: string }> {
     const user = await this.userService.create(createUserDto)
     const token = this.jwtService.sign({
       email: user.email,
@@ -26,10 +27,10 @@ export class AuthService {
 
   async login(
     loginDto: LoginDto
-  ): Promise<{ user: any; access_token: string }> {
+  ): Promise<{ user: any, access_token: string }> {
     const { email, password } = loginDto
     const user = await this.userService.findOneByEmail(email)
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || !(await BcryptManager.compare(user.password, password))) {
       throw new UnauthorizedException('Invalid credentials!')
     }
     const token = this.jwtService.sign({
