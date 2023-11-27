@@ -1,3 +1,5 @@
+// TODO: FIX INDENTATION BUG - CONFIGURE ESLINT
+/* eslint-disable @typescript-eslint/indent */
 import { Transform } from 'class-transformer'
 import {
   IsEmail,
@@ -48,12 +50,17 @@ export class User {
   @MaxLength(25)
   password: string
 
-  @Column({ nullable: true })
+  @Column({
+    nullable: true
+  })
   @IsString()
   @IsOptional()
   profileImage: string
 
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   createdAt: Date
 
   @UpdateDateColumn({

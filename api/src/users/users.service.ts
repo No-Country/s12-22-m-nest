@@ -1,11 +1,15 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common'
-import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  BadRequestException
+} from '@nestjs/common'
+import { type CreateUserDto } from './dto/create-user.dto'
+import { type UpdateUserDto } from './dto/update-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
-import { DeleteResult, Repository, UpdateResult } from 'typeorm'
-import { NotFoundException, BadRequestException } from '@nestjs/common'
-import BcryptManager from './utils/bcryptManager.utils'
+import { type DeleteResult, Repository, type UpdateResult } from 'typeorm'
+import { hash } from './../utils/bcryptManager.utils'
 import UserCriteria from './utils/userCriteria.utils'
 
 @Injectable()
@@ -16,12 +20,12 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    //check email:
+    // check email:
     await this.validateEmail(createUserDto.email)
 
     const user = this.userRepository.create({
       ...createUserDto,
-      password: await BcryptManager.hash(createUserDto.password),
+      password: await hash(createUserDto.password),
       profileImage: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png'
     })
     return await this.userRepository.save(user)
@@ -62,16 +66,16 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    //check user
+    // check user
     await this.findUserByCriteria(new UserCriteria(id, null))
 
-    //check email:
+    // check email:
     if (updateUserDto.email) {
       await this.validateEmail(updateUserDto.email)
     }
-    //check pass:
+    // check pass:
     if (updateUserDto.password) {
-      updateUserDto.password = await BcryptManager.hash(updateUserDto.password)
+      updateUserDto.password = await hash(updateUserDto.password)
     }
 
     const updatedDB: UpdateResult = await this.userRepository.update(
@@ -102,8 +106,9 @@ export class UsersService {
   }
 
   private async findUserByCriteria(criteria: UserCriteria): Promise<User> {
-    if ((!criteria.id && !criteria.email) || (criteria.id && criteria.email))
+    if ((!criteria.id && !criteria.email) || (criteria.id && criteria.email)) {
       throw new BadRequestException('Error: Criteria needs one property.')
+    }
 
     let user: User
     if (criteria.id) {
