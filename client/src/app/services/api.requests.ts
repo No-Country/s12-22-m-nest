@@ -1,37 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { type AxiosResponse, type AxiosError } from 'axios'
+import axios, { type AxiosResponse } from 'axios'
+import { type HttpMethod, type Response } from '@/interfaces'
 
 const axiosInstance = axios.create({
   baseURL: 'https://api.example.com'
 })
 
-type HttpMethod = 'get' | 'post' | 'put' | 'delete'
-
-const handleAxiosError = (error: AxiosError): void => {
-  if (error.response) {
-    console.error('Respuesta del servidor con error:', error.response.data)
-    console.error('Código de estado:', error.response.status)
-  } else if (error.request) {
-    console.error('No se recibió respuesta del servidor')
-  } else {
-    console.error('Error al realizar la solicitud:', error.message)
+export const getRequest = async <T>(url: string): Promise<Response<T>> => {
+  try {
+    const response = await fetch(`${axiosInstance.defaults.baseURL}/${url}`)
+    const responseData = await response.json()
+    if (!response.ok) {
+      const errorResponse: Response<T> = { data: null, error: { message: `Error en la solicitud GET a ${url}`, code: response.status } }
+      return errorResponse
+    }
+    return { data: responseData, error: null }
+  } catch (error: any) {
+    return { data: null, error: { message: error.message, code: error.code || 500 } }
   }
 }
 
-export const request = async <T>(method: HttpMethod, url: string, data?: any): Promise<T> => {
+export const mutationRequest = async <T>(method: HttpMethod, url: string, body?: any): Promise<Response<T>> => {
   try {
-    if (method === 'get') {
-      const response = await fetch(`${axiosInstance.defaults.baseURL}/${url}`)
-      if (!response.ok) {
-        throw new Error(`Error en la solicitud GET a ${url}`)
-      }
-      return await (response.json() as Promise<T>)
-    } else {
-      const axiosResponse: AxiosResponse<T> = await axiosInstance[method](url, data)
-      return axiosResponse.data
-    }
-  } catch (error) {
-    handleAxiosError(error as AxiosError)
-    throw error
+    const axiosResponse: AxiosResponse<T> = await axiosInstance[method](url, body)
+    return { data: axiosResponse.data, error: null }
+  } catch (error: any) {
+    return { data: null, error: { message: error.message, code: error.response?.status || 500 } }
   }
 }

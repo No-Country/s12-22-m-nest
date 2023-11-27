@@ -1,11 +1,11 @@
 export interface Message {
-  sender_id: number
+  sender: number
   body: string
   createdAt: Date
   updatedAt: Date
 }
 
 export interface Chat {
-  id: number
+  id: string
   messages: Message[]
 }

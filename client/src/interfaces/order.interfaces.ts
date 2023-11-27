@@ -1,11 +1,12 @@
+import { type User, type Chat } from '.'
 export interface Order {
-  id: number
-  dealer: string
+  id: string
+  dealer: User
   shipAddress: string
   shopAddress: string
-  status: string
-  step: string
-  chat: string[]
+  status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
+  step: 1 | 2 | 3 | 4 | 5
+  chat: Chat
   price: number
   clientName: string
   clientEmail: string
