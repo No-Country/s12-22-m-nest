@@ -1,4 +1,3 @@
-import type { NextApiRequest } from 'next'
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
@@ -22,9 +21,10 @@ const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Contraseña', type: 'password' }
       },
-      authorize: async(credentials, req) => {
+      authorize: async (credentials, req) => {
         console.log(credentials)
-        const { email, password } = credentials
+        const email = credentials?.email ?? ''
+        const password = credentials?.password ?? ''
         // TODO: cuando se agregue el servicio de login de la api esto se modifica
         if (email !== 'prueba@correo.com' || password !== '1234') {
           throw new Error('Invalid credentials')
@@ -33,7 +33,7 @@ const authOptions: NextAuthOptions = {
         const user = {
           email,
           password,
-          id: 1
+          id: '1' // Change the type of id to string
         }
 
         return user
