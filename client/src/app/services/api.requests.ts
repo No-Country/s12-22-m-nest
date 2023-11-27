@@ -1,13 +1,18 @@
 import axios, { type AxiosResponse } from 'axios'
-import { type HttpMethod, type Response } from '@/interfaces'
+import { type HttpMethod, type Response, type GetRequestParams } from '@/interfaces'
 
 const axiosInstance = axios.create({
   baseURL: 'https://api.example.com'
 })
 
-export const getRequest = async <T>(url: string): Promise<Response<T>> => {
+export const getRequest = async <T>(url: string, params: GetRequestParams): Promise<Response<T>> => {
   try {
-    const response = await fetch(`${axiosInstance.defaults.baseURL}/${url}`)
+    const response = await fetch(`${axiosInstance.defaults.baseURL}/${url}`,
+      {
+        cache: params.cache || 'force-cache',
+        next: { revalidate: params.validate || undefined }
+      })
+
     const responseData = await response.json()
     if (!response.ok) {
       const errorResponse: Response<T> = { data: null, error: { message: `Error en la solicitud GET a ${url}`, code: response.status } }

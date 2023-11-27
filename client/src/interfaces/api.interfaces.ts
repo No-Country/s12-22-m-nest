@@ -6,4 +6,9 @@ export interface Response<T> {
   } | null
 }
 
+export interface GetRequestParams {
+  cache?: 'default' | 'no-store' | 'reload' | 'force-cache' | 'only-if-cached'
+  validate?: number
+}
+
 export type HttpMethod = 'post' | 'put' | 'delete'
