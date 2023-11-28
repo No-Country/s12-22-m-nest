@@ -45,10 +45,13 @@ export class AuthService {
       const payload = this.jwtService.verify(refreshToken, {
         secret: process.env.JWT_SECRET
       })
+
       const user = await this.userService.findOneById(payload.sub)
       const newToken = this.jwtService.sign({ email: user.email, sub: user.id })
+
       return { refresh_token: newToken }
     } catch (error) {
+      console.log(error)
       if (error instanceof JsonWebTokenError) {
         throw new UnauthorizedException('Invalid token signature')
       }
