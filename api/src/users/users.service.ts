@@ -17,6 +17,7 @@ import { User } from './entities/user.entity'
 
 import { hash } from './../utils/bcryptManager.utils'
 import UserCriteria from './utils/userCriteria.utils'
+import { orders } from 'src/fakeDb'
 
 @Injectable()
 export class UsersService {
@@ -87,6 +88,19 @@ export class UsersService {
       throw new InternalServerErrorException('Error updating user')
     }
     return await this.findOneById(id)
+  }
+
+  async checkDealerAvailability(dealerId: string) {
+    // TODO: Implement this method
+    console.log('dealerId', dealerId, orders)
+    const order = orders.filter(
+      (order) => order.dealer === dealerId && order.status === 'In Progress'
+    )[0]
+
+    return {
+      isAvailable: Boolean(!order),
+      orderId: order?.id
+    }
   }
 
   async remove(id: string): Promise<string> {

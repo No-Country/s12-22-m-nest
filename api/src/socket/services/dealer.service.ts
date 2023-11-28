@@ -19,6 +19,7 @@ import { formatOrder } from 'src/utils/formatOrder.utils'
 import { AppService } from 'src/app.service'
 import { EnumSteps } from '../interfaces/step.interface'
 import { formatDealerSock } from 'src/utils/formatDealerSock.utils'
+import { UsersService } from 'src/users/users.service'
 
 @Injectable()
 export class SocketDealerService {
@@ -27,7 +28,8 @@ export class SocketDealerService {
     private readonly orderService: AppService,
     private readonly httpService: HttpService,
     private readonly socketOrderService: SocketOrderService,
-    private readonly socketMainService: SocketMainService
+    private readonly socketMainService: SocketMainService,
+    private readonly usersService: UsersService
   ) {}
 
   private readonly connectedClients = this.socketMainService.connectedClients
@@ -39,8 +41,9 @@ export class SocketDealerService {
   }
 
   async handleManageDealer(socket: Socket, data: SockDealerData) {
+    console.log('handleManageDealer')
     const { isAvailable, orderId } =
-      await this.orderService.checkDealerAvailability(
+      await this.usersService.checkDealerAvailability(
         socket.handshake.query.userId.toString()
       )
     socket.data = {
@@ -73,7 +76,7 @@ export class SocketDealerService {
     const orderRequest = formatOrder(order, shipCoordinates, shopCoordinates)
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
     let currentDealer: FormatedSockDealer | null = null
-
+    console.log('dealers', dealers)
     for (const dealer of dealers) {
       const distance = calculateDistance(
         parseFloat(shopCoordinates.lat),

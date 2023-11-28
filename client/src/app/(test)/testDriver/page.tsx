@@ -2,13 +2,15 @@
 'use client'
 import { type FunctionComponent, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import socket from './socket'
+import connector from './socket'
 import { debounce } from 'lodash'
 import { type OrderRequest } from '../interfaces'
+import { useSession } from 'next-auth/react'
 
 const ConductorComponent: FunctionComponent = () => {
   const router = useRouter()
-
+  const { data: session } = useSession()
+  const socket = useMemo(() => connector(session?.user?.id ?? ''), [])
   const debManageOrder = useMemo(
     () =>
       debounce(
@@ -41,7 +43,7 @@ const ConductorComponent: FunctionComponent = () => {
       }
     })
 
-    socket.on('orderRequest', (data: OrderRequest, callback) => {
+    socket.on('orderRequest', (data: OrderRequest, callback: any) => {
       debManageOrder(data, callback)
     })
 

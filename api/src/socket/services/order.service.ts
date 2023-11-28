@@ -1,20 +1,14 @@
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  forwardRef
-} from '@nestjs/common'
+import { ConflictException, Injectable } from '@nestjs/common'
 import { type Socket, type Server } from 'socket.io'
 import { SocketMainService } from './main.service'
 import { type OrderRequest } from '../interfaces/orderRequest.interface'
-import { AppService } from 'src/app.service'
+import { UsersService } from 'src/users/users.service'
 
 @Injectable()
 export class SocketOrderService {
   constructor(
-    @Inject(forwardRef(() => AppService))
-    private readonly orderService: AppService,
-    private readonly socketMainService: SocketMainService
+    private readonly socketMainService: SocketMainService,
+    private readonly usersService: UsersService
   ) {}
 
   private readonly connectedClients = this.socketMainService.connectedClients
@@ -51,7 +45,7 @@ export class SocketOrderService {
 
   async joinOrderDealer(socket: Socket, data: { orderId: string }) {
     const { isAvailable, orderId } =
-      await this.orderService.checkDealerAvailability(
+      await this.usersService.checkDealerAvailability(
         socket.handshake.query.userId.toString()
       )
 

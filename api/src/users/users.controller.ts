@@ -13,6 +13,11 @@ export class UsersController {
     return await this.usersService.create(createUserDto)
   }
 
+  @Get(':id/availability')
+  async checkAvailability(@Param('id') id: string) {
+    return await this.usersService.checkDealerAvailability(id)
+  }
+
   @Get()
   async findAll() {
     return await this.usersService.findAll()
