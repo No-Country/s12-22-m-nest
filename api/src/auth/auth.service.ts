@@ -46,7 +46,6 @@ export class AuthService {
         secret: process.env.JWT_SECRET
       })
       const user = await this.userService.findOneById(payload.sub)
-      if (!user) throw new UnauthorizedException('Invalid token!')
       const newToken = this.jwtService.sign({ email: user.email, sub: user.id })
       return { refresh_token: newToken }
     } catch (error) {
