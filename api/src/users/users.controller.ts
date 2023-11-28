@@ -8,18 +8,18 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto)
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.usersService.create(createUserDto)
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll()
+  async findAll() {
+    return await this.usersService.findAll()
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.usersService.findOneById(id)
+  async findOne(@Param('id') id: number) {
+    return await this.usersService.findOneById(id)
   }
 
   @Put(':id')
@@ -29,11 +29,6 @@ export class UsersController {
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    const res = await this.usersService.remove(id)
-    if (res) {
-      return 'User deleted'
-    } else {
-      return 'User not deleted'
-    }
+    await this.usersService.remove(id)
   }
 }
