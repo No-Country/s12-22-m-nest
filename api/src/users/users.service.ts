@@ -28,6 +28,7 @@ export class UsersService {
       password: await hash(createUserDto.password),
       profileImage: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png'
     })
+
     return await this.userRepository.save(user)
   }
 
@@ -46,7 +47,6 @@ export class UsersService {
   }
 
   /** NOTE **/
-
   async findOneById(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id },
