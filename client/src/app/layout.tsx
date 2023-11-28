@@ -4,7 +4,10 @@ import './globals.css'
 import { type FunctionComponent } from 'react'
 import AuthSessionProvider from '@/context/providers/authSession.provider'
 import NextUiProvider from '@/context/providers/nextUI.provider'
-import SWRProvider from '@/context/providers/swr.provider'
+import dynamic from 'next/dynamic'
+const SWRProvider = dynamic(async () => await import('@/context/providers/swr.provider'), {
+  ssr: false
+})
 
 const inter = Inter({ subsets: ['latin'] })
 

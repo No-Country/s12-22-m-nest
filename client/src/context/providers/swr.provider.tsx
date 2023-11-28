@@ -1,11 +1,11 @@
 'use client'
 import { SWRConfig } from 'swr'
-import fetcher from '@/services/fetcher.service'
+import { fetcher } from '@/services/fetcher.service'
 import { localStorageProvider } from './localStorage.provider'
 import { type ReactNode, type FunctionComponent } from 'react'
 
 interface Props {
-  children: React.PropsWithChildren<Record<string, ReactNode>>
+  children: ReactNode
 }
 
 const SWRProvider: FunctionComponent<Props> = ({ children }) => (

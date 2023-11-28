@@ -1,6 +1,4 @@
-type FetchResponseType = string
-
-const fetcher = async (url: string): Promise<FetchResponseType> => {
+export const fetcher = async (url: string): Promise<string> => {
   const response = await fetch(url)
 
   if (!response.ok) {
@@ -9,5 +7,3 @@ const fetcher = async (url: string): Promise<FetchResponseType> => {
 
   return await response.json()
 }
-
-export default fetcher
