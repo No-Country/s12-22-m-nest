@@ -5,7 +5,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module'
   },
-  extends: 'standard-with-typescript',
+  extends: ['standard-with-typescript'],
   root: true,
   env: {
     node: true,
@@ -13,6 +13,12 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
+    indent: [
+      'error',
+      2,
+      { SwitchCase: 1, ignoredNodes: ['PropertyDefinition'] }
+    ],
+    '@typescript-eslint/indent': ['error', 2, { SwitchCase: 0 }],
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',

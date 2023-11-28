@@ -5,6 +5,7 @@ import TestChatBox from '@/app/(test)/_components/ChatBox'
 import axios from 'axios'
 import { useEffect, type FunctionComponent, useState } from 'react'
 import { type Chat, type OrderRequest } from '../../interfaces'
+import { serverUrl } from '@/utils/constants/env.const'
 
 interface Props {
   params: {
@@ -26,7 +27,7 @@ const Page: FunctionComponent<Props> = ({ params }) => {
   const [chat, setChat] = useState<Chat | undefined>(undefined)
 
   const getOrder = async (): Promise<void> => {
-    await axios.get('http://localhost:3001/api/' + params.orderId).then((res) => {
+    await axios.get(`${serverUrl}/api/test/` + params.orderId).then((res) => {
       setCurrentOrder(res.data)
       setChat(res.data.chat)
     })

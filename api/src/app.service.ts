@@ -66,6 +66,7 @@ export class AppService {
   }
 
   async getOne(orderId: string) {
+    console.log('orderId', orderId)
     const order = orders.filter((order) => order.id === orderId)[0]
     const shopCoordinates = await findCoordinates(
       this.httpService,

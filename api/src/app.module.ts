@@ -6,6 +6,8 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule } from '@nestjs/config'
 import { SocketModule } from './socket/socket.module'
 import { HttpModule } from '@nestjs/axios'
+import { UsersModule } from './users/users.module'
+import { AuthModule } from './auth/auth.module'
 
 @Module({
   imports: [
@@ -24,7 +26,9 @@ import { HttpModule } from '@nestjs/axios'
       ssl: true,
       synchronize: true
     }),
-    SocketModule
+    SocketModule,
+    UsersModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService, SocketModule],
