@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { type FunctionComponent } from 'react'
+import AuthSessionProvider from '@/context/providers/authSession.provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +17,11 @@ interface Props {
 
 const RootLayout: FunctionComponent<Props> = ({ children }) => (
   <html lang='en'>
-    <body className={inter.className}>{children}</body>
+    <body className={inter.className}>
+      <AuthSessionProvider>
+        {children}
+      </AuthSessionProvider>
+      </body>
   </html>
 )
 
