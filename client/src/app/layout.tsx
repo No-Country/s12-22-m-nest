@@ -3,6 +3,11 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { type FunctionComponent } from 'react'
 import AuthSessionProvider from '@/context/providers/authSession.provider'
+import NextUiProvider from '@/context/providers/nextUI.provider'
+import dynamic from 'next/dynamic'
+const SWRProvider = dynamic(async () => await import('@/context/providers/swr.provider'), {
+  ssr: false
+})
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,13 +20,15 @@ interface Props {
   children: React.ReactNode
 }
 
-const RootLayout: FunctionComponent<Props> = ({ children }) => (
+const RootLayout: FunctionComponent<Props> = ({ children }: { children: React.ReactNode }) => (
   <html lang='en'>
     <body className={inter.className}>
       <AuthSessionProvider>
-        {children}
+        <NextUiProvider>
+          <SWRProvider>{children}</SWRProvider>
+        </NextUiProvider>
       </AuthSessionProvider>
-      </body>
+    </body>
   </html>
 )
 
