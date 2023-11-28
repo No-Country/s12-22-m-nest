@@ -1,5 +1,7 @@
+'use client'
+import { wsUrl } from '@/utils/constants/env.const'
 import io from 'socket.io-client'
 
-const socket = io('ws://localhost:3001?type=client')
+const socket = io(`${wsUrl}?type=client`)
 
 export default socket
