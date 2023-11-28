@@ -26,7 +26,7 @@ const Page: FunctionComponent<Props> = ({ params }) => {
   const [chat, setChat] = useState<Chat | undefined>(undefined)
 
   const getOrder = async (): Promise<void> => {
-    await axios.get('http://localhost:3001/api/' + params.orderId).then((res) => {
+    await axios.get('http://localhost:3001/api/test/' + params.orderId).then((res) => {
       setCurrentOrder(res.data)
       setChat(res.data.chat)
     })

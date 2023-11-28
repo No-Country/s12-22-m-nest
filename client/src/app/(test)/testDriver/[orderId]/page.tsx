@@ -28,14 +28,14 @@ const Page: FunctionComponent<Props> = ({ params }) => {
 
   // TODO: Validar si el pedido es del repartidor
   const getOrder = async (): Promise<void> => {
-    await axios.get('http://localhost:3001/api/' + params.orderId).then((res) => {
+    await axios.get('http://localhost:3001/api/test/' + params.orderId).then((res) => {
       setCurrentOrder(res.data)
       setChat(res.data.chat)
     })
   }
 
   const updateOrderStatus = async (): Promise<void> => {
-    await axios.post('http://localhost:3001/api/' + params.orderId + '/nextStep')
+    await axios.post('http://localhost:3001/api/test/' + params.orderId + '/nextStep')
   }
 
   const getLocation = (): void => {
