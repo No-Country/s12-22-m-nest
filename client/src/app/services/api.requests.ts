@@ -5,9 +5,9 @@ const axiosInstance = axios.create({
   baseURL: 'https://api.example.com'
 })
 
-export const getRequest = async <T>(url: string, params: GetRequestParams): Promise<Response<T>> => {
+export const getRequest = async <T>(params: GetRequestParams): Promise<Response<T>> => {
   try {
-    const response = await fetch(`${axiosInstance.defaults.baseURL}/${url}`,
+    const response = await fetch(`${axiosInstance.defaults.baseURL}/${params.url}`,
       {
         cache: params.cache || 'force-cache',
         next: { revalidate: params.validate || undefined }
@@ -15,7 +15,7 @@ export const getRequest = async <T>(url: string, params: GetRequestParams): Prom
 
     const responseData = await response.json()
     if (!response.ok) {
-      const errorResponse: Response<T> = { data: null, error: { message: `Error en la solicitud GET a ${url}`, code: response.status } }
+      const errorResponse: Response<T> = { data: null, error: { message: `Error en la solicitud GET a ${params.url}`, code: response.status } }
       return errorResponse
     }
     return { data: responseData, error: null }

@@ -7,6 +7,7 @@ export interface Response<T> {
 }
 
 export interface GetRequestParams {
+  url: string
   cache?: 'default' | 'no-store' | 'reload' | 'force-cache' | 'only-if-cached'
   validate?: number
 }
