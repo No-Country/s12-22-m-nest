@@ -4,7 +4,7 @@ import { AppService } from './app.service'
 import { type Order } from './socket/interfaces/orderRequest.interface'
 
 // Simulamos el controlador de ordenes
-@Controller()
+@Controller('test')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
