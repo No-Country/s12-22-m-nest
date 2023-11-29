@@ -1,9 +1,16 @@
+import { Footer, Header } from '@/components'
 import { type FunctionComponent } from 'react'
 
-const Layout: FunctionComponent = async () => (
-  <div>
-    <h1>Layout Client</h1>
-  </div>
+interface Props {
+  children: React.ReactNode
+}
+
+const ClientLayout: FunctionComponent<Props> = async ({ children }) => (
+  <>
+    <Header theme='light' />
+    {children}
+    <Footer />
+  </>
 )
 
-export default Layout
+export default ClientLayout

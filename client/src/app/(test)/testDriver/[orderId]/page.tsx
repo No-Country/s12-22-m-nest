@@ -1,11 +1,12 @@
 'use client'
-import socket from '../socket'
-import { useEffect, type FunctionComponent, useState } from 'react'
+import connector from '../socket'
+import { useEffect, type FunctionComponent, useState, useMemo } from 'react'
 import axios from 'axios'
-import TestChatBox from '@/app/(test)/_components/ChatBox'
+// import TestChatBox from '@/app/(test)/_components/ChatBox'
 import { useRouter } from 'next/navigation'
-import { type Chat, type OrderRequest } from '../../interfaces'
 import { serverUrl } from '@/utils/constants/env.const'
+import { useSession } from 'next-auth/react'
+import { type Chat, type OrderRequest } from '@/interfaces'
 
 interface Props {
   params: {
@@ -24,8 +25,11 @@ const OrderStatus = [
 
 const Page: FunctionComponent<Props> = ({ params }) => {
   const [currentOrder, setCurrentOrder] = useState<OrderRequest | undefined>(undefined)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [chat, setChat] = useState<Chat | undefined>(undefined)
   const router = useRouter()
+  const { data: session } = useSession()
+  const socket = useMemo(() => connector(session?.user?.id ?? ''), [])
 
   // TODO: Validar si el pedido es del repartidor
   const getOrder = async (): Promise<void> => {
@@ -113,7 +117,7 @@ const Page: FunctionComponent<Props> = ({ params }) => {
           Next Step
         </button>
       )}
-      <TestChatBox messages={chat?.messages ?? []} mode='dealer' orderId={params.orderId} />
+      {/* <TestChatBox messages={chat?.messages ?? []} mode='dealer' orderId={params.orderId} /> */}
     </section>
   )
 }
