@@ -1,3 +1,4 @@
+//page de prueba para los componentes
 'use client'
 import { type FunctionComponent } from 'react'
 import { useForm } from 'react-hook-form'
