@@ -4,8 +4,8 @@ import socket from './socket'
 import TestChatBox from '@/app/(test)/_components/ChatBox'
 import axios from 'axios'
 import { useEffect, type FunctionComponent, useState } from 'react'
-import { type Chat, type OrderRequest } from '../../interfaces'
 import { serverUrl } from '@/utils/constants/env.const'
+import { type Chat, type OrderRequest } from '@/interfaces'
 
 interface Props {
   params: {

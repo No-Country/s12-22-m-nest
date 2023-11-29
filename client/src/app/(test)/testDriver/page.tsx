@@ -4,8 +4,8 @@ import { type FunctionComponent, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import connector from './socket'
 import { debounce } from 'lodash'
-import { type OrderRequest } from '../interfaces'
 import { useSession } from 'next-auth/react'
+import { type OrderRequest } from '@/interfaces'
 
 const ConductorComponent: FunctionComponent = () => {
   const router = useRouter()

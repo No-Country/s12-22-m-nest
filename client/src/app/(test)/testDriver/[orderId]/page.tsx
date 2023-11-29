@@ -4,9 +4,9 @@ import { useEffect, type FunctionComponent, useState, useMemo } from 'react'
 import axios from 'axios'
 import TestChatBox from '@/app/(test)/_components/ChatBox'
 import { useRouter } from 'next/navigation'
-import { type Chat, type OrderRequest } from '../../interfaces'
 import { serverUrl } from '@/utils/constants/env.const'
 import { useSession } from 'next-auth/react'
+import { type Chat, type OrderRequest } from '@/interfaces'
 
 interface Props {
   params: {

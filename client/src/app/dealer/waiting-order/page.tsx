@@ -4,6 +4,7 @@ import { Routes } from '@/utils/constants/routes.const'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { type FunctionComponent } from 'react'
+import Content from './_components/Content'
 
 const Page: FunctionComponent = async () => {
   const session = await getServerSession(authOptions)
@@ -16,9 +17,10 @@ const Page: FunctionComponent = async () => {
   return (
     <main className='padding-general-x min-h-screen py-[100px] '>
       <h1 className='text-2xl'>
-        Bienvenido a <b>LLeGo!</b>
+        Esperando una <b>orden</b>
       </h1>
-      <p>¿Estas listo para repartir?</p>
+      <p>Aguarda a que un cliente realice un pedido.</p>
+      <Content session={session} />
     </main>
   )
 }

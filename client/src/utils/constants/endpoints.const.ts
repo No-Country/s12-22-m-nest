@@ -2,6 +2,7 @@ export const Endpoints = {
   LOGIN: '/api/auth/login',
   FIND_USER: (id: string) => `/api/users/${id}`,
   CHECK_USER_AVAILABILITY: (id: string) => `/api/users/${id}/availability`,
+  FIND_ORDER: (id: string) => `/api/test/${id}`,
   REGISTER: '/auth/register',
   DEALER: '/dealer',
   DEALER_AVAILABILITY: '/dealer/availability',

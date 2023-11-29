@@ -1,5 +1,5 @@
 // TODO: Add types
-import { mutationRequest, getRequest } from '@/app/services/api.requests'
+import { mutationRequest, getRequest } from '@/services/api.requests'
 import { Endpoints } from '@/utils/constants/endpoints.const'
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
