@@ -1,5 +1,9 @@
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { type FunctionComponent } from 'react'
+const DynamicMap = dynamic(async () => await import('@/components/DynamicMap'), {
+  ssr: false
+})
 
 const Home: FunctionComponent = () => (
   <main className='flex min-h-screen flex-col items-center justify-between p-24'>
@@ -29,7 +33,7 @@ const Home: FunctionComponent = () => (
         priority
       />
     </div>
-
+    <DynamicMap />
     <div className='mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left'>
       <a
         href='https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
