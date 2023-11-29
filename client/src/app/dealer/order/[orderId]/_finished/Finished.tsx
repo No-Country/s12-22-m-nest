@@ -5,7 +5,7 @@ interface Props {
 }
 
 const FinishedPage: FunctionComponent<Props> = () => (
-  <main className='padding-general-x min-h-screen py-[100px] '>finished</main>
+  <main className='padding-general-x min-h-screen py-[100px] '>Orden finalizada - entrgada</main>
 )
 
 export default FinishedPage

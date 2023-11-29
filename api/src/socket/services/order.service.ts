@@ -54,10 +54,12 @@ export class SocketOrderService {
       throw new ConflictException('Dealer does not have this order assigned')
     }
 
+    // TODO: check if dealer is current dealer
     const isCurrentDealer = true
     if (!isCurrentDealer) {
       return socket.emit('message', 'No tienes permiso para entrar')
     }
+
     await socket.join(data.orderId)
     socket.to(data.orderId).emit('message', 'El dealer se ha unido a la orden')
     socket.emit('message', 'Bienvenido al chat')

@@ -2,7 +2,7 @@
 import connector from '../socket'
 import { useEffect, type FunctionComponent, useState, useMemo } from 'react'
 import axios from 'axios'
-import TestChatBox from '@/app/(test)/_components/ChatBox'
+// import TestChatBox from '@/app/(test)/_components/ChatBox'
 import { useRouter } from 'next/navigation'
 import { serverUrl } from '@/utils/constants/env.const'
 import { useSession } from 'next-auth/react'
@@ -25,6 +25,7 @@ const OrderStatus = [
 
 const Page: FunctionComponent<Props> = ({ params }) => {
   const [currentOrder, setCurrentOrder] = useState<OrderRequest | undefined>(undefined)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [chat, setChat] = useState<Chat | undefined>(undefined)
   const router = useRouter()
   const { data: session } = useSession()
@@ -116,7 +117,7 @@ const Page: FunctionComponent<Props> = ({ params }) => {
           Next Step
         </button>
       )}
-      <TestChatBox messages={chat?.messages ?? []} mode='dealer' orderId={params.orderId} />
+      {/* <TestChatBox messages={chat?.messages ?? []} mode='dealer' orderId={params.orderId} /> */}
     </section>
   )
 }

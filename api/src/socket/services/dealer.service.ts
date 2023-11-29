@@ -36,12 +36,10 @@ export class SocketDealerService {
 
   handleConnection(socket: Socket): void {
     const clientId = socket.id
-    console.log('clientId connected', socket.handshake.query.userId)
     this.connectedClients.set(clientId, socket)
   }
 
   async handleManageDealer(socket: Socket, data: SockDealerData) {
-    console.log('handleManageDealer')
     const { isAvailable, orderId } =
       await this.usersService.checkDealerAvailability(
         socket.handshake.query.userId.toString()
@@ -57,13 +55,10 @@ export class SocketDealerService {
   }
 
   async updateDealerLocation(socket: Socket, data: any) {
-    const userId = socket.handshake.query.userId
-    console.log('updateDealerLocation, user:', userId)
     socket.to(data.orderId).emit('updatedDealerLocation', data)
   }
 
   async handleFindDealer(socket: Server, order: Order) {
-    console.log('Buscando Dealer')
     const shopCoordinates = await findCoordinates(
       this.httpService,
       order.shopAddress
@@ -76,7 +71,7 @@ export class SocketDealerService {
     const orderRequest = formatOrder(order, shipCoordinates, shopCoordinates)
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
     let currentDealer: FormatedSockDealer | null = null
-    console.log('dealers', dealers)
+
     for (const dealer of dealers) {
       const distance = calculateDistance(
         parseFloat(shopCoordinates.lat),
@@ -84,9 +79,8 @@ export class SocketDealerService {
         parseFloat(dealer.coordinates.lat),
         parseFloat(dealer.coordinates.lon)
       )
-      console.log('distance', distance)
+
       if (distance <= 15) {
-        console.log('Preguntando a dealer', dealer)
         const acceptOrder = await this.socketOrderService.sendOrderRequest(
           dealer.sockId,
           orderRequest
@@ -94,7 +88,6 @@ export class SocketDealerService {
         if (acceptOrder) {
           currentDealer = dealer
           const socket = this.connectedClients.get(currentDealer.sockId)
-          console.log('CurrentDealer', socket)
           socket.data.taken = true
           break
         }

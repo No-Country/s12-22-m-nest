@@ -13,13 +13,12 @@ import ResidencePage from './_residence/Residence'
 import FinishedPage from './_finished/Finished'
 
 interface Props {
-  children: React.ReactNode
   params: {
     orderId: string
   }
 }
 
-const MainPage: FunctionComponent<Props> = async ({ params, children }) => {
+const MainPage: FunctionComponent<Props> = async ({ params }) => {
   const session = await getServerSession(authOptions)
   const { data } = await checkAvailability(session?.user?.id ?? 'null')
   const { data: order } = await getOrder(params?.orderId ?? 'null')
@@ -31,13 +30,13 @@ const MainPage: FunctionComponent<Props> = async ({ params, children }) => {
   return (
     <>
       {order?.step === EnumSteps.GoingToShop ? (
-        <GoingPage orderId={params?.orderId} session={session} order={order} />
+        <GoingPage session={session} order={order} />
       ) : order?.step === EnumSteps.GettingOrder ? (
-        <ShopPage orderId={params?.orderId} session={session} order={order} />
+        <ShopPage session={session} order={order} />
       ) : order?.step === EnumSteps.GoingToCustomer ? (
-        <GoingPage orderId={params?.orderId} session={session} order={order} />
+        <GoingPage session={session} order={order} />
       ) : order?.step === EnumSteps.InCustomerPlace ? (
-        <ResidencePage orderId={params?.orderId} />
+        <ResidencePage session={session} order={order} />
       ) : order?.step === EnumSteps.Delivered ? (
         <FinishedPage orderId={params?.orderId} />
       ) : null}

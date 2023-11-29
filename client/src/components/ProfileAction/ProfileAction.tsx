@@ -20,7 +20,7 @@ const ProfileAction: FunctionComponent = () => {
             <Menu loggedUser={loggedUser} />
           </DynamicPopover>
         ) : (
-          <Button size='md' title='Sign In' href={Routes.LOGIN} />
+          <Button size='md' title='Sign In' color='primary' href={Routes.LOGIN} />
         )}
       </NavbarItem>
     </NavbarContent>

@@ -20,7 +20,6 @@ const config: Config = {
   plugins: [
     nextui({
       defaultTheme: 'light',
-      addCommonColors: true,
       themes: {
         light: {
           colors: {

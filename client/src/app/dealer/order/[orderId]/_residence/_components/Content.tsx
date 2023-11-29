@@ -9,15 +9,15 @@ import { updateOrderStatus } from '@/services/orders/updateStatus.service'
 import { ChatBox } from '@/components'
 import { handleChat } from '@/services/socket/handlers'
 import OrderManager from '../../manager'
-import { Endpoints } from '@/utils/constants/endpoints.const'
 import useSWR from 'swr'
+import { Endpoints } from '@/utils/constants/endpoints.const'
 
 interface Props {
   session: Session | null
   order: OrderRequest
 }
 
-const Going: FunctionComponent<Props> = ({ session, order: fallbackData }) => {
+const Residence: FunctionComponent<Props> = ({ session, order: fallbackData }) => {
   const router = useRouter()
   const socket = useMemo(() => connector('dealer', session?.user?.id ?? 'null'), [session?.user?.id])
   const { data: order, mutate } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
@@ -42,7 +42,7 @@ const Going: FunctionComponent<Props> = ({ session, order: fallbackData }) => {
   return (
     <OrderManager socket={socket} orderId={fallbackData?.id}>
       <section>
-        <h1>Yendo a X lugar</h1>
+        <h1>En la residencia</h1>
         <h3>Status: {order?.status}</h3>
         <h3>Step: {order && EnumSteps[order?.step]}</h3>
         {order && order.step <= 5 && (
@@ -68,4 +68,4 @@ const Going: FunctionComponent<Props> = ({ session, order: fallbackData }) => {
   )
 }
 
-export default Going
+export default Residence
