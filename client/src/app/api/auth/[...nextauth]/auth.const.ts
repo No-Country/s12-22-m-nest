@@ -36,8 +36,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async (arg) => {
       const { token, session } = arg
-      const { data } = await getRequest<any>({ url: Endpoints.FIND_USER(token.email ?? '') })
-
+      const { data } = await getRequest<any>({ url: Endpoints.FIND_USER(token.email ?? ''), cache: 'no-store' })
       session.user = {
         id: data?.id,
         email: data?.email
