@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
 'use client'
-import socket from './socket'
-import TestChatBox from '@/app/(test)/_components/ChatBox'
 import axios from 'axios'
-import { useEffect, type FunctionComponent, useState } from 'react'
-import { type Chat, type OrderRequest } from '../../interfaces'
+import { useEffect, type FunctionComponent, useState, useMemo } from 'react'
+import { serverUrl } from '@/utils/constants/env.const'
+import { type Chat, type OrderRequest } from '@/interfaces'
+import connector from '@/services/socket/connector.service'
+import { ChatBox } from '@/components'
 
 interface Props {
   params: {
@@ -22,11 +23,13 @@ const OrderStatus = [
 ]
 
 const Page: FunctionComponent<Props> = ({ params }) => {
+  const socket = useMemo(() => connector('dealer'), [])
   const [currentOrder, setCurrentOrder] = useState<OrderRequest | undefined>(undefined)
-  const [chat, setChat] = useState<Chat | undefined>(undefined)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [chat, setChat] = useState<Chat | null>(currentOrder?.chat ?? null)
 
   const getOrder = async (): Promise<void> => {
-    await axios.get('http://localhost:3001/api/test/' + params.orderId).then((res) => {
+    await axios.get(`${serverUrl}/api/test/` + params.orderId).then((res) => {
       setCurrentOrder(res.data)
       setChat(res.data.chat)
     })
@@ -66,7 +69,7 @@ const Page: FunctionComponent<Props> = ({ params }) => {
       <h2>Order: {params.orderId}</h2>
       <h3>Status: {currentOrder?.status}</h3>
       <h3>Step: {currentOrder && OrderStatus[currentOrder.step - 1]}</h3>
-      <TestChatBox messages={chat?.messages ?? []} mode='client' orderId={params.orderId} />
+      <ChatBox mode='dealer' orderId={params.orderId} chat={chat} />
     </section>
   )
 }
