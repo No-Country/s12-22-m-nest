@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { type FunctionComponent } from 'react'
-const DynamicMap = dynamic(async () => await import('@/components/DynamicMap/DinamicMap'), {
+const DynamicMap = dynamic(async () => await import('@/components/DynamicMap'), {
   ssr: false
 })
 

@@ -5,6 +5,7 @@ import { type Chat } from '../interfaces/orderRequest.interface'
 @Injectable()
 export class SocketChatService {
   updateChat(socket: Server, orderId: string, chat: Chat) {
+    console.log('updatedChat', chat)
     socket.to(orderId).emit('updatedChat', chat)
   }
 }

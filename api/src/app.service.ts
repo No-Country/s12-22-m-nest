@@ -66,6 +66,7 @@ export class AppService {
   }
 
   async getOne(orderId: string) {
+    console.log('orderId', orderId)
     const order = orders.filter((order) => order.id === orderId)[0]
     const shopCoordinates = await findCoordinates(
       this.httpService,
@@ -162,18 +163,6 @@ export class AppService {
     )
 
     return formatedOrder
-  }
-
-  async checkDealerAvailability(dealerId: string) {
-    // Buscamos en las ordenes si el dealer ya está asignado a una orden activa
-    const order = orders.filter(
-      (order) => order.dealer === dealerId && order.status === 'In Progress'
-    )[0]
-
-    return {
-      isAvailable: Boolean(!order),
-      orderId: order?.id
-    }
   }
 
   async addMessage(orderId: string, body: { sender: string; body: string }) {
