@@ -13,14 +13,12 @@ import ResidencePage from './_residence/Residence'
 import FinishedPage from './_finished/Finished'
 
 interface Props {
-  sayHello: string
   params: {
     orderId: string
   }
 }
 
-const MainPage: FunctionComponent<Props> = async ({ params, sayHello }) => {
-  console.log(sayHello)
+const MainPage: FunctionComponent<Props> = async ({ params }) => {
   const session = await getServerSession(authOptions)
   if (!session) return
   const { data } = await checkAvailability(session?.user?.id)
