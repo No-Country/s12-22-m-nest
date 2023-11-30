@@ -34,6 +34,7 @@ export class UsersService {
       password: await hash(createUserDto.password),
       profileImage: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png'
     })
+
     return await this.userRepository.save(user)
   }
 
