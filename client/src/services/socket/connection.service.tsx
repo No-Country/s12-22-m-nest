@@ -2,10 +2,8 @@
 import { type FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { debounce } from 'lodash'
 import { manageDealer } from '@/services/socket/handlers'
-import { toast } from 'sonner'
 import { type Socket } from 'socket.io-client'
 import { usePathname } from 'next/navigation'
-import { Routes } from '@/utils/constants/routes.const'
 
 interface Props {
   socket: Socket
@@ -19,17 +17,20 @@ const DealerConnectionService: FunctionComponent<Props> = ({ socket }) => {
     () =>
       debounce(async () => {
         console.log('handleManageDealer')
-        const manageDealerPromise = async (): Promise<void> => {
-          await manageDealer(socket, setConnected)
-        }
+        // const manageDealerPromise = async (): Promise<void> => {
+        //   await manageDealer(socket, setConnected)
+        // }
 
-        if (!connected && pathname === Routes.WAITING_ORDER) {
-          toast.promise(manageDealerPromise, {
-            loading: 'Conectando con el servidor',
-            success: () => 'Conectado con el servidor',
-            error: 'Error al conectar con el servidor'
-          })
-        }
+        await manageDealer(socket, setConnected)
+        console.log('connected ok')
+
+        // if (!connected && pathname === Routes.WAITING_ORDER) {
+        //   toast.promise(manageDealerPromise, {
+        //     loading: 'Conectando con el servidor',
+        //     success: () => 'Conectado con el servidor',
+        //     error: 'Error al conectar con el servidor'
+        //   })
+        // }
       }, 1000),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [connected, socket, pathname]
