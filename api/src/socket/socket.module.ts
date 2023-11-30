@@ -8,9 +8,15 @@ import { AppModule } from 'src/app.module'
 import { AppService } from 'src/app.service'
 import { SocketChatService } from './services/chat.service'
 import { ChatModule } from 'src/chat/chat.module'
+import { UsersModule } from 'src/users/users.module'
 
 @Module({
-  imports: [HttpModule, forwardRef(() => AppModule), forwardRef(() => ChatModule)],
+  imports: [
+    HttpModule,
+    forwardRef(() => AppModule),
+    forwardRef(() => ChatModule),
+    UsersModule
+  ],
   providers: [
     SocketGateway,
     SocketMainService,
