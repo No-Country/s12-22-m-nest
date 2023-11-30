@@ -1,4 +1,8 @@
+import { IsObject } from "class-validator";
+import { User } from "src/socket/interfaces/orderRequest.interface";
+import { TSteps } from "src/socket/interfaces/step.interface";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled';
 
 @Entity()
 export class Order {
@@ -8,7 +12,8 @@ export class Order {
 
     // @OneToOne(() => User, (user) => user.id, {eager:true})
     // @JoinColumn()
-    // dealer: string; 
+    @Column()
+    dealer: string | null; 
 
     @Column({nullable: false})
     shipAddress:string;
@@ -17,11 +22,16 @@ export class Order {
     shopAddress:string;
     
     @Column({nullable: false})
-    step:number;
+    step:TSteps;
+
 
     // @OneToOne (()=> Chat ,(chat)=> chat,{eager:true})
-    // @JoinColumn()  
-    // chat: chat[]; 
+    // @JoinColumn()
+    @IsObject()
+    chat: {
+    id: string;
+    messages: [];
+    }; 
 
     @Column({
         nullable: false,
@@ -41,6 +51,17 @@ export class Order {
     clientEmail: string;
 
     // @OneToOne (()=> Product ,(product)=> product ,{eager:true})
-    // @JoinColumn()   
-    // products: Product[]; 
+    // @JoinColumn()
+    @IsObject() 
+    productos: {
+    name: string;
+    quantity: number;
+    price: number
+    }; 
+
+    @Column()
+    status: OrderStatus;
+
+    @Column()
+    shop: string;
 }
