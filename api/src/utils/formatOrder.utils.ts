@@ -4,15 +4,11 @@ import {
 } from 'src/socket/interfaces/orderRequest.interface'
 import { buildMapsUrl } from './buildMapsUrl.utils'
 
-export const formatOrder = (
-  order: Order,
-  shipCoordinates: Coordinates,
-  shopCoordinates: Coordinates
-) => {
+export const formatOrder = (order: Order) => {
   const orderRequest: OrderRequest = {
     ...order,
-    shipCoordinates,
-    shopCoordinates,
+    shipCoordinates: order.shipCoordinates,
+    shopCoordinates: order.shopCoordinates,
     shipMapUrl: buildMapsUrl(order.shipAddress),
     shopMapUrl: buildMapsUrl(order.shopAddress)
   }
