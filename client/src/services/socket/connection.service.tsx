@@ -18,6 +18,7 @@ const DealerConnectionService: FunctionComponent<Props> = ({ socket }) => {
   const handleManageDealer = useMemo(
     () =>
       debounce(async () => {
+        console.log('handleManageDealer')
         const manageDealerPromise = async (): Promise<void> => {
           await manageDealer(socket, setConnected)
         }
@@ -31,11 +32,12 @@ const DealerConnectionService: FunctionComponent<Props> = ({ socket }) => {
         }
       }, 1000),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [connected, socket]
+    [connected, socket, pathname]
   )
 
   useEffect(() => {
     const handleSystem = async (): Promise<void> => {
+      console.log('handleSystem')
       await handleManageDealer()
     }
 

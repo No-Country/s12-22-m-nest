@@ -1,4 +1,4 @@
-import { type Order } from '@/interfaces'
+import { type User, type Order } from '@/interfaces'
 
 export interface SockDealerData {
   coordinates: Coordinates
@@ -14,11 +14,10 @@ export interface FormatedSockDealer {
   taken: boolean
 }
 
-export interface OrderRequest extends Order {
-  shipCoordinates: Coordinates
-  shopCoordinates: Coordinates
+export interface OrderRequest extends Omit<Order, 'dealer'> {
   shipMapUrl: URL
   shopMapUrl: URL
+  dealer: User | null | string
 }
 
 export interface Coordinates {

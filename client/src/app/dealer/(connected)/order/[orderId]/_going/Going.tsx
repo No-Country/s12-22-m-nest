@@ -27,7 +27,7 @@ const Going: FunctionComponent<Props> = ({ order: fallbackData }) => {
       handleChat(socket, mutate)
       socket.on('updateOrder', async (data: OrderRequest) => {
         console.log('updateOrder', data)
-        router.refresh()
+        await mutate()
       })
     }
 
@@ -44,7 +44,7 @@ const Going: FunctionComponent<Props> = ({ order: fallbackData }) => {
           {order && order.step <= 5 && (
             <button
               onClick={() => {
-                void updateOrderStatus(order.id)
+                void updateOrderStatus(order.id, router)
               }}
             >
               Next Step

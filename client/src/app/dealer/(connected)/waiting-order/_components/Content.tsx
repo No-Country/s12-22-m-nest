@@ -22,7 +22,7 @@ const Content: FunctionComponent<Props> = ({ session }) => {
         const accepted = confirm('¿Aceptar el pedido?')
         callback(accepted)
         router.refresh()
-      }, 1000),
+      }, 2000),
     [router]
   )
 
