@@ -55,7 +55,6 @@ export class AuthService {
 
       return { refresh_token: newToken }
     } catch (error) {
-      console.log(error)
       if (error instanceof JsonWebTokenError) {
         throw new UnauthorizedException('Invalid token signature')
       }

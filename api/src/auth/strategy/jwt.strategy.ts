@@ -5,15 +5,28 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/users/entities/user.entity'
 import { Repository } from 'typeorm'
 import { findUser } from 'src/users/common'
+import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private readonly jwtService: JwtService
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: (req) => {
+        const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req)
+        if (!token) {
+          throw new UnauthorizedException('Missing token')
+        }
+        try {
+          this.jwtService.verify(token)
+          return token
+        } catch (error) {
+          throw new UnauthorizedException('Invalid token format')
+        }
+      },
       secretOrKey: process.env.JWT_SECRET
     })
   }
