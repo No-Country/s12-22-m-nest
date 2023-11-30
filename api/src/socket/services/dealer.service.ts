@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios'
 import {
   Inject,
   Injectable,
@@ -13,22 +12,32 @@ import {
   type FormatedSockDealer,
   type SockDealerData
 } from '../interfaces/dealer.interface'
-import { type Order } from '../interfaces/orderRequest.interface'
-import { formatOrder } from 'src/utils/formatOrder.utils'
-import { AppService } from 'src/app.service'
-import { EnumSteps } from '../interfaces/step.interface'
+import { EnumSteps } from '../../order/entities/step.interface'
 import { formatDealerSock } from 'src/utils/formatDealerSock.utils'
-import { UsersService } from 'src/users/users.service'
+import { type OrderRequest } from '../interfaces/orderRequest.interface'
+import { InjectRepository } from '@nestjs/typeorm'
+import { User } from 'src/users/entities/user.entity'
+import { Repository } from 'typeorm'
+import { updateOrder } from 'src/order/common'
+import { checkIsAvailable } from 'src/utils/isAvailable.utils'
+import { Order } from 'src/order/entities/order.entity'
+import { SocketGateway } from '../socket.gateway'
+import { InjectModel } from '@nestjs/mongoose'
+import { Chat } from 'src/chat/entities/chat.mongo-entity'
+import { Model } from 'mongoose'
 
 @Injectable()
 export class SocketDealerService {
   constructor(
-    @Inject(forwardRef(() => AppService))
-    private readonly orderService: AppService,
-    private readonly httpService: HttpService,
+    @Inject(forwardRef(() => SocketGateway))
+    private readonly socketGateway: SocketGateway,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>,
+    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
     private readonly socketOrderService: SocketOrderService,
-    private readonly socketMainService: SocketMainService,
-    private readonly usersService: UsersService
+    private readonly socketMainService: SocketMainService
   ) {}
 
   private readonly connectedClients = this.socketMainService.connectedClients
@@ -39,10 +48,11 @@ export class SocketDealerService {
   }
 
   async handleManageDealer(socket: Socket, data: SockDealerData) {
-    const { isAvailable, orderId } =
-      await this.usersService.checkDealerAvailability(
-        socket.handshake.query.userId.toString()
-      )
+    const { isAvailable, orderId } = await checkIsAvailable(
+      socket.handshake.query.userId.toString(),
+      this.orderRepository
+    )
+
     socket.data = {
       coordinates: data.coordinates,
       active: data.active,
@@ -62,15 +72,14 @@ export class SocketDealerService {
     socket.to(data.orderId).emit('updatedDealerLocation', data)
   }
 
-  async handleFindDealer(socket: Server, order: Order) {
-    const orderRequest = formatOrder(order)
+  async handleFindDealer(socket: Server, order: OrderRequest) {
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
     let currentDealer: FormatedSockDealer | null = null
 
     for (const dealer of dealers) {
       const distance = calculateDistance(
-        parseFloat(orderRequest.shopCoordinates.lat),
-        parseFloat(orderRequest.shopCoordinates.lon),
+        parseFloat(order.shopCoordinates.lat),
+        parseFloat(order.shopCoordinates.lon),
         parseFloat(dealer.coordinates.lat),
         parseFloat(dealer.coordinates.lon)
       )
@@ -79,7 +88,7 @@ export class SocketDealerService {
         console.log('Preguntando a dealer', dealer)
         const acceptOrder = await this.socketOrderService.sendOrderRequest(
           dealer.sockId,
-          orderRequest
+          order
         )
         if (acceptOrder) {
           currentDealer = dealer
@@ -97,10 +106,18 @@ export class SocketDealerService {
 
     await this.connectedClients.get(currentDealer.sockId).join(order.id)
 
-    return await this.orderService.updateOrder(order.id, {
-      dealer: currentDealer.clientId,
-      status: 'In Progress',
-      step: EnumSteps.GoingToShop
-    })
+    return await updateOrder(
+      order.id,
+      {
+        dealer: currentDealer.clientId,
+        status: 'In Progress',
+        step: EnumSteps.GoingToShop
+      },
+      this.orderRepository,
+      this.userRepository,
+      this.socketOrderService,
+      this.socketGateway,
+      this.chatModel
+    )
   }
 }

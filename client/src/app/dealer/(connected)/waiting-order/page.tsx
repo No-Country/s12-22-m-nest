@@ -12,6 +12,8 @@ const Page: FunctionComponent = async () => {
   if (!session) return
   const { data } = await checkAvailability(session?.user?.id)
 
+  console.log(data)
+
   if (!data?.isAvailable && data?.orderId) {
     redirect(Routes.ORDER(data?.orderId))
   }
