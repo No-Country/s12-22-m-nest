@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { SocketOrderService } from './socket/services/order.service'
 import { EnumSteps, type TSteps } from './socket/interfaces/step.interface'
 import { SocketChatService } from './socket/services/chat.service'
+import { ChatService } from './chat/chat.service'
+import { type CreateMessageDto } from './chat/dto/create-message.dto'
 
 // Simulamos servicios
 @Injectable()
@@ -19,10 +21,12 @@ export class AppService {
     private readonly socketGateway: SocketGateway,
     private readonly socketDealerService: SocketDealerService,
     private readonly socketOrderService: SocketOrderService,
-    private readonly socketChatService: SocketChatService
+    private readonly socketChatService: SocketChatService,
+    private readonly chatService: ChatService
   ) {}
 
   async createOrder(body: Partial<Order>): Promise<any> {
+    const chat = await this.chatService.create()
     // Simulamos la creación de una orden
     const order: Order = {
       id: uuidv4(),
@@ -32,7 +36,7 @@ export class AppService {
       status: 'Pending',
       step: EnumSteps.LookingForDealer,
       chat: {
-        id: uuidv4(),
+        id: chat.id,
         messages: []
       },
       clientName: 'Pepe Argento',
@@ -181,6 +185,11 @@ export class AppService {
         ]
       }
     }
+    const message: CreateMessageDto = {
+      sender_id: body.sender,
+      body: body.body
+    }
+    await this.chatService.createMessage(orders[index].chat.id, message)
 
     this.socketChatService.updateChat(
       this.socketGateway.server,
