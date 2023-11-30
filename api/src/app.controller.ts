@@ -35,12 +35,4 @@ export class AppController {
   async nextStep(@Param('id') orderId: string): Promise<any> {
     return await this.appService.nextStep(orderId)
   }
-
-  @Post(':id/chat')
-  async addMessage(
-    @Param('id') orderId: string,
-    @Body() body: { sender: string; body: string }
-  ): Promise<any> {
-    return await this.appService.addMessage(orderId, body)
-  }
 }

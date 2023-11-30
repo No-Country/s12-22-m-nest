@@ -11,6 +11,7 @@ interface Props {
 const DealerLayout: FunctionComponent<Props> = async ({ children }) => {
   const session = await getServerSession(authOptions)
   if (!session) return
+
   return (
     <>
       <Header theme='light' />

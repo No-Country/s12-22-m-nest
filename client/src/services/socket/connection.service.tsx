@@ -4,12 +4,15 @@ import { debounce } from 'lodash'
 import { manageDealer } from '@/services/socket/handlers'
 import { toast } from 'sonner'
 import { type Socket } from 'socket.io-client'
+import { usePathname } from 'next/navigation'
+import { Routes } from '@/utils/constants/routes.const'
 
 interface Props {
   socket: Socket
 }
 
 const DealerConnectionService: FunctionComponent<Props> = ({ socket }) => {
+  const pathname = usePathname()
   const [connected, setConnected] = useState(false)
 
   const handleManageDealer = useMemo(
@@ -19,7 +22,7 @@ const DealerConnectionService: FunctionComponent<Props> = ({ socket }) => {
           await manageDealer(socket, setConnected)
         }
 
-        if (!connected) {
+        if (!connected && pathname === Routes.WAITING_ORDER) {
           toast.promise(manageDealerPromise, {
             loading: 'Conectando con el servidor',
             success: () => 'Conectado con el servidor',
@@ -27,6 +30,7 @@ const DealerConnectionService: FunctionComponent<Props> = ({ socket }) => {
           })
         }
       }, 1000),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [connected, socket]
   )
 

@@ -5,12 +5,12 @@ import { type User } from 'src/users/entities/user.entity'
 // Todo: Use Order Entity instead of Order interface
 export interface Order {
   id: string
-  dealer: typeof User | string | null
+  dealer: string | null
   shipAddress: string
   shopAddress: string
   status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
   step: TSteps
-  chat: typeof Chat
+  chat: Chat
   price: number
   clientName: string
   clientEmail: string
@@ -25,9 +25,10 @@ export interface Product {
   price: number
 }
 
-export interface OrderRequest extends Order {
+export interface OrderRequest extends Omit<Order, 'dealer'> {
   shipCoordinates: Coordinates
   shopCoordinates: Coordinates
   shipMapUrl: URL
   shopMapUrl: URL
+  dealer: User | null | string
 }

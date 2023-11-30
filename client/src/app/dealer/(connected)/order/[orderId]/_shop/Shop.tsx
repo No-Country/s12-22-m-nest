@@ -18,7 +18,7 @@ interface Props {
 const Shop: FunctionComponent<Props> = ({ order: fallbackData }) => {
   const router = useRouter()
   const socket = useContext(SocketContext)
-  const { data: order, mutate } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
+  const { data: order } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
     fallbackData
   })
   const [chat, setChat] = useState<Chat | null>(order?.chat ?? null)
@@ -29,13 +29,12 @@ const Shop: FunctionComponent<Props> = ({ order: fallbackData }) => {
 
       socket.on('updateOrder', async (data: OrderRequest) => {
         console.log('updateOrder', data)
-        await mutate()
         router.refresh()
       })
     }
 
     void handleSystem()
-  }, [mutate, router, socket])
+  }, [router, socket])
 
   return (
     <OrderManager socket={socket} orderId={fallbackData?.id}>

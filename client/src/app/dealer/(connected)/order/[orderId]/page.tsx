@@ -24,7 +24,7 @@ const MainPage: FunctionComponent<Props> = async ({ params }) => {
   const { data } = await checkAvailability(session?.user?.id)
   const { data: order } = await getOrder(params?.orderId ?? 'null')
 
-  if (data?.isAvailable && data?.orderId !== params?.orderId) {
+  if (data?.isAvailable || data?.orderId !== params?.orderId) {
     redirect(Routes.WAITING_ORDER)
   }
 
