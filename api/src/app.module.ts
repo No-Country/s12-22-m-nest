@@ -8,6 +8,7 @@ import { SocketModule } from './socket/socket.module'
 import { HttpModule } from '@nestjs/axios'
 import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
+import { ChatModule } from './chat/chat.module'
 
 @Module({
   imports: [
@@ -28,10 +29,11 @@ import { AuthModule } from './auth/auth.module'
     }),
     SocketModule,
     UsersModule,
-    AuthModule
+    AuthModule,
+    ChatModule
   ],
   controllers: [AppController],
-  providers: [AppService, SocketModule],
+  providers: [AppService, SocketModule, ChatModule],
   exports: [AppModule]
 })
 export class AppModule {}

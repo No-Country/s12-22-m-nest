@@ -81,6 +81,7 @@ export class SocketDealerService {
       )
 
       if (distance <= 15) {
+        console.log('Preguntando a dealer', dealer)
         const acceptOrder = await this.socketOrderService.sendOrderRequest(
           dealer.sockId,
           orderRequest

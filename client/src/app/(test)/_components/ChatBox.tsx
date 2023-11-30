@@ -17,8 +17,8 @@ const TestChatBox: FunctionComponent<TestChatBoxProps> = ({ messages, mode, orde
   const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     console.log('handleSendMessage', event.currentTarget.message.value)
-    await axios.post(`${serverUrl}/api/test/${orderId}/chat`, {
-      sender: mode === 'client' ? null : 'driver1',
+    await axios.post(`${serverUrl}/api/chat/${orderId}/send`, {
+      sender_id: mode === 'client' ? null : 'driver1',
       body: event.currentTarget.message.value
     })
   }
