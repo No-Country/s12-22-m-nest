@@ -1,67 +1,75 @@
-import { IsObject } from "class-validator";
-import { User } from "src/socket/interfaces/orderRequest.interface";
-import { TSteps } from "src/socket/interfaces/step.interface";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled';
+// TODO: Fix eslint disable
+/* eslint-disable @typescript-eslint/indent */
+import { IsJSON } from 'class-validator'
+import { TSteps } from 'src/order/entities/step.interface'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+
+type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
+
+export interface Product {
+  name: string
+  quantity: number
+  price: number
+}
 
 @Entity()
 export class Order {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  // @OneToOne(() => User, (user) => user.id, {eager:true})
+  // @JoinColumn()
+  @Column({ nullable: true })
+  dealer: string | null
 
-    // @OneToOne(() => User, (user) => user.id, {eager:true})
-    // @JoinColumn()
-    @Column()
-    dealer: string | null; 
+  @Column({ nullable: false })
+  shipAddress: string
 
-    @Column({nullable: false})
-    shipAddress:string;
+  @Column({ nullable: false })
+  shopAddress: string
 
-    @Column({nullable:false})
-    shopAddress:string;
-    
-    @Column({nullable: false})
-    step:TSteps;
+  @Column({ nullable: false })
+  step: TSteps
 
+  // @OneToOne (()=> Chat ,(chat)=> chat,{eager:true})
+  // @JoinColumn()
+  @Column({
+    nullable: false
+  })
+  chat: string
 
-    // @OneToOne (()=> Chat ,(chat)=> chat,{eager:true})
-    // @JoinColumn()
-    @IsObject()
-    chat: {
-    id: string;
-    messages: [];
-    }; 
+  @Column({
+    nullable: false,
+    type: 'bigint'
+  })
+  price: number
 
-    @Column({
-        nullable: false,
-        type: 'bigint'
-    })
-    price: number;
+  @Column({
+    nullable: false
+  })
+  clientName: string
 
-    @Column({
-        nullable: false
-    })
-    clientName: string;
+  @Column({
+    nullable: false
+  })
+  clientEmail: string
 
-    @Column({
-        nullable: false,
-        unique: true
-    })
-    clientEmail: string;
+  // @OneToOne (()=> Product ,(product)=> product ,{eager:true})
+  // @JoinColumn()
+  // TODO: podemos validar que sea un json?
+  @Column()
+  @IsJSON()
+  products: string
 
-    // @OneToOne (()=> Product ,(product)=> product ,{eager:true})
-    // @JoinColumn()
-    @IsObject() 
-    productos: {
-    name: string;
-    quantity: number;
-    price: number
-    }; 
+  @Column()
+  status: OrderStatus
 
-    @Column()
-    status: OrderStatus;
+  @Column()
+  shop: string
 
-    @Column()
-    shop: string;
+  @Column()
+  shipCoordinates: string | null
+
+  @Column()
+  shopCoordinates: string | null
 }

@@ -1,15 +1,18 @@
-import { getServerSession } from 'next-auth'
 import { type FunctionComponent } from 'react'
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth.const'
+import Form from './_components/Form'
 
-const Register: FunctionComponent = async () => {
-  const session = await getServerSession(authOptions)
-  console.log(session)
-  return (
-    <div>
-      <h1>Register</h1>
+const Register: FunctionComponent = async () => (
+  <div className='flex w-full flex-col gap-5'>
+    <div className='flex w-full flex-col gap-1 '>
+      <h1 className='text-3xl'>
+        Registrarse en <b>LleGo!</b>
+      </h1>
+      <p className='text-base'>Registro para repartidores</p>
     </div>
-  )
-}
+    <div className='overflow-hidden md:max-h-[400px]'>
+      <Form />
+    </div>
+  </div>
+)
 
 export default Register

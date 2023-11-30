@@ -1,35 +1,27 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put
-} from '@nestjs/common'
+// Todo: fix eslint error
+/* eslint-disable @typescript-eslint/indent */
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { OrderService } from './order.service'
 import { CreateOrderDto } from './dto/create-order.dto'
-import { UpdateOrderDto } from './dto/update-order.dto'
-import { Order } from './entities/order.entity'
+import { type Order } from './entities/order.entity'
 
-@Controller('order')
+@Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto)
+  async create(@Body() createOrderDto: CreateOrderDto) {
+    return await this.orderService.create(createOrderDto)
   }
 
   @Get()
-  findAll() {
-    return this.orderService.findAll()
+  async findAll() {
+    return await this.orderService.findAll()
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderService.findOne(id)
+  async findOne(@Param('id') id: string) {
+    return await this.orderService.findOne(id)
   }
 
   @Put(':id')
@@ -40,13 +32,13 @@ export class OrderController {
     return await this.orderService.updateOrder(orderId, body)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(id, updateOrderDto)
+  @Post(':id/nextStep')
+  async nextStep(@Param('id') orderId: string): Promise<any> {
+    return await this.orderService.nextStep(orderId)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(id)
+  async remove(@Param('id') id: string) {
+    return await this.orderService.remove(id)
   }
 }

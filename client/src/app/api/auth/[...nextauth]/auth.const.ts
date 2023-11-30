@@ -1,14 +1,14 @@
+// TODO: Add types
+import { type User } from '@/interfaces'
+import { mutationRequest, getRequest } from '@/services/api.requests'
+import { Endpoints } from '@/utils/constants/endpoints.const'
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-// {
-//   email: 'prueba@correo.com',
-//   password: '1234',
-//   redirect: 'false',
-//   csrfToken: '8ea19bda7bb56aa1354c8a16704aa9b11b1ea9496fcd16e837f1eae007f684e4',
-//   callbackUrl: 'http://localhost:3000/login',
-//   json: 'true'
-// }
+interface LoginResponse {
+  user: User
+  access_token: string
+}
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -22,24 +22,53 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Contraseña', type: 'password' }
       },
       authorize: async (credentials, req) => {
-        console.log(credentials)
         const email = credentials?.email ?? ''
         const password = credentials?.password ?? ''
-        // TODO: cuando se agregue el servicio de login de la api esto se modifica
-        if (email !== 'prueba@correo.com' || password !== '1234') {
-          throw new Error('Invalid credentials')
+        const { data, error } = await mutationRequest<LoginResponse>('post', Endpoints.LOGIN, { email, password })
+
+        if (error) {
+          throw new Error(error?.message)
         }
 
         const user = {
-          id: '1',
-          email,
-          password
+          id: data?.user?.id ?? '',
+          email: data?.user?.email ?? ''
         }
 
         return user
       }
     })
   ],
+  callbacks: {
+    session: async (arg) => {
+      const { token, session } = arg
+
+      const getSession = async (): Promise<void> => {
+        try {
+          const { data } = await getRequest<User>({
+            url: Endpoints.FIND_USER(token.email ?? ''),
+            cache: 'no-store'
+          })
+
+          const userId = data?.id ?? ''
+          const userEmail = data?.email ?? ''
+
+          session.user = {
+            id: userId,
+            email: userEmail
+          }
+        } catch (error) {
+          console.error('Error al obtener la sesión:', error)
+        }
+      }
+
+      if (!session.user?.id || session.user?.id === '') {
+        await getSession()
+      }
+
+      return session
+    }
+  },
   pages: {
     signIn: '/login'
   },

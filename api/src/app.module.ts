@@ -4,17 +4,14 @@ import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule } from '@nestjs/config'
-<<<<<<< HEAD
-import { OrderModule } from './order/order.module';
-=======
+import { OrderModule } from './order/order.module'
 import { SocketModule } from './socket/socket.module'
-import { HttpModule } from '@nestjs/axios'
->>>>>>> origin/development
+import { UsersModule } from './users/users.module'
+import { AuthModule } from './auth/auth.module'
+import { ChatModule } from './chat/chat.module'
 
 @Module({
   imports: [
-    // Todo: Eliminar HttpModule
-    HttpModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     TypeOrmModule.forRoot({
@@ -28,14 +25,14 @@ import { HttpModule } from '@nestjs/axios'
       ssl: true,
       synchronize: true
     }),
-<<<<<<< HEAD
-    OrderModule
-=======
-    SocketModule
->>>>>>> origin/development
+    OrderModule,
+    SocketModule,
+    UsersModule,
+    AuthModule,
+    ChatModule
   ],
   controllers: [AppController],
-  providers: [AppService, SocketModule],
+  providers: [AppService, SocketModule, ChatModule],
   exports: [AppModule]
 })
 export class AppModule {}
