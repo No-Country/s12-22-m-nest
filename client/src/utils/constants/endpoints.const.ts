@@ -5,7 +5,7 @@ export const Endpoints = {
   FIND_ORDER: (id: string) => `/api/test/${id}`,
   NEXT_STEP: (id: string) => `/api/test/${id}/nextStep`,
   REGISTER: '/api/auth/register',
-  SEND_MESSAGE: (orderId: string) => `/api/test/${orderId}/chat`,
+  SEND_MESSAGE: (orderId: string) => `/api/chat/${orderId}/send`,
   DEALER: '/dealer',
   DEALER_AVAILABILITY: '/dealer/availability',
   DEALER_WAITING_ORDER: '/dealer/waiting-order',
