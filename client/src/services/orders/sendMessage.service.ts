@@ -1,3 +1,4 @@
+import { Endpoints } from '@/utils/constants/endpoints.const'
 import { serverUrl } from '@/utils/constants/env.const'
 import axios from 'axios'
 
@@ -9,7 +10,7 @@ export const handleSendMessage = async (
 ): Promise<void> => {
   event.preventDefault()
   console.log('handleSendMessage', event.currentTarget.message.value)
-  await axios.post(`${serverUrl}/api/test/${orderId}/chat`, {
+  await axios.post(serverUrl + Endpoints.SEND_MESSAGE(orderId), {
     sender: mode === 'client' ? null : userId,
     body: event.currentTarget.message.value
   })

@@ -1,12 +1,12 @@
 /* eslint-disable multiline-ternary */
 'use client'
 import { useSession } from 'next-auth/react'
-import { DynamicPopover } from '@/components'
+import { Button, DynamicPopover } from '@/components'
 import Menu from './Menu'
 import { Endpoints } from '@/utils/constants/endpoints.const'
 import useSWR from 'swr'
 import { Routes } from '@/utils/constants/routes.const'
-import { NavbarContent, NavbarItem, Button } from '@nextui-org/react'
+import { NavbarContent, NavbarItem } from '@nextui-org/react'
 import { type FunctionComponent } from 'react'
 
 const ProfileAction: FunctionComponent = () => {

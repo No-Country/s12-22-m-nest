@@ -6,7 +6,7 @@ import { type FunctionComponent } from 'react'
 const Page: FunctionComponent = async () => {
   const session = await getServerSession(authOptions)
   if (!session) return null
-  const { data: user } = await getUser(session?.user?.id ?? 'null')
+  const { data: user } = await getUser(session?.user?.id)
   return (
     <main className='padding-general-x min-h-screen py-[100px] '>
       <h1 className='text-2xl'>

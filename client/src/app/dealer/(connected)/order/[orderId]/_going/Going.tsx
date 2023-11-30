@@ -1,25 +1,23 @@
 'use client'
-import { type FunctionComponent, useEffect, useMemo, useState } from 'react'
+import { type FunctionComponent, useEffect, useState, useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import connector from '@/services/socket/connector.service'
-import { type Session } from 'next-auth'
 import { type OrderRequest } from '@/interfaces/socket.interface'
 import { type Chat, EnumSteps } from '@/interfaces'
 import { updateOrderStatus } from '@/services/orders/updateStatus.service'
 import { ChatBox } from '@/components'
 import { handleChat } from '@/services/socket/handlers'
-import OrderManager from '../../manager'
-import useSWR from 'swr'
+import OrderManager from '../socketManager'
 import { Endpoints } from '@/utils/constants/endpoints.const'
+import useSWR from 'swr'
+import { SocketContext } from '@/context/providers/socket.provider'
 
 interface Props {
-  session: Session | null
   order: OrderRequest
 }
 
-const Residence: FunctionComponent<Props> = ({ session, order: fallbackData }) => {
+const Going: FunctionComponent<Props> = ({ order: fallbackData }) => {
   const router = useRouter()
-  const socket = useMemo(() => connector('dealer', session?.user?.id ?? 'null'), [session?.user?.id])
+  const socket = useContext(SocketContext)
   const { data: order, mutate } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
     fallbackData
   })
@@ -28,7 +26,6 @@ const Residence: FunctionComponent<Props> = ({ session, order: fallbackData }) =
   useEffect(() => {
     const handleSystem = async (): Promise<void> => {
       handleChat(socket, setChat)
-
       socket.on('updateOrder', async (data: OrderRequest) => {
         console.log('updateOrder', data)
         await mutate()
@@ -41,31 +38,33 @@ const Residence: FunctionComponent<Props> = ({ session, order: fallbackData }) =
 
   return (
     <OrderManager socket={socket} orderId={fallbackData?.id}>
-      <section>
-        <h1>En la residencia</h1>
-        <h3>Status: {order?.status}</h3>
-        <h3>Step: {order && EnumSteps[order?.step]}</h3>
-        {order && order.step <= 5 && (
+      <main className='padding-general-x min-h-screen py-[100px] '>
+        <section>
+          <h1>Yendo a X lugar</h1>
+          <h3>Status: {order?.status}</h3>
+          <h3>Step: {order && EnumSteps[order?.step]}</h3>
+          {order && order.step <= 5 && (
+            <button
+              onClick={() => {
+                void updateOrderStatus(order.id)
+              }}
+            >
+              Next Step
+            </button>
+          )}
           <button
             onClick={() => {
-              void updateOrderStatus(order.id)
+              router.refresh()
             }}
+            className='mx-6'
           >
-            Next Step
+            Force Refresh
           </button>
-        )}
-        <button
-          onClick={() => {
-            router.refresh()
-          }}
-          className='mx-6'
-        >
-          Force Refresh
-        </button>
-        <ChatBox mode='dealer' orderId={fallbackData?.id} chat={chat} />
-      </section>
+          <ChatBox mode='dealer' orderId={fallbackData?.id} chat={chat} />
+        </section>
+      </main>
     </OrderManager>
   )
 }
 
-export default Residence
+export default Going

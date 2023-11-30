@@ -3,7 +3,7 @@ export interface User {
   firstName: string
   lastName: string
   email: string
-  birthdate: Date
+  birthdate: Date | string
   password: string
   profileImage?: string
   createdAt: Date

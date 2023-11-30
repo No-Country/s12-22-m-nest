@@ -1,6 +1,6 @@
 'use client'
+import { Input, Button } from '@/components'
 import { loginService } from '@/services/auth/login.service'
-import { Button, Input } from '@nextui-org/react'
 import { type FunctionComponent } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -21,11 +21,9 @@ const Form: FunctionComponent = () => {
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {
-      const { status } = await loginService(data.email, data.password)
-      if (status === 401) {
-        toast.error('Credenciales incorrectas')
-      }
+      await loginService(data.email, data.password)
     } catch (error) {
+      toast.error('Ocurrió un error')
       console.error(error)
     }
   }
@@ -36,23 +34,33 @@ const Form: FunctionComponent = () => {
         type='text'
         label='Email'
         placeholder='Ingrese su email'
-        size='md'
-        labelPlacement='outside'
-        {...register('email', { required: { value: true, message: 'Este campo es requerido' } })}
+        name='email'
+        hookForm={{
+          register,
+          validations: {
+            required: { value: true, message: 'Este campo es requerido' },
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Ingrese un email válido'
+            }
+          }
+        }}
         errorMessage={errors?.email?.message}
       />
       <Input
         type='password'
         label='Contraseña'
         placeholder='Ingrese su contraseña'
-        size='md'
-        labelPlacement='outside'
-        {...register('password', { required: { value: true, message: 'Este campo es requerido' } })}
+        name='password'
+        hookForm={{
+          register,
+          validations: {
+            required: { value: true, message: 'Este campo es requerido' }
+          }
+        }}
         errorMessage={errors?.password?.message}
       />
-      <Button type='submit' isLoading={isSubmitting} color='primary' radius='full'>
-        Ingresar
-      </Button>
+      <Button type='submit' isLoading={isSubmitting} color='primary' radius='full' title='Ingresar' />
     </form>
   )
 }

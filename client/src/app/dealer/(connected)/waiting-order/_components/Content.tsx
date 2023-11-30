@@ -1,12 +1,11 @@
 'use client'
-import { type FunctionComponent, useEffect, useMemo } from 'react'
+import { type FunctionComponent, useEffect, useMemo, useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import connector from '@/services/socket/connector.service'
 import { debounce } from 'lodash'
 import { type Session } from 'next-auth'
-import { handleDealerStatus, handleOrderRequest, manageDealer } from '@/services/socket/handlers'
+import { handleDealerStatus, handleOrderRequest } from '@/services/socket/handlers'
 import { type OrderRequest } from '@/interfaces/socket.interface'
-import { getLocation } from '@/utils/getLocation.utils'
+import { SocketContext } from '@/context/providers/socket.provider'
 
 interface Props {
   session: Session | null
@@ -14,7 +13,7 @@ interface Props {
 
 const Content: FunctionComponent<Props> = ({ session }) => {
   const router = useRouter()
-  const socket = useMemo(() => connector('dealer', session?.user?.id ?? 'null'), [session?.user?.id])
+  const socket = useContext(SocketContext)
 
   const debManageOrder = useMemo(
     () =>
@@ -27,34 +26,14 @@ const Content: FunctionComponent<Props> = ({ session }) => {
     [router]
   )
 
-  const handleManageDealer = useMemo(
-    () =>
-      debounce(async () => {
-        console.log('handleManageDealer')
-        const { lat, lon } = await getLocation()
-        console.log('Ok Location', lat, lon)
-        manageDealer(lat, lon, socket)
-      }, 1000),
-    [socket]
-  )
-
   useEffect(() => {
     const handleSystem = async (): Promise<void> => {
-      await handleManageDealer()
       handleDealerStatus(socket, router)
       handleOrderRequest(socket, debManageOrder)
     }
 
     void handleSystem()
 
-    const intervalId = setInterval(async () => {
-      console.log('interval')
-      await handleManageDealer()
-    }, 30000)
-
-    return () => {
-      clearInterval(intervalId)
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

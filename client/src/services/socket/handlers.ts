@@ -1,19 +1,31 @@
 import { type Chat } from '@/interfaces'
-import { type OrderRequest } from '@/interfaces/socket.interface'
+import { type Coordinates, type OrderRequest } from '@/interfaces/socket.interface'
 import { Routes } from '@/utils/constants/routes.const'
+import { getLocation } from '@/utils/getLocation.utils'
 import { type DebouncedFunc } from 'lodash'
 import { type AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { type Dispatch, type SetStateAction } from 'react'
 import { type Socket } from 'socket.io-client'
 
-export const manageDealer = (lat: string, lon: string, socket: Socket): void => {
-  socket.emit('manageDealer', {
-    coordinates: {
-      lat,
-      lon
-    },
-    active: true
-  })
+export const manageDealer = async (socket: Socket, setConnected: Dispatch<SetStateAction<boolean>>): Promise<void> => {
+  const connect = (lat: string, lon: string): void => {
+    socket.emit('manageDealer', {
+      coordinates: {
+        lat,
+        lon
+      },
+      active: true
+    })
+  }
+
+  const getLocationPromise = async (): Promise<Coordinates> => {
+    const { lat, lon } = await getLocation()
+    connect(lat, lon)
+    setConnected(true)
+    return { lat, lon }
+  }
+
+  await getLocationPromise()
 }
 
 export const handleDealerStatus = (socket: Socket, router: AppRouterInstance): void => {

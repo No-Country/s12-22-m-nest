@@ -14,8 +14,8 @@ export class UsersController {
   }
 
   @Get(':id/availability')
-  checkAvailability(@Param('id') id: string) {
-    return this.usersService.checkDealerAvailability(id)
+  async checkAvailability(@Param('id') id: string) {
+    return await this.usersService.checkDealerAvailability(id)
   }
 
   @Get()
