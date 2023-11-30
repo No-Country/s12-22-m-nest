@@ -14,18 +14,30 @@ import {
 } from '../interfaces/dealer.interface'
 import { EnumSteps } from '../../order/entities/step.interface'
 import { formatDealerSock } from 'src/utils/formatDealerSock.utils'
-import { UsersService } from 'src/users/users.service'
-import { OrderService } from 'src/order/order.service'
 import { type OrderRequest } from '../interfaces/orderRequest.interface'
+import { InjectRepository } from '@nestjs/typeorm'
+import { User } from 'src/users/entities/user.entity'
+import { Repository } from 'typeorm'
+import { updateOrder } from 'src/order/common'
+import { checkIsAvailable } from 'src/utils/isAvailable.utils'
+import { Order } from 'src/order/entities/order.entity'
+import { SocketGateway } from '../socket.gateway'
+import { InjectModel } from '@nestjs/mongoose'
+import { Chat } from 'src/chat/entities/chat.mongo-entity'
+import { Model } from 'mongoose'
 
 @Injectable()
 export class SocketDealerService {
   constructor(
-    @Inject(forwardRef(() => OrderService))
-    private readonly orderService: OrderService,
+    @Inject(forwardRef(() => SocketGateway))
+    private readonly socketGateway: SocketGateway,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>,
+    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
     private readonly socketOrderService: SocketOrderService,
-    private readonly socketMainService: SocketMainService,
-    private readonly usersService: UsersService
+    private readonly socketMainService: SocketMainService
   ) {}
 
   private readonly connectedClients = this.socketMainService.connectedClients
@@ -36,10 +48,11 @@ export class SocketDealerService {
   }
 
   async handleManageDealer(socket: Socket, data: SockDealerData) {
-    const { isAvailable, orderId } =
-      await this.usersService.checkDealerAvailability(
-        socket.handshake.query.userId.toString()
-      )
+    const { isAvailable, orderId } = await checkIsAvailable(
+      socket.handshake.query.userId.toString(),
+      this.orderRepository
+    )
+
     socket.data = {
       coordinates: data.coordinates,
       active: data.active,
@@ -93,10 +106,18 @@ export class SocketDealerService {
 
     await this.connectedClients.get(currentDealer.sockId).join(order.id)
 
-    return await this.orderService.updateOrder(order.id, {
-      dealer: currentDealer.clientId,
-      status: 'In Progress',
-      step: EnumSteps.GoingToShop
-    })
+    return await updateOrder(
+      order.id,
+      {
+        dealer: currentDealer.clientId,
+        status: 'In Progress',
+        step: EnumSteps.GoingToShop
+      },
+      this.orderRepository,
+      this.userRepository,
+      this.socketOrderService,
+      this.socketGateway,
+      this.chatModel
+    )
   }
 }

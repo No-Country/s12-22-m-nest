@@ -1,35 +1,35 @@
-import { Module, forwardRef } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 import { SocketGateway } from './socket.gateway'
 import { HttpModule } from '@nestjs/axios'
 import { SocketMainService } from './services/main.service'
 import { SocketDealerService } from './services/dealer.service'
 import { SocketOrderService } from './services/order.service'
 import { SocketChatService } from './services/chat.service'
-import { ChatModule } from 'src/chat/chat.module'
-import { UsersModule } from 'src/users/users.module'
-import { UsersService } from 'src/users/users.service'
-import { OrderModule } from 'src/order/order.module'
-import { OrderService } from 'src/order/order.service'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { User } from 'src/users/entities/user.entity'
+import { Order } from 'src/order/entities/order.entity'
+import { MongooseModule } from '@nestjs/mongoose'
+import { Chat, ChatSchema } from 'src/chat/entities/chat.mongo-entity'
 
+@Global()
 @Module({
   imports: [
     HttpModule,
-    forwardRef(() => UsersModule),
-    forwardRef(() => ChatModule),
-    forwardRef(() => OrderModule)
+    TypeOrmModule.forFeature([User, Order]),
+    MongooseModule.forFeature([{ name: Chat.name, schema: ChatSchema }])
   ],
   providers: [
     SocketGateway,
     SocketMainService,
     SocketDealerService,
     SocketOrderService,
-    SocketChatService,
-    UsersService,
-    OrderService
+    SocketChatService
   ],
   exports: [
-    SocketMainService,
+    TypeOrmModule,
     SocketGateway,
+    MongooseModule,
+    SocketMainService,
     SocketDealerService,
     SocketOrderService,
     SocketChatService

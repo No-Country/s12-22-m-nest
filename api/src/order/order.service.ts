@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  forwardRef
-} from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Order } from './entities/order.entity'
 import { Repository } from 'typeorm'
@@ -16,26 +11,30 @@ import { SocketGateway } from 'src/socket/socket.gateway'
 import { EnumSteps, type TSteps } from 'src/order/entities/step.interface'
 import { SocketDealerService } from 'src/socket/services/dealer.service'
 import { type CreateOrderDto } from './dto/create-order.dto'
-import { ChatService } from 'src/chat/chat.service'
-import { UsersService } from 'src/users/users.service'
+import { findUser } from 'src/users/common'
+import { User } from 'src/users/entities/user.entity'
+import { updateOrder } from './common'
+import { Chat } from 'src/chat/entities/chat.mongo-entity'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+import { createChat, findChat } from 'src/chat/common'
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
     private readonly httpService: HttpService,
     private readonly socketOrderService: SocketOrderService,
     private readonly socketGateway: SocketGateway,
-    private readonly socketDealerService: SocketDealerService,
-    @Inject(forwardRef(() => ChatService))
-    private readonly chatService: ChatService,
-    @Inject(forwardRef(() => UsersService))
-    private readonly usersService: UsersService
+    private readonly socketDealerService: SocketDealerService
   ) {}
 
   async create(body: CreateOrderDto): Promise<any> {
-    const chat = await this.chatService.create()
+    const chat = await createChat(this.chatModel)
 
     const shopCoordinates = await findCoordinates(
       this.httpService,
@@ -84,7 +83,7 @@ export class OrderService {
     try {
       const order = await this.orderRepository.findOneBy({ id })
       if (!order) throw new NotFoundException('Order not found')
-      const chat = await this.chatService.getChatWithMessages(order.chat)
+      const chat = await findChat(order.chat, this.chatModel)
       const formatedOrder = formatOrder(order, chat)
       return formatedOrder
     } catch (error) {
@@ -92,32 +91,16 @@ export class OrderService {
     }
   }
 
-  async findOneByDealer(id: string) {
-    try {
-      return await this.orderRepository.findOneBy({ dealer: id })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   async updateOrder(id: string, updateOrderDto: UpdateOrderDto) {
-    let order = await this.orderRepository.findOneBy({ id })
-    if (!order) throw new NotFoundException('Order not found')
-    order = { ...order, ...updateOrderDto }
-    console.log(order)
-    await this.orderRepository.save(order)
-
-    const chat = await this.chatService.getChatWithMessages(order.chat)
-    const formatedOrder = formatOrder(order, chat)
-
-    formatedOrder.dealer = await this.usersService.findOneById(order.dealer)
-
-    this.socketOrderService.updateOrder(
-      this.socketGateway.server,
-      formatedOrder
+    return await updateOrder(
+      id,
+      updateOrderDto,
+      this.orderRepository,
+      this.userRepository,
+      this.socketOrderService,
+      this.socketGateway,
+      this.chatModel
     )
-
-    return formatedOrder
   }
 
   async nextStep(orderId: string) {
@@ -137,10 +120,10 @@ export class OrderService {
       order.status = 'Delivered'
     }
 
-    const chat = await this.chatService.getChatWithMessages(order.chat)
+    const chat = await findChat(order.chat, this.chatModel)
     const formatedOrder = formatOrder(order, chat)
 
-    formatedOrder.dealer = await this.usersService.findOneById(order.dealer)
+    formatedOrder.dealer = await findUser(order.dealer, this.userRepository)
 
     await this.orderRepository.save(order)
 
