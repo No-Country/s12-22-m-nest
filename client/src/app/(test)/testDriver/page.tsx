@@ -29,8 +29,8 @@ const ConductorComponent: FunctionComponent = () => {
   useEffect(() => {
     socket.emit('manageDealer', {
       coordinates: {
-        lat: -34.644018,
-        lon: -58.5907331
+        lat: 10.1825,
+        lon: -68.0172
       },
       active: true
     })
