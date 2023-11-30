@@ -9,7 +9,6 @@ import { type Socket, type Server } from 'socket.io'
 import { calculateDistance } from 'src/utils/calculateDistance.utils'
 import { SocketOrderService } from './order.service'
 import { SocketMainService } from './main.service'
-import { findCoordinates } from 'src/utils/findCoordinates.utils'
 import {
   type FormatedSockDealer,
   type SockDealerData
@@ -64,23 +63,14 @@ export class SocketDealerService {
   }
 
   async handleFindDealer(socket: Server, order: Order) {
-    const shopCoordinates = await findCoordinates(
-      this.httpService,
-      order.shopAddress
-    )
-    const shipCoordinates = await findCoordinates(
-      this.httpService,
-      order.shipAddress
-    )
-
-    const orderRequest = formatOrder(order, shipCoordinates, shopCoordinates)
+    const orderRequest = formatOrder(order)
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
     let currentDealer: FormatedSockDealer | null = null
 
     for (const dealer of dealers) {
       const distance = calculateDistance(
-        parseFloat(shopCoordinates.lat),
-        parseFloat(shopCoordinates.lon),
+        parseFloat(orderRequest.shopCoordinates.lat),
+        parseFloat(orderRequest.shopCoordinates.lon),
         parseFloat(dealer.coordinates.lat),
         parseFloat(dealer.coordinates.lon)
       )
