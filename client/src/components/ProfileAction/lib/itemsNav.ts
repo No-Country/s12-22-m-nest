@@ -11,9 +11,15 @@ export interface ItemNavInterface {
 
 export const itemsNavBuilder = (currentUser: User): ItemNavInterface[] => [
   {
-    key: Routes.HOME,
-    label: 'Home',
-    href: Routes.HOME,
+    key: Routes.DEALER_HOME,
+    label: 'Inicio',
+    href: Routes.DEALER_HOME,
+    visible: true
+  },
+  {
+    key: Routes.DEALER_ACCOUNT,
+    label: 'Cuenta',
+    href: Routes.DEALER_ACCOUNT,
     visible: true
   }
 ]

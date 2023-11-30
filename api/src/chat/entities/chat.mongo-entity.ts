@@ -1,7 +1,7 @@
 // TODO: FIX ESLINT PRETTIER CONFLICTS
 /* eslint-disable @typescript-eslint/indent */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document } from 'mongoose'
+import { type ObjectId } from 'mongoose'
 
 export interface Message {
   sender: string | null
@@ -19,7 +19,9 @@ export interface Message {
     }
   }
 })
-export class Chat extends Document {
+export class Chat {
+  id: ObjectId
+
   @Prop()
   messages: Message[]
 
