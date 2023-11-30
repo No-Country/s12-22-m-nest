@@ -6,6 +6,7 @@ import { type DebouncedFunc } from 'lodash'
 import { type AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { type Dispatch, type SetStateAction } from 'react'
 import { type Socket } from 'socket.io-client'
+import { type KeyedMutator } from 'swr'
 
 export const manageDealer = async (socket: Socket, setConnected: Dispatch<SetStateAction<boolean>>): Promise<void> => {
   const connect = (lat: string, lon: string): void => {
@@ -64,9 +65,9 @@ export const handleSystemMessage = (socket: Socket): void => {
   })
 }
 
-export const handleChat = (socket: Socket, setChat: Dispatch<SetStateAction<Chat | null>>): void => {
-  socket.on('updatedChat', (data: Chat) => {
+export const handleChat = (socket: Socket, update: KeyedMutator<OrderRequest>): void => {
+  socket.on('updatedChat', async (data: Chat) => {
     console.log('updatedChat', data)
-    setChat(data)
+    await update()
   })
 }

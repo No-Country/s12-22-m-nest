@@ -1,5 +1,5 @@
 'use client'
-import { type FunctionComponent, useEffect, useState, useContext } from 'react'
+import { type FunctionComponent, useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import { type OrderRequest } from '@/interfaces/socket.interface'
 import { type Chat, EnumSteps } from '@/interfaces'
@@ -18,23 +18,22 @@ interface Props {
 const Residence: FunctionComponent<Props> = ({ order: fallbackData }) => {
   const router = useRouter()
   const socket = useContext(SocketContext)
-  const { data: order } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
+  const { data: order, mutate } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
     fallbackData
   })
-  const [chat, setChat] = useState<Chat | null>(order?.chat ?? null)
 
   useEffect(() => {
     const handleSystem = async (): Promise<void> => {
-      handleChat(socket, setChat)
+      handleChat(socket, mutate)
 
       socket.on('updateOrder', async (data: OrderRequest) => {
         console.log('updateOrder', data)
-        router.refresh()
+        await mutate()
       })
     }
 
     void handleSystem()
-  }, [router, socket])
+  }, [mutate, router, socket])
 
   return (
     <OrderManager socket={socket} orderId={fallbackData?.id}>
@@ -46,7 +45,7 @@ const Residence: FunctionComponent<Props> = ({ order: fallbackData }) => {
           {order && order.step <= 5 && (
             <button
               onClick={() => {
-                void updateOrderStatus(order.id)
+                void updateOrderStatus(order.id, router)
               }}
             >
               Next Step
@@ -60,7 +59,7 @@ const Residence: FunctionComponent<Props> = ({ order: fallbackData }) => {
           >
             Force Refresh
           </button>
-          <ChatBox mode='dealer' orderId={fallbackData?.id} chat={chat} />
+          <ChatBox mode='dealer' orderId={fallbackData?.id} chat={order?.chat as Chat} />
         </section>
       </main>
     </OrderManager>

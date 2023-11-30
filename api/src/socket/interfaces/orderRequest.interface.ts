@@ -15,6 +15,8 @@ export interface Order {
   clientName: string
   clientEmail: string
   shop: string
+  shipCoordinates: Coordinates
+  shopCoordinates: Coordinates
   products: Product[]
 }
 
@@ -26,8 +28,6 @@ export interface Product {
 }
 
 export interface OrderRequest extends Omit<Order, 'dealer'> {
-  shipCoordinates: Coordinates
-  shopCoordinates: Coordinates
   shipMapUrl: URL
   shopMapUrl: URL
   dealer: User | null | string

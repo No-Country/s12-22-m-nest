@@ -26,12 +26,24 @@ export class AppService {
 
   async createOrder(body: Partial<Order>): Promise<any> {
     const chat = await this.chatService.create()
+
+    const shopCoordinates = await findCoordinates(
+      this.httpService,
+      body.shopAddress
+    )
+    const shipCoordinates = await findCoordinates(
+      this.httpService,
+      body.shipAddress
+    )
+
     // Simulamos la creación de una orden
     const order: Order = {
       id: uuidv4(),
       dealer: null,
       shipAddress: body.shipAddress ?? '',
       shopAddress: body.shopAddress ?? '',
+      shipCoordinates,
+      shopCoordinates,
       status: 'Pending',
       step: EnumSteps.LookingForDealer,
       chat: {
@@ -73,16 +85,8 @@ export class AppService {
   async getOne(orderId: string) {
     console.log('orderId', orderId)
     const order = orders.filter((order) => order.id === orderId)[0]
-    const shopCoordinates = await findCoordinates(
-      this.httpService,
-      order.shopAddress
-    )
-    const shipCoordinates = await findCoordinates(
-      this.httpService,
-      order.shipAddress
-    )
 
-    const formatedOrder = formatOrder(order, shipCoordinates, shopCoordinates)
+    const formatedOrder = formatOrder(order)
 
     formatedOrder.dealer = await this.usersService.findOneById(order.dealer)
 
@@ -94,21 +98,7 @@ export class AppService {
     const index = orders.indexOf(order)
     orders[index] = { ...order, ...body }
 
-    const shopCoordinates = await findCoordinates(
-      this.httpService,
-      order.shopAddress
-    )
-
-    const shipCoordinates = await findCoordinates(
-      this.httpService,
-      order.shipAddress
-    )
-
-    const formatedOrder = formatOrder(
-      orders[index],
-      shipCoordinates,
-      shopCoordinates
-    )
+    const formatedOrder = formatOrder(orders[index])
 
     formatedOrder.dealer = await this.usersService.findOneById(order.dealer)
 
@@ -135,21 +125,7 @@ export class AppService {
       orders[index].status = 'Delivered'
     }
 
-    const shopCoordinates = await findCoordinates(
-      this.httpService,
-      order.shopAddress
-    )
-
-    const shipCoordinates = await findCoordinates(
-      this.httpService,
-      order.shipAddress
-    )
-
-    const formatedOrder = formatOrder(
-      orders[index],
-      shipCoordinates,
-      shopCoordinates
-    )
+    const formatedOrder = formatOrder(orders[index])
 
     formatedOrder.dealer = await this.usersService.findOneById(order.dealer)
 
