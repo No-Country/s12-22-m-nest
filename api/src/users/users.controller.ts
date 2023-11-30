@@ -9,7 +9,13 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
+    console.log('createUserDto', createUserDto)
     return await this.usersService.create(createUserDto)
+  }
+
+  @Get(':id/availability')
+  async checkAvailability(@Param('id') id: string) {
+    return await this.usersService.checkDealerAvailability(id)
   }
 
   @Get()
@@ -18,17 +24,17 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) {
+  async findOne(@Param('id') id: string) {
     return await this.usersService.findOneById(id)
   }
 
   @Put(':id')
-  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.usersService.update(id, updateUserDto)
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number) {
+  async remove(@Param('id') id: string) {
     await this.usersService.remove(id)
   }
 }

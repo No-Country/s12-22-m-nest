@@ -9,7 +9,6 @@ import { type Socket, type Server } from 'socket.io'
 import { calculateDistance } from 'src/utils/calculateDistance.utils'
 import { SocketOrderService } from './order.service'
 import { SocketMainService } from './main.service'
-import { findCoordinates } from 'src/utils/findCoordinates.utils'
 import {
   type FormatedSockDealer,
   type SockDealerData
@@ -19,6 +18,7 @@ import { formatOrder } from 'src/utils/formatOrder.utils'
 import { AppService } from 'src/app.service'
 import { EnumSteps } from '../interfaces/step.interface'
 import { formatDealerSock } from 'src/utils/formatDealerSock.utils'
+import { UsersService } from 'src/users/users.service'
 
 @Injectable()
 export class SocketDealerService {
@@ -27,20 +27,20 @@ export class SocketDealerService {
     private readonly orderService: AppService,
     private readonly httpService: HttpService,
     private readonly socketOrderService: SocketOrderService,
-    private readonly socketMainService: SocketMainService
+    private readonly socketMainService: SocketMainService,
+    private readonly usersService: UsersService
   ) {}
 
   private readonly connectedClients = this.socketMainService.connectedClients
 
   handleConnection(socket: Socket): void {
     const clientId = socket.id
-    console.log('clientId connected', socket.handshake.query.userId)
     this.connectedClients.set(clientId, socket)
   }
 
   async handleManageDealer(socket: Socket, data: SockDealerData) {
     const { isAvailable, orderId } =
-      await this.orderService.checkDealerAvailability(
+      await this.usersService.checkDealerAvailability(
         socket.handshake.query.userId.toString()
       )
     socket.data = {
@@ -49,40 +49,33 @@ export class SocketDealerService {
       taken: !isAvailable
     }
 
-    console.log('handleManageDealer', socket.data, socket.id)
+    console.log(
+      'handleManageDealer',
+      socket.data,
+      socket.id,
+      socket.handshake.query.userId.toString()
+    )
     socket.emit('dealerStatus', { taken: !isAvailable, orderId })
   }
 
   async updateDealerLocation(socket: Socket, data: any) {
-    const userId = socket.handshake.query.userId
-    console.log('updateDealerLocation, user:', userId)
     socket.to(data.orderId).emit('updatedDealerLocation', data)
   }
 
   async handleFindDealer(socket: Server, order: Order) {
-    console.log('Buscando Dealer')
-    const shopCoordinates = await findCoordinates(
-      this.httpService,
-      order.shopAddress
-    )
-    const shipCoordinates = await findCoordinates(
-      this.httpService,
-      order.shipAddress
-    )
-
-    const orderRequest = formatOrder(order, shipCoordinates, shopCoordinates)
+    const orderRequest = formatOrder(order)
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
     let currentDealer: FormatedSockDealer | null = null
 
     for (const dealer of dealers) {
       const distance = calculateDistance(
-        parseFloat(shopCoordinates.lat),
-        parseFloat(shopCoordinates.lon),
+        parseFloat(orderRequest.shopCoordinates.lat),
+        parseFloat(orderRequest.shopCoordinates.lon),
         parseFloat(dealer.coordinates.lat),
         parseFloat(dealer.coordinates.lon)
       )
 
-      if (distance <= 5) {
+      if (distance <= 15) {
         console.log('Preguntando a dealer', dealer)
         const acceptOrder = await this.socketOrderService.sendOrderRequest(
           dealer.sockId,
@@ -91,7 +84,6 @@ export class SocketDealerService {
         if (acceptOrder) {
           currentDealer = dealer
           const socket = this.connectedClients.get(currentDealer.sockId)
-          console.log('CurrentDealer', socket)
           socket.data.taken = true
           break
         }

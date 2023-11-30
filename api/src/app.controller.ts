@@ -4,7 +4,7 @@ import { AppService } from './app.service'
 import { type Order } from './socket/interfaces/orderRequest.interface'
 
 // Simulamos el controlador de ordenes
-@Controller()
+@Controller('test')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
@@ -34,13 +34,5 @@ export class AppController {
   @Post(':id/nextStep')
   async nextStep(@Param('id') orderId: string): Promise<any> {
     return await this.appService.nextStep(orderId)
-  }
-
-  @Post(':id/chat')
-  async addMessage(
-    @Param('id') orderId: string,
-    @Body() body: { sender: string; body: string }
-  ): Promise<any> {
-    return await this.appService.addMessage(orderId, body)
   }
 }

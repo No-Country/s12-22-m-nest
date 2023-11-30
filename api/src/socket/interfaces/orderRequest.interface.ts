@@ -1,9 +1,11 @@
+import { type Chat } from 'src/chat/entities/chat.mongo-entity'
 import { type TSteps } from './step.interface'
+import { type User } from 'src/users/entities/user.entity'
 
 // Todo: Use Order Entity instead of Order interface
 export interface Order {
   id: string
-  dealer: User | string | null
+  dealer: string | null
   shipAddress: string
   shopAddress: string
   status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
@@ -13,18 +15,9 @@ export interface Order {
   clientName: string
   clientEmail: string
   shop: string
+  shipCoordinates: Coordinates
+  shopCoordinates: Coordinates
   products: Product[]
-}
-
-// TODO: Quit
-export interface User {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  password: string
-  birthdate: Date
-  profileImage: string
 }
 
 // TODO: Quit
@@ -34,21 +27,8 @@ export interface Product {
   price: number
 }
 
-// TODO: Quit
-export interface Chat {
-  id: string
-  messages: Message[]
-}
-
-// TODO: Quit
-export interface Message {
-  sender: string | null
-  body: string
-}
-
-export interface OrderRequest extends Order {
-  shipCoordinates: Coordinates
-  shopCoordinates: Coordinates
+export interface OrderRequest extends Omit<Order, 'dealer'> {
   shipMapUrl: URL
   shopMapUrl: URL
+  dealer: User | null | string
 }

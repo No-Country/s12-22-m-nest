@@ -1,10 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import * as nodemailer from 'nodemailer'
-import type mailData from './mailData.interface'
+import type MailData from './mailData.interface'
 
 @Injectable()
 export class MailerService {
-  public async sendMail(mailInfo: mailData) {
+  public async sendMail(mailInfo: MailData) {
     // transport:
     const transport = nodemailer.createTransport({
       service: 'outlook',
