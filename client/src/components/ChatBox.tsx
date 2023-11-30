@@ -4,13 +4,13 @@ import { handleSendMessage } from '@/services/orders/sendMessage.service'
 import { useSession } from 'next-auth/react'
 import { type FunctionComponent } from 'react'
 
-interface TestChatBoxProps {
+interface Props {
   mode: 'client' | 'dealer'
   orderId: string
   chat: Chat | null
 }
 
-const ChatBox: FunctionComponent<TestChatBoxProps> = ({ mode, orderId, chat }) => {
+const ChatBox: FunctionComponent<Props> = ({ mode, orderId, chat }) => {
   const { data: session } = useSession()
   return (
     <div className='flex flex-col gap-3 border border-red-700 bg-blue-400 px-5 py-7'>

@@ -7,7 +7,10 @@ export const findCoordinates = async (
   httpService: HttpService,
   address: string
 ): Promise<Coordinates> => {
-  const url = `https://geocode.maps.co/search?q=${address}`
+  const url = new URL(
+    `https://api.geoapify.com/v1/geocode/search?text=${address}&apiKey=${process.env.GEO_API_KEY}`
+  ).toString()
+  console.log('url', url)
   const { data } = await firstValueFrom(
     httpService.get(url).pipe(
       catchError((error: AxiosError) => {
@@ -16,9 +19,9 @@ export const findCoordinates = async (
       })
     )
   )
-
+  console.log('data', data.features[0])
   return {
-    lat: data[0].lat ?? -34.5661,
-    lon: data[0].lon ?? -58.5806
+    lat: data.features[0].properties.lat,
+    lon: data.features[0].properties.lon
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { orders, users } from './fakeDb'
+import { orders } from './fakeDb'
 import { type Order } from './socket/interfaces/orderRequest.interface'
 import { formatOrder } from './utils/formatOrder.utils'
 import { HttpService } from '@nestjs/axios'
@@ -9,7 +9,8 @@ import { SocketDealerService } from './socket/services/dealer.service'
 import { v4 as uuidv4 } from 'uuid'
 import { SocketOrderService } from './socket/services/order.service'
 import { EnumSteps, type TSteps } from './socket/interfaces/step.interface'
-import { SocketChatService } from './socket/services/chat.service'
+import { ChatService } from './chat/chat.service'
+import { UsersService } from './users/users.service'
 
 // Simulamos servicios
 @Injectable()
@@ -19,10 +20,12 @@ export class AppService {
     private readonly socketGateway: SocketGateway,
     private readonly socketDealerService: SocketDealerService,
     private readonly socketOrderService: SocketOrderService,
-    private readonly socketChatService: SocketChatService
+    private readonly chatService: ChatService,
+    private readonly usersService: UsersService
   ) {}
 
   async createOrder(body: Partial<Order>): Promise<any> {
+    const chat = await this.chatService.create()
     // Simulamos la creación de una orden
     const order: Order = {
       id: uuidv4(),
@@ -32,8 +35,10 @@ export class AppService {
       status: 'Pending',
       step: EnumSteps.LookingForDealer,
       chat: {
-        id: uuidv4(),
-        messages: []
+        id: chat.id,
+        messages: [],
+        createdAt: chat.createdAt,
+        updatedAt: chat.updatedAt
       },
       clientName: 'Pepe Argento',
       clientEmail: 'pepeargento@ejemplo.com',
@@ -79,10 +84,7 @@ export class AppService {
 
     const formatedOrder = formatOrder(order, shipCoordinates, shopCoordinates)
 
-    // TODO: populate dealer
-    formatedOrder.dealer = users.filter(
-      (user) => user.id === formatedOrder.dealer
-    )[0]
+    formatedOrder.dealer = await this.usersService.findOneById(order.dealer)
 
     return formatedOrder
   }
@@ -108,10 +110,7 @@ export class AppService {
       shopCoordinates
     )
 
-    // TODO: populate dealer
-    formatedOrder.dealer = users.filter(
-      (user) => user.id === formatedOrder.dealer
-    )[0]
+    formatedOrder.dealer = await this.usersService.findOneById(order.dealer)
 
     this.socketOrderService.updateOrder(
       this.socketGateway.server,
@@ -152,10 +151,7 @@ export class AppService {
       shopCoordinates
     )
 
-    // TODO: populate dealer
-    formatedOrder.dealer = users.filter(
-      (user) => user.id === formatedOrder.dealer
-    )[0]
+    formatedOrder.dealer = await this.usersService.findOneById(order.dealer)
 
     this.socketOrderService.updateOrder(
       this.socketGateway.server,
@@ -163,31 +159,5 @@ export class AppService {
     )
 
     return formatedOrder
-  }
-
-  async addMessage(orderId: string, body: { sender: string; body: string }) {
-    const order = orders.filter((order) => order.id === orderId)[0]
-    const index = orders.indexOf(order)
-    orders[index] = {
-      ...order,
-      chat: {
-        ...order.chat,
-        messages: [
-          ...order.chat.messages,
-          {
-            sender: body.sender,
-            body: body.body
-          }
-        ]
-      }
-    }
-
-    this.socketChatService.updateChat(
-      this.socketGateway.server,
-      orders[index].id,
-      orders[index].chat
-    )
-
-    return orders[index].chat
   }
 }

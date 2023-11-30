@@ -6,6 +6,7 @@ import { serverUrl } from '@/utils/constants/env.const'
 import { type Chat, type OrderRequest } from '@/interfaces'
 import connector from '@/services/socket/connector.service'
 import { ChatBox } from '@/components'
+import { Endpoints } from '@/utils/constants/endpoints.const'
 
 interface Props {
   params: {
@@ -29,7 +30,7 @@ const Page: FunctionComponent<Props> = ({ params }) => {
   const [chat, setChat] = useState<Chat | null>(currentOrder?.chat ?? null)
 
   const getOrder = async (): Promise<void> => {
-    await axios.get(`${serverUrl}/api/test/` + params.orderId).then((res) => {
+    await axios.get(serverUrl + Endpoints.FIND_ORDER(params.orderId)).then((res) => {
       setCurrentOrder(res.data)
       setChat(res.data.chat)
     })
