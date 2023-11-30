@@ -1,6 +1,12 @@
+// TODO: FIX ESLINT PRETTIER CONFLICTS
+/* eslint-disable @typescript-eslint/indent */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
-import { type Message } from 'src/socket/interfaces/orderRequest.interface'
+
+export interface Message {
+  sender: string | null
+  body: string
+}
 
 @Schema({
   toJSON: {
@@ -15,13 +21,13 @@ import { type Message } from 'src/socket/interfaces/orderRequest.interface'
 })
 export class Chat extends Document {
   @Prop()
-    messages: Message[]
+  messages: Message[]
 
   @Prop({ default: Date.now })
-    createdAt: Date
+  createdAt: Date
 
   @Prop({ default: Date.now })
-    updatedAt: Date
+  updatedAt: Date
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat)
