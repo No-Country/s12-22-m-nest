@@ -122,7 +122,7 @@ export class OrderService {
 
     const chat = await findChat(order.chat, this.chatModel)
     const formatedOrder = formatOrder(order, chat)
-
+    if (typeof order.dealer !== 'string') return
     formatedOrder.dealer = await findUser(order.dealer, this.userRepository)
 
     await this.orderRepository.save(order)

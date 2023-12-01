@@ -18,9 +18,15 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @ManyToOne(() => User, (user) => user.id, { eager: true })
-  @Column({ nullable: true })
-  dealer: string | null
+  @ManyToOne(() => User, { nullable: true })
+  dealer: User | string | null
+
+  // @Column({ nullable: true })
+  // dealer: string | null
+
+  // @ManyToOne(() => User)
+  // @JoinColumn({ name: 'dealer', referencedColumnName: 'id' })
+  // dealer_data: User
 
   @Column({ nullable: false })
   shipAddress: string

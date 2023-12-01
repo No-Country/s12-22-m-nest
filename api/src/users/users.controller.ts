@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+  UseGuards,
+  Query
+} from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -25,8 +35,8 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.usersService.findOneById(id)
+  async findOne(@Param('id') id: string, @Query('populate') populate: boolean) {
+    return await this.usersService.findOneById(id, populate ?? false)
   }
 
   @UseGuards(AuthGuard('jwt'))

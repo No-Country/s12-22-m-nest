@@ -4,6 +4,8 @@ import { type FindOneOptions, type Repository } from 'typeorm'
 import UserCriteria from './utils/userCriteria.utils'
 import { type CreateUserDto } from './dto/create-user.dto'
 import { hash } from 'src/utils/bcryptManager.utils'
+import { format } from 'path'
+import { formatOrder } from 'src/utils/formatOrder.utils'
 
 export const createUser = async (
   createUserDto: CreateUserDto,
@@ -30,7 +32,8 @@ export const validateEmail = async (
 
 export const findUser = async (
   id: string,
-  userRepository: Repository<User>
+  userRepository: Repository<User>,
+  populate?: boolean
 ): Promise<User> => {
   const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 
@@ -51,14 +54,16 @@ export const findUser = async (
   return await findUserByCriteria(
     userRepository,
     criteria,
-    selectedFields as FindOneOptions<User>['select']
+    selectedFields as FindOneOptions<User>['select'],
+    populate
   )
 }
 
 export const findUserByCriteria = async (
   userRepository: Repository<User>,
   criteria: UserCriteria,
-  select?: FindOneOptions<User>['select']
+  select?: FindOneOptions<User>['select'],
+  populate?: boolean
 ): Promise<User> => {
   if ((!criteria.id && !criteria.email) || (criteria.id && criteria.email)) {
     throw new BadRequestException('Error: Criteria needs one property.')
@@ -69,15 +74,13 @@ export const findUserByCriteria = async (
     user = await userRepository.findOne({
       where: { id: criteria.id },
       select,
-      relations: ['orders']
+      ...(populate && { relations: ['orders'] })
     })
-    // .createQueryBuilder('user')
-    // .leftJoinAndSelect('user.orders', 'orders')
-    // .where('user.id = :userId', { userId: criteria.id })
-    // .getOne()
   } else {
     user = await userRepository.findOne({
-      where: { email: criteria.email }
+      where: { email: criteria.email },
+      select,
+      ...(populate && { relations: ['orders'] })
     })
   }
 

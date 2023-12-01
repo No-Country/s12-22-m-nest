@@ -49,6 +49,7 @@ export const updateOrder = async (
   const formatedOrder = formatOrder(order, chat)
 
   console.log('update order', order.dealer)
+  if (typeof order.dealer !== 'string') return
   formatedOrder.dealer = await findUser(order.dealer, userRepository)
   console.log('update order ok')
 
