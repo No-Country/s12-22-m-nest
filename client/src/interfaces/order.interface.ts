@@ -23,6 +23,7 @@ export interface Order {
   clientName: string
   clientEmail: string
   products: Product[]
+  shop: string
 }
 
 export interface Product {
