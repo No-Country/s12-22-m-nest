@@ -40,7 +40,8 @@ export const findUser = async (
     'lastName',
     'birthdate',
     'email',
-    'profileImage'
+    'profileImage',
+    'orders'
   ]
 
   const criteria = emailRegex.test(id)
@@ -67,8 +68,13 @@ export const findUserByCriteria = async (
   if (criteria.id) {
     user = await userRepository.findOne({
       where: { id: criteria.id },
-      select
+      select,
+      relations: ['orders']
     })
+    // .createQueryBuilder('user')
+    // .leftJoinAndSelect('user.orders', 'orders')
+    // .where('user.id = :userId', { userId: criteria.id })
+    // .getOne()
   } else {
     user = await userRepository.findOne({
       where: { email: criteria.email }
