@@ -9,6 +9,7 @@ import { SocketModule } from './socket/socket.module'
 import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
 import { ChatModule } from './chat/chat.module'
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { ChatModule } from './chat/chat.module'
     SocketModule,
     UsersModule,
     AuthModule,
-    ChatModule
+    ChatModule,
+    CloudinaryModule
   ],
   controllers: [AppController],
   providers: [AppService],
