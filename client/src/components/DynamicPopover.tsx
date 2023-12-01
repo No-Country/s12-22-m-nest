@@ -16,7 +16,7 @@ const DynamicPopover: FunctionComponent<Props> = ({ image, children, backdrop })
       offset={10}
       placement='bottom-end'
       backdrop={backdrop}
-      classNames={{ base: 'p-2 min-w-[150px] ' }}
+      classNames={{ base: 'p-2 min-w-[150px] ', content: 'py-2' }}
     >
       <PopoverTrigger>
         <Image

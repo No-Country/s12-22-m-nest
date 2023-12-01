@@ -9,7 +9,7 @@ export const loginService = async (email: string, password: string): Promise<Sig
     callbackUrl: Routes.DEALER_HOME
   })
 
-  if (responseNextAuth?.error !== null) {
+  if (responseNextAuth?.error && responseNextAuth?.error !== null) {
     console.error(responseNextAuth?.error)
   }
 

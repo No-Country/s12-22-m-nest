@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -14,8 +15,8 @@ export class UsersController {
   }
 
   @Get(':id/availability')
-  checkAvailability(@Param('id') id: string) {
-    return this.usersService.checkDealerAvailability(id)
+  async checkAvailability(@Param('id') id: string) {
+    return await this.usersService.checkDealerAvailability(id)
   }
 
   @Get()
@@ -28,11 +29,13 @@ export class UsersController {
     return await this.usersService.findOneById(id)
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.usersService.update(id, updateUserDto)
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.usersService.remove(id)
