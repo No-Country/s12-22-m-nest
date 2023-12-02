@@ -4,8 +4,6 @@ import { type FindOneOptions, type Repository } from 'typeorm'
 import UserCriteria from './utils/userCriteria.utils'
 import { type CreateUserDto } from './dto/create-user.dto'
 import { hash } from 'src/utils/bcryptManager.utils'
-import { format } from 'path'
-import { formatOrder } from 'src/utils/formatOrder.utils'
 
 export const createUser = async (
   createUserDto: CreateUserDto,

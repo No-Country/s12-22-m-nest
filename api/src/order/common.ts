@@ -30,6 +30,16 @@ export const findActiveOrderByDealer = async (
   })
 }
 
+export const findOrdersByUser = async (
+  id: string,
+  orderRepository: Repository<Order>
+) => {
+  return await orderRepository
+    .createQueryBuilder('order')
+    .where('order.dealerId = :dealerId', { dealerId: id })
+    .getMany()
+}
+
 export const updateOrder = async (
   id: string,
   updateOrderDto: UpdateOrderDto,

@@ -13,6 +13,7 @@ import { hash } from './../utils/bcryptManager.utils'
 import { createUser, findUser } from './common'
 import { Order } from 'src/order/entities/order.entity'
 import { checkIsAvailable } from 'src/utils/isAvailable.utils'
+import { findOrdersByUser } from 'src/order/common'
 
 @Injectable()
 export class UsersService {
@@ -80,6 +81,10 @@ export class UsersService {
 
   async findOneByEmail(email: string): Promise<User> {
     return await findUser(email, this.userRepository)
+  }
+
+  async findOrdersByUser(id: string): Promise<Order[]> {
+    return await findOrdersByUser(id, this.orderRepository)
   }
 
   private async validateEmail(email: string): Promise<void> {

@@ -20,7 +20,6 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    console.log('createUserDto', createUserDto)
     return await this.usersService.create(createUserDto)
   }
 
@@ -37,6 +36,11 @@ export class UsersController {
   @Get(':id')
   async findOne(@Param('id') id: string, @Query('populate') populate: boolean) {
     return await this.usersService.findOneById(id, populate ?? false)
+  }
+
+  @Get(':id/orders')
+  async findUserOrders(@Param('id') id: string) {
+    return await this.usersService.findOrdersByUser(id)
   }
 
   @UseGuards(AuthGuard('jwt'))

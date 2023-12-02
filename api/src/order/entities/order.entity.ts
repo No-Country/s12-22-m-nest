@@ -21,13 +21,6 @@ export class Order {
   @ManyToOne(() => User, { nullable: true })
   dealer: User | string | null
 
-  // @Column({ nullable: true })
-  // dealer: string | null
-
-  // @ManyToOne(() => User)
-  // @JoinColumn({ name: 'dealer', referencedColumnName: 'id' })
-  // dealer_data: User
-
   @Column({ nullable: false })
   shipAddress: string
 
