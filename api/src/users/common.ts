@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+/* eslint-disable @typescript-eslint/indent */
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { type User } from './entities/user.entity'
 import { type FindOneOptions, type Repository } from 'typeorm'
@@ -31,11 +33,12 @@ export const validateEmail = async (
 export const findUser = async (
   id: string,
   userRepository: Repository<User>,
-  populate?: boolean
+  populate?: boolean,
+  filters?: 'default' | false | FindOneOptions<User>['select']
 ): Promise<User> => {
   const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 
-  const selectedFields = [
+  const defaultFilter = [
     'id',
     'firstName',
     'lastName',
@@ -45,6 +48,13 @@ export const findUser = async (
     'orders'
   ]
 
+  const selectedFields =
+    filters === 'default'
+      ? (defaultFilter as FindOneOptions<User>['select'])
+      : filters === false
+      ? undefined
+      : filters
+
   const criteria = emailRegex.test(id)
     ? new UserCriteria(null, id)
     : new UserCriteria(id, null)
@@ -52,7 +62,7 @@ export const findUser = async (
   return await findUserByCriteria(
     userRepository,
     criteria,
-    selectedFields as FindOneOptions<User>['select'],
+    selectedFields,
     populate
   )
 }

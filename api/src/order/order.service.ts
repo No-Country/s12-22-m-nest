@@ -11,7 +11,6 @@ import { SocketGateway } from 'src/socket/socket.gateway'
 import { EnumSteps, type TSteps } from 'src/order/entities/step.interface'
 import { SocketDealerService } from 'src/socket/services/dealer.service'
 import { type CreateOrderDto } from './dto/create-order.dto'
-import { findUser } from 'src/users/common'
 import { User } from 'src/users/entities/user.entity'
 import { updateOrder } from './common'
 import { Chat } from 'src/chat/entities/chat.mongo-entity'
@@ -46,7 +45,7 @@ export class OrderService {
     )
 
     const order = this.orderRepository.create({
-      dealer: null,
+      dealerId: null,
       shipAddress: body.shipAddress ?? '',
       shopAddress: body.shopAddress ?? '',
       shipCoordinates: JSON.stringify(shipCoordinates),
@@ -81,7 +80,10 @@ export class OrderService {
 
   async findOne(id: string) {
     try {
-      const order = await this.orderRepository.findOneBy({ id })
+      const order = await this.orderRepository.findOne({
+        where: { id },
+        relations: ['dealer']
+      })
       if (!order) throw new NotFoundException('Order not found')
       const chat = await findChat(order.chat, this.chatModel)
       const formatedOrder = formatOrder(order, chat)
@@ -104,7 +106,10 @@ export class OrderService {
   }
 
   async nextStep(orderId: string) {
-    let order = await this.orderRepository.findOneBy({ id: orderId })
+    let order = await this.orderRepository.findOne({
+      where: { id: orderId },
+      relations: ['dealer']
+    })
 
     if (!order) throw new NotFoundException('Order not found')
 
@@ -122,11 +127,9 @@ export class OrderService {
 
     const chat = await findChat(order.chat, this.chatModel)
     const formatedOrder = formatOrder(order, chat)
-    if (typeof order.dealer !== 'string') return
-    formatedOrder.dealer = await findUser(order.dealer, this.userRepository)
 
     await this.orderRepository.save(order)
-
+    console.log('formatedOrder', formatedOrder)
     this.socketOrderService.updateOrder(
       this.socketGateway.server,
       formatedOrder

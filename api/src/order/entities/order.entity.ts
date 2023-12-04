@@ -18,8 +18,13 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @ManyToOne(() => User, { nullable: true })
-  dealer: User | string | null
+  @Column({ type: 'uuid', nullable: true })
+  dealerId: string
+
+  @ManyToOne(() => User, {
+    nullable: true
+  })
+  dealer: User
 
   @Column({ nullable: false })
   shipAddress: string

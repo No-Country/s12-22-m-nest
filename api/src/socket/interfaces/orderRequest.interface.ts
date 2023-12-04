@@ -11,7 +11,7 @@ export interface OrderRequest
   > {
   shipMapUrl: URL
   shopMapUrl: URL
-  dealer: User | null | string
+  dealer: User | null
   shipCoordinates: Coordinates
   shopCoordinates: Coordinates
   products: Product[]
