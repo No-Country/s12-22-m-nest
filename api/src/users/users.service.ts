@@ -7,18 +7,13 @@ import {
 import { type CreateUserDto } from './dto/create-user.dto'
 import { type UpdateUserDto } from './dto/update-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
-import {
-  type FindOneOptions,
-  type DeleteResult,
-  Repository,
-  type UpdateResult
-} from 'typeorm'
+import { type DeleteResult, Repository, type UpdateResult } from 'typeorm'
 import { User } from './entities/user.entity'
 import { hash } from './../utils/bcryptManager.utils'
-import UserCriteria from './utils/userCriteria.utils'
 import { createUser, findUser } from './common'
 import { Order } from 'src/order/entities/order.entity'
 import { checkIsAvailable } from 'src/utils/isAvailable.utils'
+import { findOrdersByUser } from 'src/order/common'
 
 @Injectable()
 export class UsersService {
@@ -47,12 +42,12 @@ export class UsersService {
     })
   }
 
-  async findOneById(id: string): Promise<User> {
-    return await findUser(id, this.userRepository)
+  async findOneById(id: string, populate: boolean): Promise<User> {
+    return await findUser(id, this.userRepository, populate)
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    await this.findUserByCriteria(new UserCriteria(id, null))
+    await findUser(id, this.userRepository)
 
     if (updateUserDto.email) {
       await this.validateEmail(updateUserDto.email)
@@ -70,7 +65,7 @@ export class UsersService {
     if (updatedDB.affected === 0) {
       throw new InternalServerErrorException('Error updating user')
     }
-    return await this.findOneById(id)
+    return await findUser(id, this.userRepository)
   }
 
   async checkDealerAvailability(dealerId: string) {
@@ -85,35 +80,15 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string): Promise<User> {
-    return await this.findUserByCriteria(new UserCriteria(null, email))
+    return await findUser(email, this.userRepository)
+  }
+
+  async findOrdersByUser(id: string): Promise<Order[]> {
+    return await findOrdersByUser(id, this.orderRepository)
   }
 
   private async validateEmail(email: string): Promise<void> {
     const check = await this.userRepository.findOne({ where: { email } })
     if (check) throw new BadRequestException('Email in use')
-  }
-
-  private async findUserByCriteria(
-    criteria: UserCriteria,
-    select?: FindOneOptions<User>['select']
-  ): Promise<User> {
-    if ((!criteria.id && !criteria.email) || (criteria.id && criteria.email)) {
-      throw new BadRequestException('Error: Criteria needs one property.')
-    }
-
-    let user: User
-    if (criteria.id) {
-      user = await this.userRepository.findOne({
-        where: { id: criteria.id },
-        select
-      })
-    } else {
-      user = await this.userRepository.findOne({
-        where: { email: criteria.email }
-      })
-    }
-
-    if (!user) throw new NotFoundException('User not found')
-    return user
   }
 }

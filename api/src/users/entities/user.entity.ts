@@ -9,10 +9,13 @@ import {
   MaxLength,
   MinLength
 } from 'class-validator'
+import { Order } from 'src/order/entities/order.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
@@ -56,6 +59,10 @@ export class User {
   @IsString()
   @IsOptional()
   profileImage: string
+
+  @OneToMany(() => Order, (order) => order.dealer)
+  @JoinColumn()
+  orders: Order[]
 
   @CreateDateColumn({
     type: 'timestamp',
