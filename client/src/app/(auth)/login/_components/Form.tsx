@@ -1,14 +1,11 @@
 'use client'
 import { Input, Button } from '@/components'
+import { type LoginFormData } from '@/interfaces'
 import { loginService } from '@/services/auth/login.service'
+import { emailValidations, passwordValidations } from '@/utils/constants/validations.const'
 import { type FunctionComponent } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-
-interface LoginFormData {
-  email: string
-  password: string
-}
 
 const Form: FunctionComponent = () => {
   const {
@@ -37,13 +34,7 @@ const Form: FunctionComponent = () => {
         name='email'
         hookForm={{
           register,
-          validations: {
-            required: { value: true, message: 'Este campo es requerido' },
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: 'Ingrese un email válido'
-            }
-          }
+          validations: emailValidations
         }}
         errorMessage={errors?.email?.message}
       />
@@ -54,9 +45,7 @@ const Form: FunctionComponent = () => {
         name='password'
         hookForm={{
           register,
-          validations: {
-            required: { value: true, message: 'Este campo es requerido' }
-          }
+          validations: passwordValidations
         }}
         errorMessage={errors?.password?.message}
       />

@@ -60,7 +60,7 @@ export class User {
   @IsOptional()
   profileImage: string
 
-  @OneToMany(() => Order, (order) => order.dealer)
+  @OneToMany(() => Order, (order) => order.dealerId)
   @JoinColumn()
   orders: Order[]
 

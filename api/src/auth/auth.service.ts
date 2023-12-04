@@ -33,9 +33,11 @@ export class AuthService {
   ): Promise<{ user: any; access_token: string }> {
     const { email, password } = loginDto
     const user = await findUser(email, this.userRepository)
+
     if (!user || !(await compare(user.password, password))) {
       throw new UnauthorizedException('Invalid credentials!')
     }
+
     const token = this.jwtService.sign({
       email: user.email,
       sub: user.id
