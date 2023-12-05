@@ -109,7 +109,7 @@ export class SocketDealerService {
     return await updateOrder(
       order.id,
       {
-        dealer: currentDealer.clientId,
+        dealerId: currentDealer.clientId,
         status: 'In Progress',
         step: EnumSteps.GoingToShop
       },

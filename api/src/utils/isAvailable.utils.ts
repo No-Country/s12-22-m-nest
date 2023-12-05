@@ -7,9 +7,7 @@ export const checkIsAvailable = async (
   orderRepository: Repository<Order>
 ) => {
   const orders = await findActiveOrderByDealer(id, orderRepository)
-
-  const isAvailable = Boolean(orders.length === 0)
-
+  const isAvailable = Boolean(!orders || orders?.length === 0)
   return {
     isAvailable,
     orderId: isAvailable ? null : orders[0].id

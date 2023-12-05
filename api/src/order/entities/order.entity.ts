@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/indent */
 import { IsJSON } from 'class-validator'
 import { TSteps } from 'src/order/entities/step.interface'
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { User } from 'src/users/entities/user.entity'
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
 
@@ -17,10 +18,13 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  // @OneToOne(() => User, (user) => user.id, {eager:true})
-  // @JoinColumn()
-  @Column({ nullable: true })
-  dealer: string | null
+  @Column({ type: 'uuid', nullable: true })
+  dealerId: string
+
+  @ManyToOne(() => User, {
+    nullable: true
+  })
+  dealer: User
 
   @Column({ nullable: false })
   shipAddress: string

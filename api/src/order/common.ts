@@ -3,7 +3,6 @@ import { type Order } from './entities/order.entity'
 import { type UpdateOrderDto } from './dto/update-order.dto'
 import { NotFoundException } from '@nestjs/common'
 import { formatOrder } from 'src/utils/formatOrder.utils'
-import { findUser } from 'src/users/common'
 import { type User } from 'src/users/entities/user.entity'
 import { type SocketGateway } from 'src/socket/socket.gateway'
 import { type SocketOrderService } from 'src/socket/services/order.service'
@@ -22,12 +21,22 @@ export const findActiveOrderByDealer = async (
   id: string,
   orderRepository: Repository<Order>
 ) => {
-  return await orderRepository.find({
+  console.log('findActiveOrderByDealer', id)
+  const orders = await orderRepository.find({
     where: {
-      dealer: id,
+      dealerId: id,
       status: 'In Progress'
     }
   })
+
+  return orders
+}
+
+export const findOrdersByUser = async (
+  userId: string,
+  orderRepository: Repository<Order>
+) => {
+  return await orderRepository.findBy({ dealerId: userId })
 }
 
 export const updateOrder = async (
@@ -39,7 +48,10 @@ export const updateOrder = async (
   socketGateway: SocketGateway,
   chatModel: Model<Chat>
 ) => {
-  let order = await orderRepository.findOneBy({ id })
+  let order = await orderRepository.findOne({
+    where: { id },
+    relations: ['dealer']
+  })
   if (!order) throw new NotFoundException('Order not found')
   order = { ...order, ...updateOrderDto }
   console.log(order)
@@ -47,10 +59,6 @@ export const updateOrder = async (
 
   const chat = await findChat(order.chat, chatModel)
   const formatedOrder = formatOrder(order, chat)
-
-  console.log('update order', order.dealer)
-  formatedOrder.dealer = await findUser(order.dealer, userRepository)
-  console.log('update order ok')
 
   socketOrderService.updateOrder(socketGateway.server, formatedOrder)
 
