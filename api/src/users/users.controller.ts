@@ -7,16 +7,20 @@ import {
   Delete,
   Put,
   UseGuards,
-  Query
+  Query,
+  UseInterceptors,
+  UploadedFile
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service'
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService, private readonly cloudinaryService: CloudinaryService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -45,7 +49,11 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @UseInterceptors(FileInterceptor('file'))
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @UploadedFile() file: Express.Multer.File) {
+    if (file) {
+      updateUserDto.profileImage = (await this.cloudinaryService.uploadImage(file)).secure_url
+    }
     return await this.usersService.update(id, updateUserDto)
   }
 
