@@ -1,9 +1,9 @@
-import { type Order } from '@/interfaces'
+import { type OrderRequest } from '@/interfaces'
 import { Card, CardBody, CardFooter, Image } from '@nextui-org/react'
 import { type FunctionComponent } from 'react'
 
 interface Props {
-  order: Order
+  order: OrderRequest
 }
 
 const DataComponent: FunctionComponent<Props> = ({ order }) => (
