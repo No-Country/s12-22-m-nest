@@ -1,4 +1,4 @@
-import { Footer } from '@/components'
+import { Footer, Header } from '@/components'
 import SocketProvider from '@/context/providers/socket.provider'
 import { getServerSession } from 'next-auth'
 import { type FunctionComponent } from 'react'
@@ -12,6 +12,7 @@ const ClientLayout: FunctionComponent<Props> = async ({ children }) => {
   const session = await getServerSession(authOptions)
   return (
   <>
+    <Header layout='simple'/>
     <SocketProvider session={session} mode='client'>
     {children}
     </SocketProvider>

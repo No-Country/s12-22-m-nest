@@ -24,18 +24,22 @@ const dealerIcon = Leaflet.icon({
 
 const shopIcon = Leaflet.icon({
   iconUrl: 'https://api.iconify.design/flat-color-icons/shop.svg',
-  iconSize: [50, 50]
+  iconSize: [40, 40]
 })
 
 const shipIcon = Leaflet.icon({
   iconUrl: 'https://api.iconify.design/flat-color-icons/home.svg',
-  iconSize: [50, 50]
+  iconSize: [40, 40]
 })
 
 const Map: FunctionComponent<Props> = ({ widthMap, heightMap, locations }) => (
   <MapContainer
-    center={[Number(locations.shipCoordinates?.lat), Number(locations.shipCoordinates?.lon)]}
-    zoom={16}
+    center={
+      locations.dealerCoordinates
+        ? [Number(locations.dealerCoordinates?.lat), Number(locations.dealerCoordinates?.lon)]
+        : [Number(locations.shipCoordinates?.lat), Number(locations.shipCoordinates?.lon)]
+    }
+    zoom={12}
     scrollWheelZoom={false}
     style={{ height: heightMap, width: widthMap }}
   >

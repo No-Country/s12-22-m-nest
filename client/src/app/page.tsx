@@ -1,9 +1,5 @@
-import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { type FunctionComponent } from 'react'
-const DynamicMap = dynamic(async () => await import('@/components/DynamicMap'), {
-  ssr: false
-})
 
 const Home: FunctionComponent = () => (
   <main className='flex min-h-screen flex-col items-center justify-between p-24'>

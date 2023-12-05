@@ -3,18 +3,18 @@ import { Card, CardBody, CardFooter, Image } from '@nextui-org/react'
 import { type FunctionComponent } from 'react'
 
 interface Props {
-  order: OrderRequest
+  order: OrderRequest | undefined
 }
 
-const DataComponent: FunctionComponent<Props> = ({ order }) => (
+const Data: FunctionComponent<Props> = ({ order }) => (
     <Card className='max-w-[800px] mx-auto mt-2 mb-5 px-10 pb-5 bg-black rounded-lg'>
         <CardBody className='flex flex-row justify-between text-slate-200'>
             <div>
                 <h2 className='font-light mb-1'>Tu orden</h2>
-                <p className='font-semibold'>{order.shop}</p>
+                <p className='font-semibold'>{order?.shop}</p>
             </div>
             {
-                order.shop === 'McDonalds' &&
+                order?.shop === 'McDonalds' &&
                   <Image
                   alt="mcdonalds logo"
                   height={40}
@@ -30,4 +30,4 @@ const DataComponent: FunctionComponent<Props> = ({ order }) => (
     </Card>
 )
 
-export default DataComponent
+export default Data

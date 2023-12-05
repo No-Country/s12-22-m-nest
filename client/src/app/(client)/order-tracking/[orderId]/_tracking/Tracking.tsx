@@ -2,7 +2,6 @@
 import dynamic from 'next/dynamic'
 import { useContext, type FunctionComponent, useEffect, useState } from 'react'
 import { type Coordinates, type OrderRequest } from '@/interfaces'
-import { DataComponent, MoreInfoModal } from './_components'
 import { SocketContext } from '@/context/providers/socket.provider'
 import { Endpoints } from '@/utils/constants/endpoints.const'
 import useSWR from 'swr'
@@ -10,6 +9,9 @@ import { handleChat } from '@/services/socket/handlers'
 import { redirect } from 'next/navigation'
 import { Routes } from '@/utils/constants/routes.const'
 import SocketManager from '../SocketManager'
+import Data from './_components/Data'
+import InfoSheets from './_components/InfoSheets'
+
 const DynamicMap = dynamic(async () => await import('@/components/DynamicMap'), {
   ssr: false
 })
@@ -23,8 +25,12 @@ const Tracking: FunctionComponent<Props> = ({ order: fallbackData }) => {
   const { data: order, mutate } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
     fallbackData
   })
-
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null)
+  const [mapData, setMapData] = useState({
+    shipCoordinates: order?.shipCoordinates,
+    shopCoordinates: order?.shopCoordinates,
+    dealerCoordinates: coordinates
+  })
 
   useEffect(() => {
     const handleSystem = async (): Promise<void> => {
@@ -39,32 +45,26 @@ const Tracking: FunctionComponent<Props> = ({ order: fallbackData }) => {
         console.log('updatedDealerLocation', data)
         if (data === undefined) return
         setCoordinates(data)
+        setMapData({
+          ...mapData,
+          dealerCoordinates: coordinates
+        })
       })
     }
-
     void handleSystem()
-    console.log(coordinates)
-  }, [mutate, socket, coordinates])
+  }, [mutate, socket, coordinates, mapData])
 
   if (fallbackData.status !== 'In Progress') {
     redirect(Routes.ORDER_TRACKING(fallbackData.id))
   }
 
-  const mapData = {
-    shipCoordinates: order?.shipCoordinates,
-    shopCoordinates: order?.shopCoordinates,
-    dealerCoordinates: coordinates
-  }
-
-  console.log(mapData)
-
   return (
     <SocketManager socket={socket}>
       <div className='padding-general-x min-h-[80vh] py-[50px]'>
         <h1 className='text-center font-medium'>Seguí tu pedido en tiempo real</h1>
-        <DataComponent order={fallbackData} />
+        <Data order={order} />
         <DynamicMap heightMap='500px' widthMap='100%' locations={mapData} />
-        <MoreInfoModal order={fallbackData} />
+        <InfoSheets order={order || fallbackData} />
       </div>
     </SocketManager>
   )

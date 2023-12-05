@@ -6,7 +6,7 @@ interface Props {
   products: Product[]
 }
 
-const ProductsInfo: FunctionComponent<Props> = ({ products }) => (
+const ProductsTable: FunctionComponent<Props> = ({ products }) => (
   <Table hideHeader className='w-[80%] mx-auto'>
     <TableHeader>
         <TableColumn>Cantidad</TableColumn>
@@ -25,4 +25,4 @@ const ProductsInfo: FunctionComponent<Props> = ({ products }) => (
   </Table>
 )
 
-export default ProductsInfo
+export default ProductsTable
