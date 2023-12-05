@@ -5,6 +5,7 @@ import { User } from './entities/user.entity'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Order } from 'src/order/entities/order.entity'
 import { OrderModule } from 'src/order/order.module'
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service'
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { OrderModule } from 'src/order/order.module'
     forwardRef(() => OrderModule)
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, CloudinaryService],
   exports: [UsersService]
 })
 export class UsersModule {}
