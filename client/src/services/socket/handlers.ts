@@ -52,10 +52,17 @@ export const handleJoinOrderDealer = (socket: Socket, orderId: string): void => 
   })
 }
 
-export const handleJoinOrderClient = (socket: Socket, params: { orderId: string }): void => {
+export const handleJoinOrderClient = (
+  socket: Socket,
+  setConnected: Dispatch<SetStateAction<boolean>>,
+  orderId: string
+): void => {
   socket.emit('joinOrderClient', {
-    orderId: params.orderId
+    orderId
   })
+
+  setConnected(true)
+  console.log('joinOrderClient', orderId)
 }
 
 export const handleSystemMessage = (socket: Socket): void => {

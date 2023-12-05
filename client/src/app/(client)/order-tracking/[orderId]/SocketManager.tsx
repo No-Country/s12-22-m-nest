@@ -1,30 +1,29 @@
 'use client'
-import { type FunctionComponent, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { handleDealerStatus, handleJoinOrderDealer, handleSystemMessage } from '@/services/socket/handlers'
+import { type FunctionComponent, useEffect, useState } from 'react'
+import { handleJoinOrderClient, handleSystemMessage } from '@/services/socket/handlers'
 import { type Socket } from 'socket.io-client'
+import { useParams } from 'next/navigation'
 
 interface Props {
   children: JSX.Element
-  orderId: string
   socket: Socket
 }
 
-const OrderManager: FunctionComponent<Props> = ({ children, orderId, socket }) => {
-  const router = useRouter()
+const SocketManager: FunctionComponent<Props> = ({ children, socket }) => {
+  const params = useParams()
+  const [connected, setConnected] = useState(false)
 
   useEffect(() => {
     const handleSystem = async (): Promise<void> => {
-      handleDealerStatus(socket, router)
-      handleJoinOrderDealer(socket, orderId)
+      handleJoinOrderClient(socket, setConnected, params?.orderId as string)
       handleSystemMessage(socket)
     }
 
     void handleSystem()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [connected])
 
   return <>{children}</>
 }
 
-export default OrderManager
+export default SocketManager

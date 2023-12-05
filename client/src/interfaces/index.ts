@@ -1,6 +1,5 @@
 export * from './api.interface'
 export * from './chat.interface'
-export * from './map.interface'
 export * from './order.interface'
 export * from './socket.interface'
 export * from './form.interface'

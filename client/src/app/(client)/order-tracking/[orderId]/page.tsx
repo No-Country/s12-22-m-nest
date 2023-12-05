@@ -9,10 +9,16 @@ interface Props {
   }
 }
 
-const OrderTracking: FunctionComponent<Props> = async({ params }) => {
+const OrderTracking: FunctionComponent<Props> = async ({ params }) => {
   const { data: order } = await getOrder(params?.orderId ?? 'null')
 
-  return <section className='relative'>{order?.status === 'In Progress' ? <Tracking order={order}/> : <Finished order={order}/>}</section>
+  return (
+    <>
+      <section className='relative'>
+        {order?.status === 'In Progress' ? <Tracking order={order} /> : <Finished order={order} />}
+      </section>{' '}
+    </>
+  )
 }
 
 export default OrderTracking
