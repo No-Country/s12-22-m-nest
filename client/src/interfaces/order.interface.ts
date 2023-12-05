@@ -26,6 +26,7 @@ export interface Order {
   shopCoordinates: Coordinates
   clientEmail: string
   products: Product[]
+  shop: string
 }
 
 export interface Product {

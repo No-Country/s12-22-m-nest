@@ -8,7 +8,6 @@ import { usePathname } from 'next/navigation'
 interface Props {
   socket: Socket
 }
-
 const DealerConnectionService: FunctionComponent<Props> = ({ socket }) => {
   const pathname = usePathname()
   const [connected, setConnected] = useState(false)
