@@ -30,6 +30,7 @@ export class SocketOrderService {
 
         driverSocket.emit('orderRequest', order, (response) => {
           clearTimeout(timeoutId)
+          console.log('orderRequest response', response)
           resolve(response)
         })
       } else {

@@ -7,7 +7,13 @@ interface Props {
 }
 
 const ProductsTable: FunctionComponent<Props> = ({ products }) => (
-  <Table hideHeader className='mx-auto w-[80%]'>
+  <Table
+    hideHeader
+    className='w-full'
+    classNames={{
+      wrapper: 'shadow-none'
+    }}
+  >
     <TableHeader>
       <TableColumn>Cantidad</TableColumn>
       <TableColumn>Producto</TableColumn>
@@ -16,7 +22,7 @@ const ProductsTable: FunctionComponent<Props> = ({ products }) => (
     <TableBody>
       {products.map((product, index) => (
         <TableRow key={index}>
-          <TableCell className='font-semibold'>{product.quantity}</TableCell>
+          <TableCell className='font-semibold'>{product.quantity}x</TableCell>
           <TableCell>
             <p>{product.name}</p>
             <span className='text-xs font-light'>(${product.price})</span>

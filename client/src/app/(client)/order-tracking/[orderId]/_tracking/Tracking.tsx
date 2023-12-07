@@ -9,8 +9,8 @@ import { handleChat } from '@/services/socket/handlers'
 import { redirect } from 'next/navigation'
 import { Routes } from '@/utils/constants/routes.const'
 import SocketManager from '../SocketManager'
-import Data from './_components/Data'
 import InfoSheets from './_components/InfoSheets'
+import { TopBarClient } from '@/components'
 
 const DynamicMap = dynamic(async () => await import('@/components/DynamicMap'), {
   ssr: false
@@ -60,12 +60,13 @@ const Tracking: FunctionComponent<Props> = ({ order: fallbackData }) => {
 
   return (
     <SocketManager socket={socket}>
-      <div className='padding-general-x min-h-[80vh] py-[50px]'>
-        <h1 className='text-center font-medium'>Seguí tu pedido en tiempo real</h1>
-        <Data order={order} />
-        <DynamicMap heightMap='500px' widthMap='100%' locations={mapData} />
-        <InfoSheets order={order || fallbackData} />
-      </div>
+      <>
+        <TopBarClient order={order || fallbackData} />
+        <section className='relative h-full w-screen flex-grow'>
+          <DynamicMap locations={mapData} />
+          <InfoSheets order={order || fallbackData} />
+        </section>
+      </>
     </SocketManager>
   )
 }
