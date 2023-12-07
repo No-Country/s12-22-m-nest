@@ -8,6 +8,7 @@ import { SocketContext } from '@/context/providers/socket.provider'
 import { type OrderRequest } from '@/interfaces'
 import { useRouter } from 'next/navigation'
 import { Routes } from '@/utils/constants/routes.const'
+import { toast } from 'sonner'
 
 const OrderReqModal: React.FunctionComponent = () => {
   const router = useRouter()
@@ -26,8 +27,11 @@ const OrderReqModal: React.FunctionComponent = () => {
 
   const handleAccept = (): void => {
     callbackRef.current?.(true)
+    toast('Procesando...')
     if (reqOrder) {
-      router.push(Routes.ORDER(reqOrder?.id))
+      setTimeout(() => {
+        router.push(Routes.ORDER(reqOrder?.id))
+      }, 1500)
     }
     toInitialStatus()
   }
