@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { type OrderRequest } from '@/interfaces/socket.interface'
 import { type Chat, EnumSteps } from '@/interfaces'
 import { updateOrderStatus } from '@/services/orders/updateStatus.service'
-import { ChatBox } from '@/components'
+import { ChatBox, TopBarDealer } from '@/components'
 import { handleChat } from '@/services/socket/handlers'
 import OrderManager from '../socketManager'
 import { Endpoints } from '@/utils/constants/endpoints.const'
@@ -22,11 +22,14 @@ const Going: FunctionComponent<Props> = ({ order: fallbackData }) => {
     fallbackData
   })
 
+  const handleUpdateOrder = async (): Promise<void> => {
+    void updateOrderStatus(order?.id ?? '', router)
+  }
+
   useEffect(() => {
     const handleSystem = async (): Promise<void> => {
       handleChat(socket, mutate)
       socket.on('updateOrder', async (data: OrderRequest) => {
-        console.log('updateOrder', data)
         await mutate()
       })
     }
@@ -36,30 +39,18 @@ const Going: FunctionComponent<Props> = ({ order: fallbackData }) => {
 
   return (
     <OrderManager socket={socket} orderId={fallbackData?.id}>
-      <main className='padding-general-x min-h-screen py-[100px] '>
-        <section>
-          <h1>Yendo a X lugar</h1>
-          <h3>Status: {order?.status}</h3>
-          <h3>Step: {order && EnumSteps[order?.step]}</h3>
-          {order && order.step <= 5 && (
-            <button
-              onClick={() => {
-                void updateOrderStatus(order.id, router)
-              }}
-            >
-              Next Step
-            </button>
-          )}
-          <button
-            onClick={() => {
-              router.refresh()
-            }}
-            className='mx-6'
-          >
-            Force Refresh
-          </button>
-          <ChatBox mode='dealer' orderId={fallbackData?.id} chat={order?.chat as Chat} />
-        </section>
+      <main className=' flex flex-col items-start  pt-[100px] '>
+        <TopBarDealer
+          title={order?.step === EnumSteps.GoingToShop ? 'GOING_SHOP' : 'GOING_CUSTOMER'}
+          description={order?.step === EnumSteps.GoingToShop ? 'GOING_SHOP' : 'GOING_CUSTOMER'}
+          button
+          buttonTitle='Ya llegué'
+          buttonAction={handleUpdateOrder}
+          isSwitchActive={true}
+          mapButton
+          mapButtonLink={order?.step === EnumSteps.GoingToShop ? order?.shopMapUrl : order?.shipMapUrl}
+        />
+        <ChatBox mode='dealer' orderId={fallbackData?.id} chat={order?.chat as Chat} />
       </main>
     </OrderManager>
   )

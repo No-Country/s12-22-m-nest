@@ -6,7 +6,7 @@ interface Props {
 }
 
 const BaseTopBar: FunctionComponent<Props> = ({ children, className }) => (
-  <section className={`${className} padding-general-x flex w-full items-center justify-center rounded-2xl  pb-5`}>
+  <section className={`${className} padding-general-x flex w-full items-center justify-center bg-white  pb-5`}>
     {children}
   </section>
 )
