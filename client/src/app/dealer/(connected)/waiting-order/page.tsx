@@ -3,7 +3,7 @@ import { Routes } from '@/utils/constants/routes.const'
 import { getServerSession } from 'next-auth'
 import { type FunctionComponent } from 'react'
 import Content from './_components/Content'
-import { Button } from '@/components'
+import { TopBarDealer } from '@/components'
 import { checkAvailability } from '@/services/users/checkAvailability.service'
 import { redirect } from 'next/navigation'
 
@@ -17,12 +17,8 @@ const Page: FunctionComponent = async () => {
   }
 
   return (
-    <main className='padding-general-x flex min-h-screen flex-col items-start gap-2 py-[100px]'>
-      <h1 className='text-2xl'>
-        Esperando una <b>orden</b>
-      </h1>
-      <p>Aguarda a que un cliente realice un pedido.</p>
-      <Button title='Dejar de repartir' href={Routes.DEALER_HOME} />
+    <main className=' flex min-h-screen flex-col items-start pt-[100px] '>
+      <TopBarDealer title='CONNECTED' description='WAITING_ORDER' switch={true} isSwitchActive={true} />
       <Content session={session} />
     </main>
   )

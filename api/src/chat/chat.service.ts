@@ -3,44 +3,36 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Chat } from './entities/chat.mongo-entity'
 import { type CreateMessageDto } from './dto/create-message.dto'
-import { orders } from 'src/fakeDb'
 import { SocketChatService } from 'src/socket/services/chat.service'
 import { SocketGateway } from 'src/socket/socket.gateway'
+import { createChat, findChat } from './common'
+import { Order } from 'src/order/entities/order.entity'
+import { Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
+import { findOrder } from 'src/order/common'
 
 @Injectable()
 export class ChatService {
   constructor(
-    @InjectModel(Chat.name) private readonly ChatModel: Model<Chat>,
+    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>,
     private readonly socketChatService: SocketChatService,
     private readonly socketGateway: SocketGateway
   ) {}
 
   async create(): Promise<Chat> {
-    const newChat = new this.ChatModel()
-    newChat.messages = []
-    return await newChat.save()
+    return await createChat(this.chatModel)
   }
 
-  async createMessage(orderId: string, createMessageDto: CreateMessageDto): Promise<any> {
-    const order = orders.filter((order) => order.id === orderId)[0]
-    const chat = await this.ChatModel.findById(order.chat.id).exec()
+  async createMessage(
+    orderId: string,
+    createMessageDto: CreateMessageDto
+  ): Promise<any> {
+    const order = await findOrder(orderId, this.orderRepository)
+    const chat = await this.chatModel.findById(order.chat).exec()
     if (!chat) {
       throw new NotFoundException('Chat not found')
-    }
-    console.log('la orden es ', order)
-    const index = orders.indexOf(order)
-    orders[index] = {
-      ...order,
-      chat: {
-        ...order.chat,
-        messages: [
-          ...order.chat.messages,
-          {
-            sender: createMessageDto.sender_id,
-            body: createMessageDto.body
-          }
-        ]
-      }
     }
 
     const newMessage = {
@@ -51,16 +43,12 @@ export class ChatService {
 
     await chat.save()
 
-    this.socketChatService.updateChat(
-      this.socketGateway.server,
-      orders[index].id,
-      orders[index].chat
-    )
+    this.socketChatService.updateChat(this.socketGateway.server, orderId, chat)
 
-    return orders[index].chat
+    return chat
   }
 
   async getChatWithMessages(chatId: string): Promise<Chat | null> {
-    return await this.ChatModel.findById(chatId).exec()
+    return await findChat(chatId, this.chatModel)
   }
 }

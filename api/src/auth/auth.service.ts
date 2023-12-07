@@ -1,21 +1,25 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JsonWebTokenError, JwtService } from '@nestjs/jwt'
 import type { CreateUserDto } from 'src/users/dto/create-user.dto'
-import { UsersService } from 'src/users/users.service'
 import type { LoginDto } from './dto/login.dto'
 import { compare } from 'src/utils/bcryptManager.utils'
+import { User } from 'src/users/entities/user.entity'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { createUser, findUser } from 'src/users/common'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly userService: UsersService
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
   ) {}
 
   async register(
     createUserDto: CreateUserDto
   ): Promise<{ user: any; access_token: string }> {
-    const user = await this.userService.create(createUserDto)
+    const user = await createUser(createUserDto, this.userRepository)
     const token = this.jwtService.sign({
       email: user.email,
       sub: user.id
@@ -28,10 +32,12 @@ export class AuthService {
     loginDto: LoginDto
   ): Promise<{ user: any; access_token: string }> {
     const { email, password } = loginDto
-    const user = await this.userService.findOneByEmail(email)
+    const user = await findUser(email, this.userRepository)
+
     if (!user || !(await compare(user.password, password))) {
       throw new UnauthorizedException('Invalid credentials!')
     }
+
     const token = this.jwtService.sign({
       email: user.email,
       sub: user.id
@@ -46,12 +52,11 @@ export class AuthService {
         secret: process.env.JWT_SECRET
       })
 
-      const user = await this.userService.findOneById(payload.sub)
+      const user = await findUser(payload.sub, this.userRepository)
       const newToken = this.jwtService.sign({ email: user.email, sub: user.id })
 
       return { refresh_token: newToken }
     } catch (error) {
-      console.log(error)
       if (error instanceof JsonWebTokenError) {
         throw new UnauthorizedException('Invalid token signature')
       }

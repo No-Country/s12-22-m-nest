@@ -5,7 +5,7 @@ interface Props {
 }
 
 const AuthLayout: FunctionComponent<Props> = ({ children }) => (
-  <main className='grid min-h-screen w-full grid-cols-[auto_450px] bg-[#ad2831] '>
+  <main className='grid min-h-screen w-full grid-cols-[auto_450px] bg-green-800 '>
     <div className='flex flex-col items-start justify-end gap-2 p-10'>
       <h1 className='text-4xl text-white'>
         Somos <b>LleGo!</b>

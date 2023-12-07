@@ -4,16 +4,15 @@ import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule } from '@nestjs/config'
+import { OrderModule } from './order/order.module'
 import { SocketModule } from './socket/socket.module'
-import { HttpModule } from '@nestjs/axios'
 import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
 import { ChatModule } from './chat/chat.module'
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
-    // Todo: Eliminar HttpModule
-    HttpModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     TypeOrmModule.forRoot({
@@ -27,13 +26,15 @@ import { ChatModule } from './chat/chat.module'
       ssl: true,
       synchronize: true
     }),
+    OrderModule,
     SocketModule,
     UsersModule,
     AuthModule,
-    ChatModule
+    ChatModule,
+    CloudinaryModule
   ],
   controllers: [AppController],
-  providers: [AppService, SocketModule, ChatModule],
+  providers: [AppService],
   exports: [AppModule]
 })
 export class AppModule {}

@@ -2,13 +2,17 @@ import { ConflictException, Injectable } from '@nestjs/common'
 import { type Socket, type Server } from 'socket.io'
 import { SocketMainService } from './main.service'
 import { type OrderRequest } from '../interfaces/orderRequest.interface'
-import { UsersService } from 'src/users/users.service'
+import { Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
+import { checkIsAvailable } from 'src/utils/isAvailable.utils'
+import { Order } from 'src/order/entities/order.entity'
 
 @Injectable()
 export class SocketOrderService {
   constructor(
     private readonly socketMainService: SocketMainService,
-    private readonly usersService: UsersService
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>
   ) {}
 
   private readonly connectedClients = this.socketMainService.connectedClients
@@ -26,6 +30,7 @@ export class SocketOrderService {
 
         driverSocket.emit('orderRequest', order, (response) => {
           clearTimeout(timeoutId)
+          console.log('orderRequest response', response)
           resolve(response)
         })
       } else {
@@ -44,10 +49,10 @@ export class SocketOrderService {
   }
 
   async joinOrderDealer(socket: Socket, data: { orderId: string }) {
-    const { isAvailable, orderId } =
-      await this.usersService.checkDealerAvailability(
-        socket.handshake.query.userId.toString()
-      )
+    const { isAvailable, orderId } = await checkIsAvailable(
+      socket.handshake.query.userId.toString(),
+      this.orderRepository
+    )
 
     console.log('joinOrderDealer', isAvailable, orderId, data.orderId)
     if (isAvailable || orderId !== data.orderId) {

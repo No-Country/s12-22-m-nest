@@ -10,6 +10,7 @@ interface CustomProps {
   onClick?: () => void
   className?: string
   href?: string
+  target?: '_blank' | '_self' | '_parent' | '_top' | undefined
 }
 
 type DefaultProps = ComponentProps<typeof ButtonUI>
@@ -17,6 +18,7 @@ type ExtendedProps = DefaultProps & CustomProps
 
 const Button: FunctionComponent<ExtendedProps> = ({ ...props }) => (
   <ButtonUI
+    target={props.target}
     as={props?.href?.length ? Link : 'button'}
     href={props?.href ?? ''}
     color={props.color ?? 'primary'}

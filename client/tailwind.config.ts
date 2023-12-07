@@ -24,7 +24,7 @@ const config: Config = {
         light: {
           colors: {
             primary: {
-              DEFAULT: '#ad2831',
+              DEFAULT: '#166534',
               foreground: '#ffffff'
             },
             danger: {

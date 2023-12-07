@@ -1,6 +1,6 @@
 'use client'
 import { Input, Button } from '@/components'
-import { type User } from '@/interfaces'
+import { type RegisterFormData } from '@/interfaces'
 import { registerService } from '@/services/auth/register.service'
 import { ScrollShadow } from '@nextui-org/react'
 import { type FunctionComponent } from 'react'
@@ -8,8 +8,12 @@ import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Routes } from '@/utils/constants/routes.const'
-
-type RegisterFormData = Omit<User, 'id'>
+import {
+  birthdateValidations,
+  emailValidations,
+  nameValidations,
+  passwordValidations
+} from '@/utils/constants/validations.const'
 
 const Form: FunctionComponent = () => {
   const router = useRouter()
@@ -47,17 +51,7 @@ const Form: FunctionComponent = () => {
           name='firstName'
           hookForm={{
             register,
-            validations: {
-              required: { value: true, message: 'Este campo es requerido' },
-              minLength: {
-                value: 3,
-                message: 'Debe tener al menos 3 caracteres'
-              },
-              maxLength: {
-                value: 25,
-                message: 'Debe tener máximo 25 caracteres'
-              }
-            }
+            validations: nameValidations.firstName
           }}
           errorMessage={errors?.firstName?.message}
         />
@@ -68,17 +62,7 @@ const Form: FunctionComponent = () => {
           name='lastName'
           hookForm={{
             register,
-            validations: {
-              required: { value: true, message: 'Este campo es requerido' },
-              minLength: {
-                value: 3,
-                message: 'Debe tener al menos 3 caracteres'
-              },
-              maxLength: {
-                value: 25,
-                message: 'Debe tener máximo 25 caracteres'
-              }
-            }
+            validations: nameValidations.lastName
           }}
           errorMessage={errors?.lastName?.message}
         />
@@ -89,13 +73,7 @@ const Form: FunctionComponent = () => {
           name='email'
           hookForm={{
             register,
-            validations: {
-              required: { value: true, message: 'Este campo es requerido' },
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Ingrese un email válido'
-              }
-            }
+            validations: emailValidations
           }}
           errorMessage={errors?.email?.message}
         />
@@ -106,9 +84,7 @@ const Form: FunctionComponent = () => {
           name='birthdate'
           hookForm={{
             register,
-            validations: {
-              required: { value: true, message: 'Este campo es requerido' }
-            }
+            validations: birthdateValidations
           }}
           errorMessage={errors?.birthdate?.message}
         />
@@ -119,17 +95,7 @@ const Form: FunctionComponent = () => {
           name='password'
           hookForm={{
             register,
-            validations: {
-              required: { value: true, message: 'Este campo es requerido' },
-              minLength: {
-                value: 6,
-                message: 'Debe tener al menos 6 caracteres'
-              },
-              maxLength: {
-                value: 25,
-                message: 'Debe tener máximo 25 caracteres'
-              }
-            }
+            validations: passwordValidations
           }}
           errorMessage={errors?.password?.message}
         />

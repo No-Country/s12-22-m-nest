@@ -1,20 +1,19 @@
-import { Module, forwardRef } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { ChatService } from './chat.service'
 import { ChatController } from './chat.controller'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Chat, ChatSchema } from './entities/chat.mongo-entity'
 import { SocketChatService } from 'src/socket/services/chat.service'
 import { SocketGateway } from 'src/socket/socket.gateway'
-import { SocketModule } from 'src/socket/socket.module'
+import { Order } from 'src/order/entities/order.entity'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Chat.name, schema: ChatSchema }
-    ]), forwardRef(() => SocketModule)
+    TypeOrmModule.forFeature([Order]),
+    MongooseModule.forFeature([{ name: Chat.name, schema: ChatSchema }])
   ],
   controllers: [ChatController],
-  providers: [ChatService, SocketChatService, SocketGateway],
-  exports: [ChatService]
+  providers: [ChatService, SocketChatService, SocketGateway]
 })
 export class ChatModule {}

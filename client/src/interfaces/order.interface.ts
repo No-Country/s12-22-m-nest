@@ -1,4 +1,4 @@
-import { type Chat, type Coordinates } from '.'
+import { type User, type Chat, type Coordinates } from '.'
 
 export type TSteps = 1 | 2 | 3 | 4 | 5 | 6
 
@@ -13,7 +13,8 @@ export enum EnumSteps {
 
 export interface Order {
   id: string
-  dealer: string | null
+  dealerId: string | null
+  dealer: User | null
   shipAddress: string
   shopAddress: string
   status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
@@ -25,6 +26,7 @@ export interface Order {
   shopCoordinates: Coordinates
   clientEmail: string
   products: Product[]
+  shop: string
 }
 
 export interface Product {
