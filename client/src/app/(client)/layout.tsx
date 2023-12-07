@@ -1,4 +1,3 @@
-import { Footer, Header } from '@/components'
 import SocketProvider from '@/context/providers/socket.provider'
 import { getServerSession } from 'next-auth'
 import { type FunctionComponent } from 'react'
@@ -11,13 +10,9 @@ interface Props {
 const ClientLayout: FunctionComponent<Props> = async ({ children }) => {
   const session = await getServerSession(authOptions)
   return (
-  <>
-    <Header layout='simple'/>
     <SocketProvider session={session} mode='client'>
-    {children}
+      {children}
     </SocketProvider>
-    <Footer />
-  </>
   )
 }
 export default ClientLayout

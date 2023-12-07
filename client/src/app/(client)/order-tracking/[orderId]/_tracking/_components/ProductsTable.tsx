@@ -7,21 +7,24 @@ interface Props {
 }
 
 const ProductsTable: FunctionComponent<Props> = ({ products }) => (
-  <Table hideHeader className='w-[80%] mx-auto'>
+  <Table hideHeader className='mx-auto w-[80%]'>
     <TableHeader>
-        <TableColumn>Cantidad</TableColumn>
-        <TableColumn>Producto</TableColumn>
-        <TableColumn>Precio final</TableColumn>
+      <TableColumn>Cantidad</TableColumn>
+      <TableColumn>Producto</TableColumn>
+      <TableColumn>Precio final</TableColumn>
     </TableHeader>
     <TableBody>
-        {
-            products.map((product, index) => <TableRow key={index}>
-                <TableCell className='font-semibold'>{product.quantity}</TableCell>
-                <TableCell><p>{product.name}</p><span className='font-light text-xs'>(${product.price})</span></TableCell>
-                <TableCell className='font-semibold text-base'>${product.quantity * product.price}</TableCell>
-            </TableRow>)
-        }
-      </TableBody>
+      {products.map((product, index) => (
+        <TableRow key={index}>
+          <TableCell className='font-semibold'>{product.quantity}</TableCell>
+          <TableCell>
+            <p>{product.name}</p>
+            <span className='text-xs font-light'>(${product.price})</span>
+          </TableCell>
+          <TableCell className='text-base font-semibold'>${product.quantity * product.price}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
   </Table>
 )
 
