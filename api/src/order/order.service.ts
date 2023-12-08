@@ -17,6 +17,7 @@ import { Chat } from 'src/chat/entities/chat.mongo-entity'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { createChat, findChat } from 'src/chat/common'
+import { MailerService } from 'src/mailer/mailer.service'
 
 @Injectable()
 export class OrderService {
@@ -29,7 +30,8 @@ export class OrderService {
     private readonly httpService: HttpService,
     private readonly socketOrderService: SocketOrderService,
     private readonly socketGateway: SocketGateway,
-    private readonly socketDealerService: SocketDealerService
+    private readonly socketDealerService: SocketDealerService,
+    private readonly mailerService: MailerService
   ) {}
 
   async create(body: CreateOrderDto): Promise<any> {
@@ -53,8 +55,8 @@ export class OrderService {
       status: 'Pending',
       step: EnumSteps.LookingForDealer,
       chat: String(chat.id),
-      clientName: 'Pepe Argento',
-      clientEmail: 'pepeargento@ejemplo.com',
+      clientName: body.clientName,
+      clientEmail: body.clientEmail,
       shop: 'McDonalds',
       price: 300,
       products: JSON.stringify(body.products)
@@ -63,6 +65,14 @@ export class OrderService {
     await this.orderRepository.save(order)
 
     const orderRequest = formatOrder(order, chat)
+
+    // send mail:
+    // eslint-disable-next-line no-template-curly-in-string
+    await this.mailerService.sendMail({
+      receiverMail: order.clientEmail,
+      header: 'Sigue tu orden',
+      body: `Hola, este es el link para seguir tu orden:${process.env.CLIENT_URL}/order-tracking/${order.id}`
+    })
 
     return await this.socketDealerService.handleFindDealer(
       this.socketGateway.server,
@@ -94,7 +104,7 @@ export class OrderService {
   }
 
   async updateOrder(id: string, updateOrderDto: UpdateOrderDto) {
-    return await updateOrder(
+    const orderUpdated = await updateOrder(
       id,
       updateOrderDto,
       this.orderRepository,
@@ -103,6 +113,14 @@ export class OrderService {
       this.socketGateway,
       this.chatModel
     )
+    if (updateOrderDto.status === 'Canceled') {
+      await this.mailerService.sendMail({
+        receiverMail: updateOrderDto.clientEmail,
+        header: 'Tu orden ha sido cancelada',
+        body: 'Hola, te informamos que tu orden ha sido cancelada.'
+      })
+    }
+    return orderUpdated
   }
 
   async nextStep(orderId: string) {
