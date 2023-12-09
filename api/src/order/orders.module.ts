@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { OrderController } from './order.controller'
-import { OrderService } from './order.service'
+import { OrderController } from './orders.controller'
+import { OrderService } from './orders.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Order } from './entities/order.entity'
 import { HttpModule } from '@nestjs/axios'

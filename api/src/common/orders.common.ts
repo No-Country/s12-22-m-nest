@@ -1,6 +1,6 @@
 import { type Repository } from 'typeorm'
-import { type Order } from './entities/order.entity'
-import { type UpdateOrderDto } from './dto/update-order.dto'
+import { type Order } from '../order/entities/order.entity'
+import { type UpdateOrderDto } from '../order/dto/update-order.dto'
 import { NotFoundException } from '@nestjs/common'
 import { formatOrder } from 'src/utils/formatOrder.utils'
 import { type User } from 'src/users/entities/user.entity'
@@ -8,13 +8,21 @@ import { type SocketGateway } from 'src/socket/socket.gateway'
 import { type SocketOrderService } from 'src/socket/services/order.service'
 import { type Model } from 'mongoose'
 import { type Chat } from 'src/chat/entities/chat.mongo-entity'
-import { findChat } from 'src/chat/common'
+import { findChat } from 'src/common/chat.common'
 
 export const findOrder = async (
   id: string,
-  orderRepository: Repository<Order>
+  orderRepository: Repository<Order>,
+  populate?: boolean
 ) => {
-  return await orderRepository.findOneBy({ id })
+  const order = await orderRepository.findOne({
+    where: { id },
+    ...(populate && { relations: ['dealer'] })
+  })
+
+  if (!order) throw new NotFoundException('Order not found')
+
+  return order
 }
 
 export const findActiveOrderByDealer = async (

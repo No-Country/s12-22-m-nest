@@ -1,7 +1,7 @@
 // Todo: fix eslint error
 /* eslint-disable @typescript-eslint/indent */
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
-import { OrderService } from './order.service'
+import { OrderService } from './orders.service'
 import { CreateOrderDto } from './dto/create-order.dto'
 import { type Order } from './entities/order.entity'
 

@@ -49,7 +49,7 @@ export class UsersController {
 
   @Get(':id/orders')
   async findUserOrders(@Param('id') id: string) {
-    return await this.usersService.findOrdersByUser(id)
+    return await this.usersService.findUserOrders(id)
   }
 
   @UseGuards(AuthGuard('jwt'))

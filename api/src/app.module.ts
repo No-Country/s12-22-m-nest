@@ -4,12 +4,12 @@ import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule } from '@nestjs/config'
-import { OrderModule } from './order/order.module'
+import { OrderModule } from './order/orders.module'
 import { SocketModule } from './socket/socket.module'
 import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
 import { ChatModule } from './chat/chat.module'
-import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module'
 
 @Module({
   imports: [

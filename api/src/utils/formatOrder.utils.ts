@@ -14,7 +14,7 @@ export const formatOrder = (order: Order, chat: Chat | null) => {
     parseFloat(shopCoordinates.lat),
     parseFloat(shopCoordinates.lon)
   )
-  console.log('distance', distance, shipCoordinates, shopCoordinates)
+
   const orderRequest: OrderRequest = {
     ...order,
     products,

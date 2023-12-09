@@ -1,10 +1,10 @@
 /* eslint-disable indent */
 /* eslint-disable @typescript-eslint/indent */
 import { BadRequestException, NotFoundException } from '@nestjs/common'
-import { type User } from './entities/user.entity'
+import { type User } from '../users/entities/user.entity'
 import { type FindOneOptions, type Repository } from 'typeorm'
-import UserCriteria from './utils/userCriteria.utils'
-import { type CreateUserDto } from './dto/create-user.dto'
+import UserCriteria from '../users/utils/userCriteria.utils'
+import { type CreateUserDto } from '../users/dto/create-user.dto'
 import { hash } from 'src/utils/bcryptManager.utils'
 
 export const createUser = async (
