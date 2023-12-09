@@ -28,9 +28,7 @@ export class Order {
   @Column({ type: 'uuid', nullable: true })
   dealerId: string
 
-  @ManyToOne(() => User, {
-    nullable: true
-  })
+  @ManyToOne(() => User, (user) => user.orders)
   dealer: User
 
   @Column({ nullable: false })

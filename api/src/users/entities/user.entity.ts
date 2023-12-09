@@ -14,7 +14,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
@@ -60,8 +59,7 @@ export class User {
   @IsOptional()
   profileImage: string
 
-  @OneToMany(() => Order, (order) => order.dealerId)
-  @JoinColumn()
+  @OneToMany(() => Order, (order) => order.dealer)
   orders: Order[]
 
   @CreateDateColumn({
