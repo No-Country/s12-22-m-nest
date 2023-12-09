@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import {
   Controller,
   Get,
@@ -17,10 +18,14 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service'
+import { UpdatePasswordDto } from './dto/update-password.dto'
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService, private readonly cloudinaryService: CloudinaryService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly cloudinaryService: CloudinaryService
+  ) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -44,17 +49,33 @@ export class UsersController {
 
   @Get(':id/orders')
   async findUserOrders(@Param('id') id: string) {
-    return await this.usersService.findOrdersByUser(id)
+    return await this.usersService.findUserOrders(id)
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
-  @UseInterceptors(FileInterceptor('file'))
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @UploadedFile() file: Express.Multer.File) {
-    if (file) {
-      updateUserDto.profileImage = (await this.cloudinaryService.uploadImage(file)).secure_url
+  @UseInterceptors(FileInterceptor('profileImage'))
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() profileImage: Express.Multer.File
+  ) {
+    console.log('file', profileImage)
+    if (profileImage) {
+      updateUserDto.profileImage = (
+        await this.cloudinaryService.uploadImage(profileImage)
+      ).secure_url
     }
     return await this.usersService.update(id, updateUserDto)
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put(':id/password')
+  async updatePassword(
+    @Param('id') id: string,
+    @Body() updatePasswordDto: UpdatePasswordDto
+  ) {
+    return await this.usersService.updatePassword(id, updatePasswordDto)
   }
 
   @UseGuards(AuthGuard('jwt'))

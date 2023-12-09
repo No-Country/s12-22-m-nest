@@ -11,7 +11,7 @@ import { type FunctionComponent } from 'react'
 
 const ProfileAction: FunctionComponent = () => {
   const { data: session, status } = useSession()
-  const { data: loggedUser } = useSWR(Endpoints.FIND_USER(session?.user?.email ?? ''))
+  const { data: loggedUser } = useSWR(Endpoints.FIND_USER(session?.user?.id ?? ''))
   return (
     <NavbarContent>
       <NavbarItem className='flex items-center gap-2'>

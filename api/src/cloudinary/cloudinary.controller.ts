@@ -9,9 +9,11 @@ import {
 import { CloudinaryService } from './cloudinary.service'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { DeleteImageDto } from './dto/delete-image.dto'
+
 @Controller('cloudinary')
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
+
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(@UploadedFile() file: Express.Multer.File) {

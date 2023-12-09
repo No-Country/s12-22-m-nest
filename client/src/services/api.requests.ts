@@ -28,11 +28,17 @@ export const getRequest = async <T>(params: GetRequestParams): Promise<Response<
   }
 }
 
-export const mutationRequest = async <T>(method: HttpMethod, url: string, body?: any): Promise<Response<T>> => {
+export const mutationRequest = async <T>(
+  method: HttpMethod,
+  url: string,
+  body?: any,
+  headers?: any
+): Promise<Response<T>> => {
   try {
-    const axiosResponse: AxiosResponse<T> = await axiosInstance[method](url, body)
+    const axiosResponse: AxiosResponse<T> = await axiosInstance[method](url, body, headers)
     return { data: axiosResponse.data, error: null }
   } catch (error: any) {
+    console.error(error)
     return { data: null, error: { message: error.message, code: error.response?.status || 500 } }
   }
 }

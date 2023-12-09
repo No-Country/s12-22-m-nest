@@ -32,30 +32,35 @@ export const authOptions: NextAuthOptions = {
 
         const user = {
           id: data?.user?.id ?? '',
-          email: data?.user?.email ?? ''
+          email: data?.user?.email ?? '',
+          sessionId: data?.access_token ?? ''
         }
 
         return user
       }
     })
   ],
+
   callbacks: {
+    jwt: async (arg) => {
+      const { token, user } = arg
+      user && (token.sessionId = user.sessionId)
+      return await Promise.resolve(token)
+    },
     session: async (arg) => {
       const { token, session } = arg
-
+      console.log('session callback user', token)
       const getSession = async (): Promise<void> => {
         try {
           const { data } = await getRequest<User>({
             url: Endpoints.FIND_USER(token.email ?? ''),
             cache: 'no-store'
           })
-          console.log(data)
-          const userId = data?.id ?? ''
-          const userEmail = data?.email ?? ''
 
           session.user = {
-            id: userId,
-            email: userEmail
+            id: data?.id ?? '',
+            email: data?.email ?? '',
+            sessionId: token.sessionId ?? ''
           }
         } catch (error) {
           console.error('Error al obtener la sesión:', error)

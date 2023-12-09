@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { type Coordinates } from '@/interfaces'
 import Leaflet from 'leaflet'
+import CenterMap from './CenterMap'
 
 export interface Location {
   shipCoordinates: Coordinates | undefined | null
@@ -35,10 +36,8 @@ const Map: FunctionComponent<Props> = ({ locations }) => (
     <MapContainer
       center={
         locations.dealerCoordinates
-          ? [Number(locations.dealerCoordinates?.lat), Number(locations.dealerCoordinates?.lon)]
-          : locations.shopCoordinates && locations.shipCoordinates
-            ? [Number(locations.shipCoordinates?.lat), Number(locations.shipCoordinates?.lon)]
-            : [-34.6037345, -58.3841453]
+          ? [Number(locations.dealerCoordinates.lat), Number(locations.dealerCoordinates.lon)]
+          : [-34.6037345, -58.3841453]
       }
       zoom={12}
       scrollWheelZoom={false}
@@ -48,6 +47,7 @@ const Map: FunctionComponent<Props> = ({ locations }) => (
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
+      <CenterMap locations={locations} />
       {locations?.shipCoordinates && (
         <Marker
           icon={shipIcon}

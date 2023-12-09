@@ -12,11 +12,11 @@ import { EnumSteps, type TSteps } from 'src/order/entities/step.interface'
 import { SocketDealerService } from 'src/socket/services/dealer.service'
 import { type CreateOrderDto } from './dto/create-order.dto'
 import { User } from 'src/users/entities/user.entity'
-import { updateOrder } from './common'
+import { findOrder, updateOrder } from '../common/orders.common'
 import { Chat } from 'src/chat/entities/chat.mongo-entity'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { createChat, findChat } from 'src/chat/common'
+import { createChat, findChat } from 'src/common/chat.common'
 import { MailerService } from 'src/mailer/mailer.service'
 
 @Injectable()
@@ -34,6 +34,16 @@ export class OrderService {
     private readonly mailerService: MailerService
   ) {}
 
+  async findOne(id: string) {
+    const order = await findOrder(id, this.orderRepository, true)
+    const chat = await findChat(order.chat, this.chatModel)
+    return formatOrder(order, chat)
+  }
+
+  async findAll() {
+    return await this.orderRepository.find()
+  }
+
   async create(body: CreateOrderDto): Promise<any> {
     const chat = await createChat(this.chatModel)
 
@@ -41,6 +51,7 @@ export class OrderService {
       this.httpService,
       body.shopAddress
     )
+
     const shipCoordinates = await findCoordinates(
       this.httpService,
       body.shipAddress
@@ -63,11 +74,8 @@ export class OrderService {
     })
 
     await this.orderRepository.save(order)
-
     const orderRequest = formatOrder(order, chat)
 
-    // send mail:
-    // eslint-disable-next-line no-template-curly-in-string
     await this.mailerService.sendMail({
       receiverMail: order.clientEmail,
       header: 'Sigue tu orden',
@@ -78,29 +86,6 @@ export class OrderService {
       this.socketGateway.server,
       orderRequest
     )
-  }
-
-  async findAll() {
-    try {
-      return await this.orderRepository.find()
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  async findOne(id: string) {
-    try {
-      const order = await this.orderRepository.findOne({
-        where: { id },
-        relations: ['dealer']
-      })
-      if (!order) throw new NotFoundException('Order not found')
-      const chat = await findChat(order.chat, this.chatModel)
-      const formatedOrder = formatOrder(order, chat)
-      return formatedOrder
-    } catch (error) {
-      console.error(error)
-    }
   }
 
   async updateOrder(id: string, updateOrderDto: UpdateOrderDto) {
@@ -157,13 +142,8 @@ export class OrderService {
   }
 
   async remove(id: string) {
-    try {
-      const order = await this.orderRepository.findOneBy({ id })
-      if (!order) throw new Error('Order not found')
-      await this.orderRepository.delete(id)
-      return order
-    } catch (error) {
-      console.error(error)
-    }
+    const order = await findOrder(id, this.orderRepository)
+    await this.orderRepository.delete(id)
+    return order
   }
 }

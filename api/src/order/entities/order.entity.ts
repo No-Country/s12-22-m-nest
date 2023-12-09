@@ -3,7 +3,14 @@
 import { IsJSON } from 'class-validator'
 import { TSteps } from 'src/order/entities/step.interface'
 import { User } from 'src/users/entities/user.entity'
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
 
 type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
 
@@ -21,9 +28,7 @@ export class Order {
   @Column({ type: 'uuid', nullable: true })
   dealerId: string
 
-  @ManyToOne(() => User, {
-    nullable: true
-  })
+  @ManyToOne(() => User, (user) => user.orders)
   dealer: User
 
   @Column({ nullable: false })
@@ -76,4 +81,17 @@ export class Order {
 
   @Column()
   shopCoordinates: string | null
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
+  createdAt: Date
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP'
+  })
+  updatedAt: Date
 }

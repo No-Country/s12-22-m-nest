@@ -5,11 +5,11 @@ import { Chat } from './entities/chat.mongo-entity'
 import { type CreateMessageDto } from './dto/create-message.dto'
 import { SocketChatService } from 'src/socket/services/chat.service'
 import { SocketGateway } from 'src/socket/socket.gateway'
-import { createChat, findChat } from './common'
+import { createChat, findChat } from '../common/chat.common'
 import { Order } from 'src/order/entities/order.entity'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
-import { findOrder } from 'src/order/common'
+import { findOrder } from 'src/common/orders.common'
 
 @Injectable()
 export class ChatService {
