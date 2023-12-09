@@ -20,7 +20,7 @@ export class ProductsService {
   }
 
   async findAll() {
-    return await this.productRepository.find()
+    return await this.productRepository.find({ relations: ['shop'] })
   }
 
   async findOne(id: string) {

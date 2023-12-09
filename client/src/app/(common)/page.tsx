@@ -1,9 +1,17 @@
+import { ProductGrid } from '@/components'
+import { getProducts } from '@/services/products/getProducts.service'
 import { type FunctionComponent } from 'react'
 
-const Home: FunctionComponent = () => (
-  <main className='flex min-h-screen flex-col items-center justify-between p-24'>
-    HOME - LANDING PAGE / USO COMUN DEDICADO A LOS CLIENTES
-  </main>
-)
+const Home: FunctionComponent = async () => {
+  const { data: products } = await getProducts()
+  return (
+    <main className='padding-general-x flex flex-col gap-10 pb-10 pt-[100px] lg:gap-5 '>
+      <section className='flex w-full flex-col gap-5 2xl:container'>
+        <h2 className='text-2xl font-semibold'>Los mas vendidos 🔥</h2>
+        <ProductGrid products={products ?? []} />
+      </section>
+    </main>
+  )
+}
 
 export default Home

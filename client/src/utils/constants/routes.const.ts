@@ -8,7 +8,8 @@ export const routes = {
     ACCOUNT: '/account',
     ORDER_HISTORY: '/account/order-history',
     ORDER: (id: string) => `/order/${id}`,
-    ORDER_TRACKING: (id: string) => `/order-tracking/${id}`
+    ORDER_TRACKING: (id: string) => `/order-tracking/${id}`,
+    SHOP: (id: string) => `/shop/${id}`
   },
   dealer: {
     HOME: '/dealer',

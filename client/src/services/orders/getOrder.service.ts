@@ -1,4 +1,3 @@
-// TODO: Add types
 import { getRequest } from '@/services/api.requests'
 import { type OrderRequest, type Response } from '@/interfaces'
 import { Endpoints } from '@/utils/constants/endpoints.const'

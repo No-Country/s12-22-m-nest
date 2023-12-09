@@ -15,3 +15,6 @@ export { default as ProductsTable } from './ProductsTable'
 export { default as OrdersTable } from './OrdersTable'
 export { default as Footer } from './Footer'
 export { default as Header } from './Header/Header'
+
+export { default as ProductGrid } from './Product/Grid'
+export { default as ProductItem } from './Product/Item'

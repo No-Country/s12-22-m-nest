@@ -1,4 +1,4 @@
-import { type User, type Chat, type Coordinates } from '.'
+import { type User, type Chat, type Coordinates, type Product } from '.'
 
 export type TSteps = 1 | 2 | 3 | 4 | 5 | 6
 
@@ -29,10 +29,4 @@ export interface Order {
   shop: string
   createdAt: string
   updatedAt: string
-}
-
-export interface Product {
-  name: string
-  quantity: number
-  price: number
 }

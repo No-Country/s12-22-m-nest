@@ -36,7 +36,7 @@ export class ShopsService {
   async findOne(id: string) {
     const shop = await this.shopRepository.findOne({
       where: { id },
-      relations: ['products']
+      relations: ['products', 'products.shop']
     })
 
     return formatShop(shop)
