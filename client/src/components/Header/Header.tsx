@@ -4,7 +4,8 @@ import { ProfileAction } from '@/components'
 import { Navbar, NavbarBrand } from '@nextui-org/react'
 import NextLink from 'next/link'
 import { type FunctionComponent, useState } from 'react'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
+import { useSession } from 'next-auth/react'
 
 interface Props {
   theme?: 'light' | 'transparent'
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'full' }) => {
+  const { data: session } = useSession()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -19,7 +21,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
     setIsScrolled(position > 0)
   }
 
-  const logo = '/icon/logo.svg'
+  const logo = session?.user.type === 'dealer' ? '/icon/logo.svg' : '/icon/shop-logo.svg'
   const bgColor = theme === 'transparent' ? (isScrolled ? 'bg-[#FFFFFF1]' : 'bg-transparent') : 'bg-white'
 
   const blur = isScrolled
@@ -46,17 +48,13 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
       }}
     >
       <div className='flex gap-3'>
-        <NextLink href={Routes.HOME}>
+        <NextLink href={routes[session?.user?.type ?? 'customer'].HOME}>
           <NavbarBrand>
             <Image src={logo} alt='Logo' width={120} height={50} />
           </NavbarBrand>
         </NextLink>
       </div>
-      {layout === 'full' && (
-        <div className='flex items-center justify-end gap-10'>
-          <ProfileAction />
-        </div>
-      )}
+      {layout === 'full' && <ProfileAction />}
     </Navbar>
   )
 }

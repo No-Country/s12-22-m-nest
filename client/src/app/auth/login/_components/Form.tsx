@@ -18,7 +18,8 @@ const Form: FunctionComponent = () => {
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {
-      await loginService(data.email, data.password)
+      const res = await loginService(data.email, data.password)
+      console.log(res)
     } catch (error) {
       toast.error('Ocurrió un error')
       console.error(error)

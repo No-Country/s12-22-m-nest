@@ -1,6 +1,6 @@
 import { type Chat } from '@/interfaces'
 import { type Coordinates, type OrderRequest } from '@/interfaces/socket.interface'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
 import { getLocation } from '@/utils/getLocation.utils'
 import { type DebouncedFunc } from 'lodash'
 import { type AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -38,7 +38,7 @@ export const manageDealer = async (
 export const handleDealerStatus = (socket: Socket, router: AppRouterInstance): void => {
   socket.on('dealerStatus', (data) => {
     if (data.taken) {
-      router.push(Routes.ORDER(data.orderId))
+      router.push(routes.dealer.ORDER(data.orderId))
     }
   })
 }

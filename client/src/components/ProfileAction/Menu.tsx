@@ -1,9 +1,9 @@
 'use client'
-import { itemsNavBuilder, type ItemNavInterface } from './lib/itemsNav'
 import NextLink from 'next/link'
 import { signOut } from 'next-auth/react'
 import type { User } from '@/interfaces'
 import { type FunctionComponent } from 'react'
+import { itemsNavBuilder } from '@/lib/userNav.lib'
 
 interface Props {
   loggedUser: User

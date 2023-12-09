@@ -5,6 +5,7 @@ interface SessionUser {
   id: string
   email: string
   sessionId: string
+  type: 'customer' | 'dealer'
 }
 
 // This types are declared to implement type safe Providers (Credentials, Google, Github, etc.) in next auth
@@ -28,6 +29,7 @@ declare module 'next-auth' {
       accessToken?: string
       idToken?: string
       sessionId: string
+      type: 'customer' | 'dealer'
       provider: string
     }
   }
@@ -37,5 +39,6 @@ declare module 'next-auth/jwt' {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT extends Partial<SessionUser> {
     sessionId: string
+    type: 'customer' | 'dealer'
   }
 }

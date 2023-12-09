@@ -7,7 +7,7 @@ import { Endpoints } from '@/utils/constants/endpoints.const'
 import useSWR from 'swr'
 import { handleChat } from '@/services/socket/handlers'
 import { redirect } from 'next/navigation'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
 import SocketManager from '../SocketManager'
 import InfoSheets from './_components/InfoSheets'
 import { TopBarClient } from '@/components'
@@ -55,7 +55,7 @@ const Tracking: FunctionComponent<Props> = ({ order: fallbackData }) => {
   }, [mutate, socket, coordinates, mapData])
 
   if (fallbackData.status !== 'In Progress') {
-    redirect(Routes.ORDER_TRACKING(fallbackData.id))
+    redirect(routes.customer.ORDER_TRACKING(fallbackData.id))
   }
 
   return (

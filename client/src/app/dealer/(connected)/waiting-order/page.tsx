@@ -1,5 +1,5 @@
 import authOptions from '@/app/api/auth/[...nextauth]/auth.const'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
 import { getServerSession } from 'next-auth'
 import { type FunctionComponent } from 'react'
 import Content from './_components/Content'
@@ -13,7 +13,7 @@ const Page: FunctionComponent = async () => {
   const { data } = await checkAvailability(session?.user?.id)
 
   if (!data?.isAvailable && data?.orderId) {
-    redirect(Routes.ORDER(data?.orderId))
+    redirect(routes.dealer.ORDER(data?.orderId))
   }
 
   return (

@@ -7,7 +7,7 @@ import { type FunctionComponent } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
 import {
   birthdateValidations,
   emailValidations,
@@ -35,7 +35,7 @@ const Form: FunctionComponent = () => {
       if (error) {
         toast.error('Ocurrió un error')
       }
-      router.push(Routes.LOGIN)
+      router.push(routes.auth.LOGIN)
     } catch (error) {
       console.error(error)
     }

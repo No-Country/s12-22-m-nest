@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 'use client'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
 import { Switch } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import { type FunctionComponent } from 'react'
@@ -58,7 +58,7 @@ const TopBarDealer: FunctionComponent<Props> = ({
   mapButtonLink = ''
 }) => {
   const router = useRouter()
-  const pushLocation = description === 'DISCONNECTED' ? Routes.WAITING_ORDER : Routes.DEALER_HOME
+  const pushLocation = description === 'DISCONNECTED' ? routes.dealer.WAITING_ORDER : routes.dealer.HOME
 
   return (
     <BaseTopBar>
