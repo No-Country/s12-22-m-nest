@@ -12,7 +12,7 @@ import SocketManager from '../SocketManager'
 import InfoSheets from './_components/InfoSheets'
 import { TopBarClient } from '@/components'
 
-const DynamicMap = dynamic(async () => await import('@/components/DynamicMap'), {
+const DynamicMap = dynamic(async () => await import('@/components/DynamicMap/DynamicMap'), {
   ssr: false
 })
 

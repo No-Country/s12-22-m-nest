@@ -4,7 +4,7 @@ import { type Product, type Order } from 'src/order/entities/order.entity'
 import { type Chat } from 'src/chat/entities/chat.mongo-entity'
 import { calculateDistance } from './calculateDistance.utils'
 
-export const formatOrder = (order: Order, chat: Chat) => {
+export const formatOrder = (order: Order, chat: Chat | null) => {
   const shipCoordinates = JSON.parse(order.shipCoordinates) as Coordinates
   const shopCoordinates = JSON.parse(order.shopCoordinates) as Coordinates
   const products = JSON.parse(order.products) as Product[]
@@ -18,7 +18,7 @@ export const formatOrder = (order: Order, chat: Chat) => {
   const orderRequest: OrderRequest = {
     ...order,
     products,
-    chat,
+    ...(chat && { chat }),
     shipCoordinates,
     shopCoordinates,
     shipMapUrl: buildMapsUrl(order.shipAddress),

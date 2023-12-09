@@ -27,6 +27,8 @@ export interface Order {
   clientEmail: string
   products: Product[]
   shop: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Product {

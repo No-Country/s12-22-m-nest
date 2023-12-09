@@ -6,5 +6,6 @@ export const Routes = {
   WAITING_ORDER: '/dealer/waiting-order',
   ORDER: (id: string) => `/dealer/order/${id}`,
   ORDER_TRACKING: (id: string) => `/dealer/order-tracking/${id}`,
-  DEALER_ACCOUNT: '/dealer/account'
+  DEALER_ACCOUNT: '/dealer/account',
+  ORDER_HISTORY: '/dealer/account/order-history'
 }
