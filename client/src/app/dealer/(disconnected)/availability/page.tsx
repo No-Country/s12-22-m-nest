@@ -1,6 +1,5 @@
 import authOptions from '@/app/api/auth/[...nextauth]/auth.const'
-import Button from '@/components/Button'
-import { Routes } from '@/utils/constants/routes.const'
+import { DynamicMap, TopBarDealer } from '@/components'
 import { getServerSession } from 'next-auth'
 import { type FunctionComponent } from 'react'
 
@@ -9,12 +8,17 @@ const Page: FunctionComponent = async () => {
   if (!session) return
 
   return (
-    <main className='padding-general-x flex min-h-screen flex-col items-start gap-2 py-[100px] '>
-      <h1 className='text-2xl'>
-        Bienvenido a <b>LLeGo!</b>
-      </h1>
-      <p>¿Estas listo para repartir?</p>
-      <Button title='Comenzar' href={Routes.WAITING_ORDER} />
+    <main className=' flex min-h-screen flex-col items-start pt-[100px] '>
+      <TopBarDealer title='DISCONNECTED' description='DISCONNECTED' switch={true} isSwitchActive={false} />
+      <section className='relative h-full w-screen flex-grow'>
+        <DynamicMap
+          locations={{
+            shipCoordinates: null,
+            shopCoordinates: null,
+            dealerCoordinates: null
+          }}
+        />
+      </section>
     </main>
   )
 }

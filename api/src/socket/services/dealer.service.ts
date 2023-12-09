@@ -66,6 +66,15 @@ export class SocketDealerService {
       socket.handshake.query.userId.toString()
     )
     socket.emit('dealerStatus', { taken: !isAvailable, orderId })
+
+    console.log('data.taken', isAvailable)
+
+    if (!isAvailable) {
+      socket.to(orderId).emit('updatedDealerLocation', data.coordinates)
+      socket
+        .to(orderId)
+        .emit('message', { message: 'El dealer se ha conectado' })
+    }
   }
 
   async updateDealerLocation(socket: Socket, data: any) {

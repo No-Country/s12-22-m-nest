@@ -34,7 +34,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
       className={stylesNavbar}
       classNames={{
         wrapper: 'p-0 h-auto w-full max-w-full flex justify-between  2xl:container',
-        base: 'bg-transparent min-h-[95px]',
+        base: 'bg-transparent min-h-[95px] z-50',
         content: 'w-auto !grow-0',
         brand: 'max-w-[185px] ',
         item: `data-[active=true]:font-semibold font-light ${textColor}`
@@ -48,7 +48,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
       <div className='flex gap-3'>
         <NextLink href={Routes.HOME}>
           <NavbarBrand>
-            <Image src={logo} alt='Logo' width={75} height={30} />
+            <Image src={logo} alt='Logo' width={120} height={50} />
           </NavbarBrand>
         </NextLink>
       </div>

@@ -8,7 +8,16 @@ import { type Dispatch, type SetStateAction } from 'react'
 import { type Socket } from 'socket.io-client'
 import { type KeyedMutator } from 'swr'
 
-export const manageDealer = async (socket: Socket, setConnected: Dispatch<SetStateAction<boolean>>): Promise<void> => {
+const getLocationPromise = async (): Promise<Coordinates> => {
+  const { lat, lon } = await getLocation()
+  return { lat, lon }
+}
+
+export const manageDealer = async (
+  socket: Socket,
+  setConnected: Dispatch<SetStateAction<boolean>>,
+  setDealerCoordinates: (coordinates: Coordinates | null) => void
+): Promise<void> => {
   const connect = (lat: string, lon: string): void => {
     socket.emit('manageDealer', {
       coordinates: {
@@ -19,14 +28,11 @@ export const manageDealer = async (socket: Socket, setConnected: Dispatch<SetSta
     })
   }
 
-  const getLocationPromise = async (): Promise<Coordinates> => {
-    const { lat, lon } = await getLocation()
-    connect(lat, lon)
-    setConnected(true)
-    return { lat, lon }
-  }
-
-  await getLocationPromise()
+  const { lat, lon } = await getLocationPromise()
+  setDealerCoordinates({ lat, lon })
+  console.log('manageDealer', lat, lon)
+  connect(lat, lon)
+  setConnected(true)
 }
 
 export const handleDealerStatus = (socket: Socket, router: AppRouterInstance): void => {
@@ -52,10 +58,17 @@ export const handleJoinOrderDealer = (socket: Socket, orderId: string): void => 
   })
 }
 
-export const handleJoinOrderClient = (socket: Socket, params: { orderId: string }): void => {
+export const handleJoinOrderClient = (
+  socket: Socket,
+  setConnected: Dispatch<SetStateAction<boolean>>,
+  orderId: string
+): void => {
   socket.emit('joinOrderClient', {
-    orderId: params.orderId
+    orderId
   })
+
+  setConnected(true)
+  console.log('joinOrderClient', orderId)
 }
 
 export const handleSystemMessage = (socket: Socket): void => {

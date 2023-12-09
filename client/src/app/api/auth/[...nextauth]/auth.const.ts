@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
             url: Endpoints.FIND_USER(token.email ?? ''),
             cache: 'no-store'
           })
-
+          console.log(data)
           const userId = data?.id ?? ''
           const userEmail = data?.email ?? ''
 

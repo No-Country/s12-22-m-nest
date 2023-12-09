@@ -2,14 +2,15 @@
 import { type FunctionComponent, useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import { type OrderRequest } from '@/interfaces/socket.interface'
-import { type Chat, EnumSteps } from '@/interfaces'
+import { type Chat } from '@/interfaces'
 import { updateOrderStatus } from '@/services/orders/updateStatus.service'
-import { ChatBox } from '@/components'
+import { ChatBox, TopBarDealer } from '@/components'
 import { handleChat } from '@/services/socket/handlers'
 import OrderManager from '../socketManager'
 import useSWR from 'swr'
 import { Endpoints } from '@/utils/constants/endpoints.const'
 import { SocketContext } from '@/context/providers/socket.provider'
+import Client from './_components/Client'
 
 interface Props {
   order: OrderRequest
@@ -21,6 +22,10 @@ const Residence: FunctionComponent<Props> = ({ order: fallbackData }) => {
   const { data: order, mutate } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
     fallbackData
   })
+
+  const handleUpdateOrder = async (): Promise<void> => {
+    void updateOrderStatus(order?.id ?? '', router)
+  }
 
   useEffect(() => {
     const handleSystem = async (): Promise<void> => {
@@ -37,28 +42,17 @@ const Residence: FunctionComponent<Props> = ({ order: fallbackData }) => {
 
   return (
     <OrderManager socket={socket} orderId={fallbackData?.id}>
-      <main className='padding-general-x min-h-screen py-[100px] '>
-        <section>
-          <h1>En la residencia</h1>
-          <h3>Status: {order?.status}</h3>
-          <h3>Step: {order && EnumSteps[order?.step]}</h3>
-          {order && order.step <= 5 && (
-            <button
-              onClick={() => {
-                void updateOrderStatus(order.id, router)
-              }}
-            >
-              Next Step
-            </button>
-          )}
-          <button
-            onClick={() => {
-              router.refresh()
-            }}
-            className='mx-6'
-          >
-            Force Refresh
-          </button>
+      <main className=' flex flex-col items-start  pt-[100px] '>
+        <TopBarDealer
+          title='ON_RESIDENCE'
+          description='ON_RESIDENCE'
+          button
+          buttonTitle='Ya entregué'
+          buttonAction={handleUpdateOrder}
+          isSwitchActive={true}
+        />
+        <section className='padding-general-x w-full bg-gray-100 py-10'>
+          <Client order={order ?? fallbackData} />
           <ChatBox mode='dealer' orderId={fallbackData?.id} chat={order?.chat as Chat} />
         </section>
       </main>

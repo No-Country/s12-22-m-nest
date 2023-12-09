@@ -23,6 +23,7 @@ export interface OrderRequest
   shopCoordinates: Coordinates
   products: Product[]
   chat: Chat
+  distance: number
 }
 
 export interface Coordinates {
