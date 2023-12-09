@@ -1,7 +1,7 @@
 export const routes = {
   auth: {
-    LOGIN: '/login',
-    REGISTER: '/register'
+    LOGIN: '/auth/login',
+    REGISTER: '/auth/register'
   },
   customer: {
     HOME: '/',
@@ -11,7 +11,8 @@ export const routes = {
     ORDER_TRACKING: (id: string) => `/order-tracking/${id}`
   },
   dealer: {
-    HOME: '/dealer/availability',
+    HOME: '/dealer',
+    AVAILABILITY: '/dealer/availability',
     WAITING_ORDER: '/dealer/waiting-order',
     ORDER: (id: string) => `/dealer/order/${id}`,
     ACCOUNT: '/account',

@@ -58,7 +58,7 @@ const TopBarDealer: FunctionComponent<Props> = ({
   mapButtonLink = ''
 }) => {
   const router = useRouter()
-  const pushLocation = description === 'DISCONNECTED' ? routes.dealer.WAITING_ORDER : routes.dealer.HOME
+  const pushLocation = description === 'DISCONNECTED' ? routes.dealer.WAITING_ORDER : routes.dealer.AVAILABILITY
 
   return (
     <BaseTopBar>

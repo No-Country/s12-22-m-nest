@@ -6,6 +6,7 @@ import NextLink from 'next/link'
 import { type FunctionComponent, useState } from 'react'
 import { routes } from '@/utils/constants/routes.const'
 import { useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 
 interface Props {
   theme?: 'light' | 'transparent'
@@ -14,6 +15,7 @@ interface Props {
 
 const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'full' }) => {
   const { data: session } = useSession()
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -21,7 +23,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
     setIsScrolled(position > 0)
   }
 
-  const logo = session?.user.type === 'dealer' ? '/icon/logo.svg' : '/icon/shop-logo.svg'
+  const logo = pathname.startsWith(routes.dealer.HOME) ? '/icon/logo.svg' : '/icon/shop-logo.svg'
   const bgColor = theme === 'transparent' ? (isScrolled ? 'bg-[#FFFFFF1]' : 'bg-transparent') : 'bg-white'
 
   const blur = isScrolled

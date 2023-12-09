@@ -6,9 +6,9 @@ export const itemsNavBuilder = (currentUser: User): ItemNavInterface[] => items[
 const items = {
   dealer: [
     {
-      key: routes.dealer.HOME,
+      key: routes.dealer.AVAILABILITY,
       label: 'Inicio',
-      href: routes.dealer.HOME,
+      href: routes.dealer.AVAILABILITY,
       visible: true
     },
     {
