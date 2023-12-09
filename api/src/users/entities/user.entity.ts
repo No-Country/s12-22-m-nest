@@ -46,6 +46,11 @@ export class User {
   @IsISO8601()
   birthdate: Date
 
+  @Column({ default: 'dealer' })
+  @IsString()
+  @IsOptional()
+  type: 'customer' | 'dealer' | 'admin'
+
   @Column()
   @IsString()
   @MinLength(6)
