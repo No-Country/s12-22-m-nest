@@ -22,7 +22,6 @@ export interface OrderInterface {
   step: TSteps
   chat: Chat
   price: number
-  clientName: string
   shipCoordinates: Coordinates
   products: Product[]
   shop: Shop

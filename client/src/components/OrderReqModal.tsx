@@ -9,6 +9,14 @@ import { type OrderInterface } from '@/interfaces'
 import { useRouter } from 'next/navigation'
 import { routes } from '@/utils/constants/routes.const'
 import { toast } from 'sonner'
+import { Howl } from 'howler'
+import { clientUrl } from '@/utils/constants/env.const'
+
+const sound = new Howl({
+  src: [clientUrl + '/sound/incomingOrder.mp3'],
+  loop: true,
+  html5: true
+})
 
 const OrderReqModal: React.FunctionComponent = () => {
   const router = useRouter()
@@ -42,6 +50,7 @@ const OrderReqModal: React.FunctionComponent = () => {
     setRemainingTime(30)
     setReqOrder(null)
     callbackRef.current = undefined
+    sound.stop()
     clearInterval(intervalRef.current)
   }
 
@@ -70,7 +79,8 @@ const OrderReqModal: React.FunctionComponent = () => {
   const incomingOrder = useMemo(
     () =>
       debounce((data: OrderInterface, callback: (accepted: boolean) => void) => {
-        console.log('incomingOrder', data)
+        console.log('incomingOrder', clientUrl + '/sound/incomingOrder.mp3')
+        sound.play()
         handleInterval()
         callbackRef.current = callback
         setAsking(true)
@@ -80,18 +90,32 @@ const OrderReqModal: React.FunctionComponent = () => {
     []
   )
 
+  const handleKeyDown = (event: React.KeyboardEvent): void => {
+    // Evita la acción predeterminada cuando se presiona la tecla "Play"
+    if (event.key === 'Play') {
+      event.preventDefault()
+    }
+  }
+
   useEffect(() => {
     handleOrder(socket, incomingOrder)
   }, [socket])
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton isDismissable={false} placement='center'>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      hideCloseButton
+      isDismissable={false}
+      placement='center'
+      onKeyDown={handleKeyDown}
+    >
       <ModalContent>
         <ModalHeader className='flex flex-col gap-1'>Pedido Entrante</ModalHeader>
         <ModalBody>
           <div className='flex flex-col gap-1'>
-            <p className='text-sm'>Cliente: {reqOrder?.clientName}</p>
-            <p className='text-sm'>Tienda: {reqOrder?.shop.name}</p>
+            <p className='text-sm'>Cliente: {reqOrder?.client.firstName + ' ' + reqOrder?.client.lastName}</p>
+            <p className='text-sm'>Tienda: {reqOrder?.shop?.name}</p>
             <p className='text-sm'>Distancia: {reqOrder?.distance}km</p>
           </div>
         </ModalBody>

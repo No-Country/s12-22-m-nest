@@ -29,7 +29,7 @@ const Finished: FunctionComponent<Props> = async ({ order }) => (
         </div>
         <div className='px-[20px]'>
           <p className='font-semibold'>Cliente</p>
-          <p className='text-sm font-light'>{order?.clientName}</p>
+          <p className='text-sm font-light'>{order?.client?.firstName + ' ' + order?.client?.lastName}</p>
         </div>
         <p className='px-[20px] text-right font-medium'>Total: ${order?.price}</p>
       </CardBody>
