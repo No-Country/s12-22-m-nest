@@ -8,5 +8,9 @@ export const Endpoints = {
   FIND_ORDER: (id: string) => `/api/orders/${id}`,
   NEXT_STEP: (id: string) => `/api/orders/${id}/nextStep`,
   REGISTER: '/api/auth/register',
-  SEND_MESSAGE: (orderId: string) => `/api/chat/${orderId}/send`
+  SEND_MESSAGE: (orderId: string) => `/api/chat/${orderId}/send`,
+  FIND_PRODUCTS: '/api/products',
+  FIND_SHOP: (id: string) => `/api/shops/${id}`,
+  CREATE_ORDER: '/api/orders',
+  FIND_PRODUCT: (id: string) => `/api/products/${id}`
 }

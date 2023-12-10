@@ -1,13 +1,13 @@
 'use client'
 import { type FunctionComponent, useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import { type OrderRequest } from '@/interfaces/socket.interface'
+import { type OrderInterface } from '@/interfaces'
 import OrderManager from '../socketManager'
 import { SocketContext } from '@/context/providers/socket.provider'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
 
 interface Props {
-  order: OrderRequest
+  order: OrderInterface
 }
 
 const Finished: FunctionComponent<Props> = ({ order: fallbackData }) => {
@@ -16,7 +16,7 @@ const Finished: FunctionComponent<Props> = ({ order: fallbackData }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      router.push(Routes.WAITING_ORDER)
+      router.push(routes.dealer.WAITING_ORDER)
     }, 3000)
   }, [router])
 

@@ -6,7 +6,7 @@ import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { checkIsAvailable } from 'src/utils/isAvailable.utils'
 import { Order } from 'src/order/entities/order.entity'
-import { findOrder } from 'src/order/common'
+import { findOrder } from 'src/common/orders.common'
 
 @Injectable()
 export class SocketOrderService {
@@ -54,7 +54,9 @@ export class SocketOrderService {
       socket.handshake.query.userId.toString(),
       this.orderRepository
     )
-    const currentOrderDealer = (await findOrder(data.orderId, this.orderRepository)).dealerId
+    const currentOrderDealer = (
+      await findOrder(data.orderId, this.orderRepository)
+    ).dealerId
     const requestDealer = socket.handshake.query.userId
     console.log('joinOrderDealer', isAvailable, orderId, data.orderId)
     if (isAvailable || orderId !== data.orderId) {

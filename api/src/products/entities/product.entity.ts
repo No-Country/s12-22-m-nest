@@ -11,7 +11,7 @@ import {
   UpdateDateColumn
 } from 'typeorm'
 
-export interface Product {
+export interface ProductOrder {
   name: string
   quantity: number
   price: number

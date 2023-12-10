@@ -5,7 +5,7 @@ import { Button, DynamicPopover } from '@/components'
 import Menu from './Menu'
 import { Endpoints } from '@/utils/constants/endpoints.const'
 import useSWR from 'swr'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
 import { NavbarContent, NavbarItem } from '@nextui-org/react'
 import { type FunctionComponent } from 'react'
 
@@ -20,7 +20,7 @@ const ProfileAction: FunctionComponent = () => {
             <Menu loggedUser={loggedUser} />
           </DynamicPopover>
         ) : (
-          <Button size='md' title='Sign In' color='primary' href={Routes.LOGIN} />
+          <Button size='md' title='Sign In' color='primary' href={routes.auth.LOGIN} />
         )}
       </NavbarItem>
     </NavbarContent>

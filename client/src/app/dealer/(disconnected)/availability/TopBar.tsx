@@ -1,5 +1,5 @@
 'use client'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
 import { Switch } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import { type FunctionComponent } from 'react'
@@ -15,7 +15,7 @@ const TopBar: FunctionComponent = () => {
           </h1>
           <Switch
             onValueChange={() => {
-              router.push(Routes.WAITING_ORDER)
+              router.push(routes.dealer.WAITING_ORDER)
             }}
             size='sm'
           />

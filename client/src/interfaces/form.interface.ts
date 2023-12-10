@@ -14,3 +14,14 @@ export interface PasswordFormProps {
   newPassword: string
   repeatPassword: string
 }
+
+export interface ShippingFormProps {
+  shipAddress: string
+}
+
+export interface OrderFormProps {
+  shipAddress: string
+  client: string
+  shop: string
+  products: string[]
+}
