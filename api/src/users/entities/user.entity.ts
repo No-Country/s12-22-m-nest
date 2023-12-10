@@ -7,14 +7,14 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-  MinLength
+  MinLength,
+  Matches
 } from 'class-validator'
 import { Order } from 'src/order/entities/order.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
@@ -47,6 +47,11 @@ export class User {
   @IsISO8601()
   birthdate: Date
 
+  @Column({ default: 'dealer' })
+  @IsString()
+  @Matches(/(dealer|customer)/)
+  type: 'customer' | 'dealer'
+
   @Column()
   @IsString()
   @MinLength(6)
@@ -60,9 +65,11 @@ export class User {
   @IsOptional()
   profileImage: string
 
-  @OneToMany(() => Order, (order) => order.dealerId)
-  @JoinColumn()
+  @OneToMany(() => Order, (order) => order.dealer)
   orders: Order[]
+
+  @OneToMany(() => Order, (order) => order.client)
+  clientOrders: Order[]
 
   @CreateDateColumn({
     type: 'timestamp',

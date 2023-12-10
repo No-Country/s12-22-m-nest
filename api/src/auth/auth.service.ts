@@ -6,7 +6,7 @@ import { compare } from 'src/utils/bcryptManager.utils'
 import { User } from 'src/users/entities/user.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { createUser, findUser } from 'src/users/common'
+import { createUser, findUser } from 'src/common/users.common'
 
 @Injectable()
 export class AuthService {

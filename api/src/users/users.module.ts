@@ -4,7 +4,7 @@ import { UsersController } from './users.controller'
 import { User } from './entities/user.entity'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Order } from 'src/order/entities/order.entity'
-import { OrderModule } from 'src/order/order.module'
+import { OrderModule } from 'src/order/orders.module'
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service'
 
 @Module({

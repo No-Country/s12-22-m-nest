@@ -1,4 +1,3 @@
-// TODO: Add types
 import { type User } from '@/interfaces'
 import { mutationRequest, getRequest } from '@/services/api.requests'
 import { Endpoints } from '@/utils/constants/endpoints.const'
@@ -32,30 +31,39 @@ export const authOptions: NextAuthOptions = {
 
         const user = {
           id: data?.user?.id ?? '',
-          email: data?.user?.email ?? ''
+          email: data?.user?.email ?? '',
+          sessionId: data?.access_token ?? '',
+          type: data?.user?.type ?? 'customer'
         }
 
         return user
       }
     })
   ],
+
   callbacks: {
+    jwt: async (arg) => {
+      const { token, user } = arg
+      if (user) {
+        token.sessionId = user.sessionId
+        token.type = user.type
+      }
+      return await Promise.resolve(token)
+    },
     session: async (arg) => {
       const { token, session } = arg
-
       const getSession = async (): Promise<void> => {
         try {
           const { data } = await getRequest<User>({
             url: Endpoints.FIND_USER(token.email ?? ''),
             cache: 'no-store'
           })
-          console.log(data)
-          const userId = data?.id ?? ''
-          const userEmail = data?.email ?? ''
 
           session.user = {
-            id: userId,
-            email: userEmail
+            id: data?.id ?? '',
+            email: data?.email ?? '',
+            sessionId: token.sessionId ?? '',
+            type: data?.type ?? 'customer'
           }
         } catch (error) {
           console.error('Error al obtener la sesión:', error)
@@ -70,7 +78,7 @@ export const authOptions: NextAuthOptions = {
     }
   },
   pages: {
-    signIn: '/login'
+    signIn: '/auth/login'
   },
   secret: process.env.NEXTAUTH_SECRET
 }

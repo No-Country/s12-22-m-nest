@@ -1,4 +1,4 @@
-import { findActiveOrderByDealer } from 'src/order/common'
+import { findActiveOrderByDealer } from 'src/common/orders.common'
 import { type Order } from 'src/order/entities/order.entity'
 import { type Repository } from 'typeorm'
 

@@ -1,6 +1,5 @@
-import { type Chat } from '@/interfaces'
-import { type Coordinates, type OrderRequest } from '@/interfaces/socket.interface'
-import { Routes } from '@/utils/constants/routes.const'
+import { type Chat, type Coordinates, type OrderInterface } from '@/interfaces'
+import { routes } from '@/utils/constants/routes.const'
 import { getLocation } from '@/utils/getLocation.utils'
 import { type DebouncedFunc } from 'lodash'
 import { type AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -38,14 +37,14 @@ export const manageDealer = async (
 export const handleDealerStatus = (socket: Socket, router: AppRouterInstance): void => {
   socket.on('dealerStatus', (data) => {
     if (data.taken) {
-      router.push(Routes.ORDER(data.orderId))
+      router.push(routes.dealer.ORDER(data.orderId))
     }
   })
 }
 
-export const handleOrderRequest = (
+export const handleOrder = (
   socket: Socket,
-  debManageOrder: DebouncedFunc<(data: OrderRequest, callback: (accepted: boolean) => void) => void>
+  debManageOrder: DebouncedFunc<(data: OrderInterface, callback: (accepted: boolean) => void) => void>
 ): void => {
   socket.on('orderRequest', (data, callback) => {
     debManageOrder(data, callback)
@@ -78,7 +77,7 @@ export const handleSystemMessage = (socket: Socket): void => {
   })
 }
 
-export const handleChat = (socket: Socket, update: KeyedMutator<OrderRequest>): void => {
+export const handleChat = (socket: Socket, update: KeyedMutator<OrderInterface>): void => {
   socket.on('updatedChat', async (data: Chat) => {
     console.log('updatedChat', data)
     await update()
