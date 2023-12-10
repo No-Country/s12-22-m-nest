@@ -9,8 +9,8 @@ import { Button } from '@/components'
 import Link from 'next/link'
 
 export enum Title {
-  DISCONNECTED = 'Actualmente estas desconectado',
-  CONNECTED = 'Ya estas conectado',
+  DISCONNECTED = 'Actualmente estás desconectado',
+  CONNECTED = 'Ya estás conectado',
   ON_SHOP = 'Retira el pedido',
   GOING_CUSTOMER = 'Dirigete al cliente',
   GOING_SHOP = 'Dirigete al comercio',
@@ -63,9 +63,9 @@ const TopBarDealer: FunctionComponent<Props> = ({
   return (
     <BaseTopBar>
       <div className='flex w-full items-center justify-between 2xl:container'>
-        <div className='flex w-full flex-col items-start'>
-          <div className='flex w-full items-center gap-3'>
-            <h1 className='text-2xl'>{Title[title]}</h1>
+        <div className='flex w-full flex-col items-start gap-y-1'>
+          <div className='flex w-full items-center gap-10 md:gap-3'>
+            <h1 className='text-lg md:text-2xl'>{Title[title]}</h1>
             {switch_ && (
               <Switch
                 isSelected={isSwitchActive}
