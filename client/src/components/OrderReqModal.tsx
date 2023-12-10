@@ -3,9 +3,9 @@
 import React, { useState, useEffect, useMemo, useContext, useRef } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import { debounce } from 'lodash'
-import { handleOrderRequest } from '@/services/socket/handlers'
+import { handleOrderInterface } from '@/services/socket/handlers'
 import { SocketContext } from '@/context/providers/socket.provider'
-import { type OrderRequest } from '@/interfaces'
+import { type OrderInterface } from '@/interfaces'
 import { useRouter } from 'next/navigation'
 import { routes } from '@/utils/constants/routes.const'
 import { toast } from 'sonner'
@@ -14,7 +14,7 @@ const OrderReqModal: React.FunctionComponent = () => {
   const router = useRouter()
   const [remainingTime, setRemainingTime] = useState(30)
   const [asking, setAsking] = useState(false)
-  const [reqOrder, setReqOrder] = useState<OrderRequest | null>(null)
+  const [reqOrder, setReqOrder] = useState<OrderInterface | null>(null)
   const callbackRef = useRef<(accepted: boolean) => void>()
   const intervalRef = useRef<NodeJS.Timeout>()
   const { isOpen, onOpenChange, onClose } = useDisclosure()
@@ -69,7 +69,7 @@ const OrderReqModal: React.FunctionComponent = () => {
 
   const incomingOrder = useMemo(
     () =>
-      debounce((data: OrderRequest, callback: (accepted: boolean) => void) => {
+      debounce((data: OrderInterface, callback: (accepted: boolean) => void) => {
         console.log('incomingOrder', data)
         handleInterval()
         callbackRef.current = callback
@@ -81,7 +81,7 @@ const OrderReqModal: React.FunctionComponent = () => {
   )
 
   useEffect(() => {
-    handleOrderRequest(socket, incomingOrder)
+    handleOrderInterface(socket, incomingOrder)
   }, [socket])
 
   return (
@@ -91,7 +91,7 @@ const OrderReqModal: React.FunctionComponent = () => {
         <ModalBody>
           <div className='flex flex-col gap-1'>
             <p className='text-sm'>Cliente: {reqOrder?.clientName}</p>
-            <p className='text-sm'>Tienda: {reqOrder?.shop}</p>
+            <p className='text-sm'>Tienda: {reqOrder?.shop.name}</p>
             <p className='text-sm'>Distancia: {reqOrder?.distance}km</p>
           </div>
         </ModalBody>

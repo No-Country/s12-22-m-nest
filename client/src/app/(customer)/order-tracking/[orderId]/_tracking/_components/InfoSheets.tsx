@@ -1,14 +1,14 @@
 /* eslint-disable multiline-ternary */
 'use client'
 import { useState, type FunctionComponent } from 'react'
-import { type OrderRequest } from '@/interfaces'
+import { type OrderInterface } from '@/interfaces'
 import { Button, ButtonGroup, Card, CardBody, CardHeader } from '@nextui-org/react'
 import OrderInfo from './OrderInfo'
 import ProductsTable from './ProductsTable'
 import { ChatBox } from '@/components'
 
 interface Props {
-  order: OrderRequest
+  order: OrderInterface
 }
 
 const InfoSheets: FunctionComponent<Props> = ({ order }) => {

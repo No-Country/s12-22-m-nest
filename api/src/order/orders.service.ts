@@ -90,7 +90,7 @@ export class OrderService {
       price: finalPrice,
       products: JSON.stringify(products),
       distance,
-      mapUrl: buildMapsUrl(shop.address).toString()
+      shipMapUrl: buildMapsUrl(shop.address).toString()
     })
 
     await this.orderRepository.save(orderCreation)

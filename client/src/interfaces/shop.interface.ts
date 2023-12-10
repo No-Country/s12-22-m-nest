@@ -1,4 +1,4 @@
-import { type Product } from '.'
+import { type Coordinates, type Product } from '.'
 
 export interface Shop {
   id: string
@@ -7,7 +7,8 @@ export interface Shop {
   address: string
   description: string
   phone: string
-  coordinates: string
+  coordinates: Coordinates
+  mapUrl: URL
   thumbnail?: string
   createdAt: Date
   updatedAt: Date

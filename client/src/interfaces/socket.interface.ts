@@ -1,4 +1,4 @@
-import { type Order, type Chat, type Product } from '@/interfaces'
+export type { OrderInterface } from './order.interface'
 
 export interface SockDealerData {
   coordinates: Coordinates

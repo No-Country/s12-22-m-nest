@@ -1,9 +1,9 @@
-import { type OrderRequest } from '@/interfaces'
+import { type OrderInterface } from '@/interfaces'
 import { type FunctionComponent } from 'react'
 import status from '../status.lib'
 
 interface Props {
-  order: OrderRequest
+  order: OrderInterface
 }
 
 const OrderInfo: FunctionComponent<Props> = ({ order }) => (

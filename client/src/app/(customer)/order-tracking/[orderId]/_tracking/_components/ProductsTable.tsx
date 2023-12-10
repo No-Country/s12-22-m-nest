@@ -16,12 +16,14 @@ const ProductsTable: FunctionComponent<Props> = ({ products }) => (
     <TableBody>
       {products.map((product, index) => (
         <TableRow key={index}>
-          <TableCell className='font-semibold'>{product.quantity}</TableCell>
+          {/* // Todo: manejar cantidades */}
+          <TableCell className='font-semibold'>1</TableCell>
           <TableCell>
             <p>{product.name}</p>
             <span className='text-xs font-light'>(${product.price})</span>
           </TableCell>
-          <TableCell className='text-base font-semibold'>${product.quantity * product.price}</TableCell>
+          {/* // Todo: manejar cantidades */}
+          <TableCell className='text-base font-semibold'>${product.price}</TableCell>
         </TableRow>
       ))}
     </TableBody>

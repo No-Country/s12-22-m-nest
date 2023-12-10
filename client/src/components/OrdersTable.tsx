@@ -1,11 +1,11 @@
 'use client'
-import { type OrderRequest } from '@/interfaces'
+import { type OrderInterface } from '@/interfaces'
 import { TableCell, TableRow } from '@nextui-org/react'
 import { type FunctionComponent } from 'react'
 import { DynamicTable } from '.'
 
 interface Props {
-  orders: OrderRequest[]
+  orders: OrderInterface[]
 }
 
 const OrdersTable: FunctionComponent<Props> = ({ orders }) => (

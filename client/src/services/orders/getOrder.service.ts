@@ -1,9 +1,9 @@
 import { getRequest } from '@/services/api.requests'
-import { type OrderRequest, type Response } from '@/interfaces'
+import { type OrderInterface, type Response } from '@/interfaces'
 import { Endpoints } from '@/utils/constants/endpoints.const'
 
-export const getOrder = async (orderId: string): Promise<Response<OrderRequest>> => {
-  const response = await getRequest<OrderRequest>({
+export const getOrder = async (orderId: string): Promise<Response<OrderInterface>> => {
+  const response = await getRequest<OrderInterface>({
     url: Endpoints.FIND_ORDER(orderId),
     cache: 'no-store'
   })

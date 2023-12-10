@@ -1,5 +1,5 @@
 import { type Chat } from '@/interfaces'
-import { type Coordinates, type OrderRequest } from '@/interfaces/socket.interface'
+import { type Coordinates, type OrderInterface } from '@/interfaces/socket.interface'
 import { routes } from '@/utils/constants/routes.const'
 import { getLocation } from '@/utils/getLocation.utils'
 import { type DebouncedFunc } from 'lodash'
@@ -43,11 +43,11 @@ export const handleDealerStatus = (socket: Socket, router: AppRouterInstance): v
   })
 }
 
-export const handleOrderRequest = (
+export const handleOrderInterface = (
   socket: Socket,
-  debManageOrder: DebouncedFunc<(data: OrderRequest, callback: (accepted: boolean) => void) => void>
+  debManageOrder: DebouncedFunc<(data: OrderInterface, callback: (accepted: boolean) => void) => void>
 ): void => {
-  socket.on('orderRequest', (data, callback) => {
+  socket.on('OrderInterface', (data, callback) => {
     debManageOrder(data, callback)
   })
 }
@@ -78,7 +78,7 @@ export const handleSystemMessage = (socket: Socket): void => {
   })
 }
 
-export const handleChat = (socket: Socket, update: KeyedMutator<OrderRequest>): void => {
+export const handleChat = (socket: Socket, update: KeyedMutator<OrderInterface>): void => {
   socket.on('updatedChat', async (data: Chat) => {
     console.log('updatedChat', data)
     await update()

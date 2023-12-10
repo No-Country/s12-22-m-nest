@@ -11,7 +11,7 @@ export enum EnumSteps {
   Delivered = 6
 }
 
-export interface Order {
+export interface OrderInterface {
   id: string
   dealerId: string | null
   dealer: User | null
@@ -31,4 +31,6 @@ export interface Order {
   shop: Shop
   createdAt: string
   updatedAt: string
+  distance: number
+  shipMapUrl: URL
 }

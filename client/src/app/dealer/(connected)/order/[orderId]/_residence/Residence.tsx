@@ -1,7 +1,7 @@
 'use client'
 import { type FunctionComponent, useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import { type OrderRequest } from '@/interfaces/socket.interface'
+import { type OrderInterface } from '@/interfaces/socket.interface'
 import { type Chat } from '@/interfaces'
 import { updateOrderStatus } from '@/services/orders/updateStatus.service'
 import { ChatBox, TopBarDealer } from '@/components'
@@ -13,13 +13,13 @@ import { SocketContext } from '@/context/providers/socket.provider'
 import Client from './_components/Client'
 
 interface Props {
-  order: OrderRequest
+  order: OrderInterface
 }
 
 const Residence: FunctionComponent<Props> = ({ order: fallbackData }) => {
   const router = useRouter()
   const socket = useContext(SocketContext)
-  const { data: order, mutate } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
+  const { data: order, mutate } = useSWR<OrderInterface>(Endpoints.FIND_ORDER(fallbackData?.id), {
     fallbackData
   })
 
@@ -31,7 +31,7 @@ const Residence: FunctionComponent<Props> = ({ order: fallbackData }) => {
     const handleSystem = async (): Promise<void> => {
       handleChat(socket, mutate)
 
-      socket.on('updateOrder', async (data: OrderRequest) => {
+      socket.on('updateOrder', async (data: OrderInterface) => {
         console.log('updateOrder', data)
         await mutate()
       })

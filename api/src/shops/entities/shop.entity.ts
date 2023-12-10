@@ -20,6 +20,9 @@ export class Shop {
   @OneToMany(() => Product, (product) => product.shop)
   products: Product[]
 
+  @Column()
+  mapUrl: string
+
   @OneToMany(() => Order, (order) => order.shop)
   orders: Order[]
 

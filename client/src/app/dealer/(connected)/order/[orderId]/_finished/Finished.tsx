@@ -1,13 +1,13 @@
 'use client'
 import { type FunctionComponent, useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import { type OrderRequest } from '@/interfaces/socket.interface'
+import { type OrderInterface } from '@/interfaces/socket.interface'
 import OrderManager from '../socketManager'
 import { SocketContext } from '@/context/providers/socket.provider'
 import { routes } from '@/utils/constants/routes.const'
 
 interface Props {
-  order: OrderRequest
+  order: OrderInterface
 }
 
 const Finished: FunctionComponent<Props> = ({ order: fallbackData }) => {

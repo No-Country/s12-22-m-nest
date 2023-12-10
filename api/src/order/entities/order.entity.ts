@@ -42,6 +42,9 @@ export class Order {
   shipAddress: string
 
   @Column({ nullable: false })
+  shipMapUrl: string
+
+  @Column({ nullable: false })
   step: TSteps
 
   @ManyToOne(() => Shop, (shop) => shop.orders, { eager: true })
@@ -75,9 +78,6 @@ export class Order {
 
   @Column('float')
   distance: number
-
-  @Column()
-  mapUrl: string
 
   @Column()
   shipCoordinates: string | null

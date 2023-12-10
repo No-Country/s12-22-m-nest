@@ -1,7 +1,7 @@
 'use client'
 import dynamic from 'next/dynamic'
 import { useContext, type FunctionComponent, useEffect, useState } from 'react'
-import { type Coordinates, type OrderRequest } from '@/interfaces'
+import { type Coordinates, type OrderInterface } from '@/interfaces'
 import { SocketContext } from '@/context/providers/socket.provider'
 import { Endpoints } from '@/utils/constants/endpoints.const'
 import useSWR from 'swr'
@@ -17,12 +17,12 @@ const DynamicMap = dynamic(async () => await import('@/components/DynamicMap/Dyn
 })
 
 interface Props {
-  order: OrderRequest
+  order: OrderInterface
 }
 
 const Tracking: FunctionComponent<Props> = ({ order: fallbackData }) => {
   const socket = useContext(SocketContext)
-  const { data: order, mutate } = useSWR<OrderRequest>(Endpoints.FIND_ORDER(fallbackData?.id), {
+  const { data: order, mutate } = useSWR<OrderInterface>(Endpoints.FIND_ORDER(fallbackData?.id), {
     fallbackData
   })
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null)
@@ -36,7 +36,7 @@ const Tracking: FunctionComponent<Props> = ({ order: fallbackData }) => {
     const handleSystem = async (): Promise<void> => {
       handleChat(socket, mutate)
 
-      socket.on('updateOrder', async (data: OrderRequest) => {
+      socket.on('updateOrder', async (data: OrderInterface) => {
         console.log('updateOrder', data)
         await mutate()
       })
