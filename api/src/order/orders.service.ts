@@ -18,6 +18,10 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { createChat, findChat } from 'src/common/chat.common'
 import { MailerService } from 'src/mailer/mailer.service'
+import { Shop } from 'src/shops/entities/shop.entity'
+import { findUser } from 'src/common/users.common'
+import { getFormatProducts } from 'src/utils/getFormatProducts.utils'
+import { Product } from 'src/products/entities/product.entity'
 
 @Injectable()
 export class OrderService {
@@ -26,6 +30,10 @@ export class OrderService {
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Shop)
+    private readonly shopRepository: Repository<Shop>,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
     @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
     private readonly httpService: HttpService,
     private readonly socketOrderService: SocketOrderService,
@@ -46,10 +54,18 @@ export class OrderService {
 
   async create(body: CreateOrderDto): Promise<any> {
     const chat = await createChat(this.chatModel)
-
+    const client = await findUser(body.client, this.userRepository)
+    const shop = await this.shopRepository.findOne({
+      where: { id: body.shop }
+    })
+    const products = await getFormatProducts(
+      body.products,
+      this.productRepository
+    )
+    const finalPrice = products.reduce((acc, curr) => acc + curr.price, 0)
     const shopCoordinates = await findCoordinates(
       this.httpService,
-      body.shopAddress
+      shop.address
     )
 
     const shipCoordinates = await findCoordinates(
@@ -59,25 +75,25 @@ export class OrderService {
 
     const order = this.orderRepository.create({
       dealerId: null,
-      shipAddress: body.shipAddress ?? '',
-      shopAddress: body.shopAddress ?? '',
+      shipAddress: body.shipAddress,
+      shopAddress: shop.address,
       shipCoordinates: JSON.stringify(shipCoordinates),
       shopCoordinates: JSON.stringify(shopCoordinates),
       status: 'Pending',
       step: EnumSteps.LookingForDealer,
       chat: String(chat.id),
-      clientName: body.clientName,
-      clientEmail: body.clientEmail,
-      shop: 'McDonalds',
-      price: 300,
-      products: JSON.stringify(body.products)
+      clientName: client.firstName + ' ' + client.lastName,
+      clientEmail: client.email,
+      shop: shop.name,
+      price: finalPrice,
+      products: JSON.stringify(products)
     })
 
     await this.orderRepository.save(order)
     const orderRequest = formatOrder(order, chat)
 
     await this.mailerService.sendMail({
-      receiverMail: order.clientEmail,
+      receiverMail: client.email,
       header: 'Sigue tu orden',
       body: `Hola, este es el link para seguir tu orden:${process.env.CLIENT_URL}/order-tracking/${order.id}`
     })
