@@ -2,8 +2,16 @@
 /* eslint-disable @typescript-eslint/indent */
 import { IsJSON } from 'class-validator'
 import { TSteps } from 'src/order/entities/step.interface'
+import { Shop } from 'src/shops/entities/shop.entity'
 import { User } from 'src/users/entities/user.entity'
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
 
 type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
 
@@ -21,19 +29,29 @@ export class Order {
   @Column({ type: 'uuid', nullable: true })
   dealerId: string
 
-  @ManyToOne(() => User, {
-    nullable: true
-  })
+  @ManyToOne(() => User, (user) => user.orders, { eager: true })
   dealer: User
+
+  @Column({ type: 'uuid', nullable: true })
+  clientId: string
+
+  @ManyToOne(() => User, (user) => user.clientOrders, { eager: true })
+  client: User
 
   @Column({ nullable: false })
   shipAddress: string
 
   @Column({ nullable: false })
-  shopAddress: string
+  shipMapUrl: string
 
   @Column({ nullable: false })
   step: TSteps
+
+  @ManyToOne(() => Shop, (shop) => shop.orders, { eager: true })
+  shop: Shop
+
+  @Column({ type: 'uuid', nullable: true })
+  shopId: string
 
   // @OneToOne (()=> Chat ,(chat)=> chat,{eager:true})
   // @JoinColumn()
@@ -48,16 +66,6 @@ export class Order {
   })
   price: number
 
-  @Column({
-    nullable: false
-  })
-  clientName: string
-
-  @Column({
-    nullable: false
-  })
-  clientEmail: string
-
   // @OneToOne (()=> Product ,(product)=> product ,{eager:true})
   // @JoinColumn()
   // TODO: podemos validar que sea un json?
@@ -68,12 +76,22 @@ export class Order {
   @Column()
   status: OrderStatus
 
-  @Column()
-  shop: string
+  @Column('float')
+  distance: number
 
   @Column()
   shipCoordinates: string | null
 
-  @Column()
-  shopCoordinates: string | null
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
+  createdAt: Date
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP'
+  })
+  updatedAt: Date
 }

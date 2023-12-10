@@ -1,9 +1,9 @@
 'use client'
-import { itemsNavBuilder, type ItemNavInterface } from './lib/itemsNav'
 import NextLink from 'next/link'
 import { signOut } from 'next-auth/react'
 import type { User } from '@/interfaces'
 import { type FunctionComponent } from 'react'
+import { itemsNavBuilder } from '@/lib/userNav.lib'
 
 interface Props {
   loggedUser: User
@@ -15,7 +15,7 @@ const Menu: FunctionComponent<Props> = ({ loggedUser }) => {
 
   return (
     <div className='flex w-full flex-col'>
-      {items.map((item, index) => (
+      {items?.map((item, index) => (
         <NextLink
           href={item.href}
           className={`w-full rounded-xl p-2 hover:bg-slate-100 ${item.color === 'danger' ? dangerStyle : ''}`}

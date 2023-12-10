@@ -1,15 +1,16 @@
-import { Order, type Product } from '../entities/order.entity'
-import { OmitType } from '@nestjs/mapped-types'
+/* eslint-disable @typescript-eslint/indent */
+import { IsArray, IsString } from 'class-validator'
 
-export class CreateOrderDto extends OmitType(Order, [
-  'id',
-  'dealer',
-  'chat',
-  'step',
-  'status',
-  'shipCoordinates',
-  'shopCoordinates',
-  'products'
-]) {
-  products: Product[]
+export class CreateOrderDto {
+  @IsString()
+  shipAddress: string
+
+  @IsString()
+  client: string
+
+  @IsString()
+  shop: string
+
+  @IsArray()
+  products: string[]
 }

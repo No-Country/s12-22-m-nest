@@ -1,10 +1,12 @@
 'use client'
 import Image from 'next/image'
-import { ProfileAction } from '@/components'
+import { Cart, ProfileAction } from '@/components'
 import { Navbar, NavbarBrand } from '@nextui-org/react'
 import NextLink from 'next/link'
 import { type FunctionComponent, useState } from 'react'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
+import { useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 
 interface Props {
   theme?: 'light' | 'transparent'
@@ -12,6 +14,8 @@ interface Props {
 }
 
 const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'full' }) => {
+  const { data: session, status } = useSession()
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -19,7 +23,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
     setIsScrolled(position > 0)
   }
 
-  const logo = '/icon/logo.svg'
+  const logo = pathname.startsWith(routes.dealer.HOME) ? '/icon/logo.svg' : '/icon/shop-logo.svg'
   const bgColor = theme === 'transparent' ? (isScrolled ? 'bg-[#FFFFFF1]' : 'bg-transparent') : 'bg-white'
 
   const blur = isScrolled
@@ -34,7 +38,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
       className={stylesNavbar}
       classNames={{
         wrapper: 'p-0 h-auto w-full max-w-full flex justify-between  2xl:container',
-        base: 'bg-transparent min-h-[95px] z-50',
+        base: 'bg-transparent min-h-[95px] z-10',
         content: 'w-auto !grow-0',
         brand: 'max-w-[185px] ',
         item: `data-[active=true]:font-semibold font-light ${textColor}`
@@ -46,14 +50,15 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
       }}
     >
       <div className='flex gap-3'>
-        <NextLink href={Routes.HOME}>
+        <NextLink href={routes[session?.user?.type ?? 'customer'].HOME}>
           <NavbarBrand>
             <Image src={logo} alt='Logo' width={120} height={50} />
           </NavbarBrand>
         </NextLink>
       </div>
       {layout === 'full' && (
-        <div className='flex items-center justify-end gap-10'>
+        <div className='flex items-center gap-3'>
+          {(session?.user?.type === 'customer' || status === 'unauthenticated') && <Cart />}
           <ProfileAction />
         </div>
       )}

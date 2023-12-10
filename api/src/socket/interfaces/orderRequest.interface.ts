@@ -1,20 +1,21 @@
 // Todo: fix eslint-disable
 /* eslint-disable @typescript-eslint/indent */
-import { type User } from 'src/users/entities/user.entity'
 import { type Product, type Order } from 'src/order/entities/order.entity'
 import { type Chat } from 'src/chat/entities/chat.mongo-entity'
+import { type ShopResponse } from 'src/shops/entities/shop.entity'
 
 export interface OrderRequest
   extends Omit<
     Order,
-    'dealer' | 'shipCoordinates' | 'shopCoordinates' | 'products' | 'chat'
+    | 'dealer'
+    | 'shipCoordinates'
+    | 'shopCoordinates'
+    | 'products'
+    | 'chat'
+    | 'shop'
   > {
-  shipMapUrl: URL
-  shopMapUrl: URL
-  dealer: User | null
   shipCoordinates: Coordinates
-  shopCoordinates: Coordinates
   products: Product[]
   chat: Chat
-  distance: number
+  shop: ShopResponse
 }

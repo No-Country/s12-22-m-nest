@@ -18,7 +18,7 @@ import { type OrderRequest } from '../interfaces/orderRequest.interface'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/users/entities/user.entity'
 import { Repository } from 'typeorm'
-import { updateOrder } from 'src/order/common'
+import { updateOrder } from 'src/common/orders.common'
 import { checkIsAvailable } from 'src/utils/isAvailable.utils'
 import { Order } from 'src/order/entities/order.entity'
 import { SocketGateway } from '../socket.gateway'
@@ -87,8 +87,8 @@ export class SocketDealerService {
 
     for (const dealer of dealers) {
       const distance = calculateDistance(
-        parseFloat(order.shopCoordinates.lat),
-        parseFloat(order.shopCoordinates.lon),
+        parseFloat(order.shop.coordinates.lat),
+        parseFloat(order.shop.coordinates.lon),
         parseFloat(dealer.coordinates.lat),
         parseFloat(dealer.coordinates.lon)
       )

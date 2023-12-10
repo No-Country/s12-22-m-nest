@@ -3,7 +3,7 @@ import authOptions from '@/app/api/auth/[...nextauth]/auth.const'
 import { EnumSteps } from '@/interfaces'
 import { getOrder } from '@/services/orders/getOrder.service'
 import { checkAvailability } from '@/services/users/checkAvailability.service'
-import { Routes } from '@/utils/constants/routes.const'
+import { routes } from '@/utils/constants/routes.const'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { type FunctionComponent } from 'react'
@@ -11,6 +11,11 @@ import GoingPage from './_going/Going'
 import ShopPage from './_shop/Shop'
 import ResidencePage from './_residence/Residence'
 import FinishedPage from './_finished/Finished'
+import { type Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Orden activa | LleGo!'
+}
 
 interface Props {
   params: {
@@ -27,7 +32,7 @@ const MainPage: FunctionComponent<Props> = async ({ params }) => {
   console.log('order', order)
 
   if (data?.isAvailable || data?.orderId !== params?.orderId) {
-    redirect(Routes.WAITING_ORDER)
+    redirect(routes.dealer.WAITING_ORDER)
   }
 
   return (

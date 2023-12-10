@@ -50,3 +50,15 @@ export const nameValidations: Record<string, RegisterOptions> = {
 export const birthdateValidations: RegisterOptions = {
   required
 }
+
+export const firstNameValidations: RegisterOptions = {
+  required
+}
+
+export const lastNameValidations: RegisterOptions = {
+  required
+}
+
+export const addressValidations: RegisterOptions = {
+  required
+}
