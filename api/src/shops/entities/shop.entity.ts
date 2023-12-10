@@ -12,6 +12,10 @@ import {
   UpdateDateColumn
 } from 'typeorm'
 
+export interface ShopResponse extends Omit<Shop, 'coordinates'> {
+  coordinates: Coordinates
+}
+
 @Entity()
 export class Shop {
   @PrimaryGeneratedColumn('uuid')

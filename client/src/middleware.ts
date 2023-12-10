@@ -6,7 +6,7 @@ import { type NextFetchEvent, type NextRequest, NextResponse } from 'next/server
 const checkStartsWith = (path: string, routes: string[]): boolean => routes.some((route) => path.startsWith(route))
 
 const middleware = async (req: NextRequest, event: NextFetchEvent): Promise<NextMiddlewareResult> => {
-  const customerRoutes = ['/account', '/checkout', '/order-tracking/']
+  const customerRoutes = ['/checkout', '/order-tracking/']
   const dealerRoutes = ['/dealer/']
   const token = await getToken({
     req,

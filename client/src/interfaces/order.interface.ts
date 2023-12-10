@@ -18,15 +18,12 @@ export interface OrderInterface {
   client: User
   clientId: string
   shipAddress: string
-  shopAddress: string
   status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
   step: TSteps
   chat: Chat
   price: number
   clientName: string
   shipCoordinates: Coordinates
-  shopCoordinates: Coordinates
-  clientEmail: string
   products: Product[]
   shop: Shop
   createdAt: string

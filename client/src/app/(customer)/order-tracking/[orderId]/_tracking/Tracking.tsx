@@ -11,6 +11,7 @@ import { routes } from '@/utils/constants/routes.const'
 import SocketManager from '../SocketManager'
 import InfoSheets from './_components/InfoSheets'
 import { TopBarClient } from '@/components'
+import { type Location } from '@/components/DynamicMap/DynamicMap'
 
 const DynamicMap = dynamic(async () => await import('@/components/DynamicMap/DynamicMap'), {
   ssr: false
@@ -25,11 +26,10 @@ const Tracking: FunctionComponent<Props> = ({ order: fallbackData }) => {
   const { data: order, mutate } = useSWR<OrderInterface>(Endpoints.FIND_ORDER(fallbackData?.id), {
     fallbackData
   })
-  const [coordinates, setCoordinates] = useState<Coordinates | null>(null)
-  const [mapData, setMapData] = useState({
-    shipCoordinates: order?.shipCoordinates,
-    shopCoordinates: order?.shopCoordinates,
-    dealerCoordinates: coordinates
+  const [mapData, setMapData] = useState<Location>({
+    shipCoordinates: order?.shipCoordinates || null,
+    shopCoordinates: order?.shop.coordinates || null,
+    dealerCoordinates: null
   })
 
   useEffect(() => {
@@ -43,20 +43,21 @@ const Tracking: FunctionComponent<Props> = ({ order: fallbackData }) => {
 
       socket.on('updatedDealerLocation', (data: Coordinates) => {
         console.log('updatedDealerLocation', data)
-        if (data === undefined) return
-        setCoordinates(data)
+        if (!data) return
         setMapData({
           ...mapData,
-          dealerCoordinates: coordinates
+          dealerCoordinates: data
         })
       })
     }
     void handleSystem()
-  }, [mutate, socket, coordinates, mapData])
+  }, [mutate, socket, mapData])
 
   if (fallbackData.status !== 'In Progress') {
     redirect(routes.customer.ORDER_TRACKING(fallbackData.id))
   }
+
+  console.log('mapData', mapData)
 
   return (
     <SocketManager socket={socket}>

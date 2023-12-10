@@ -21,7 +21,7 @@ const Finished: FunctionComponent<Props> = async ({ order }) => (
         <div className='px-[20px]'>
           <p className='font-semibold'>Tienda</p>
           <p className='font-normal'>{order?.shop.name}</p>
-          <p className='text-sm font-light'>{order?.shopAddress}</p>
+          <p className='text-sm font-light'>{order?.shop.address}</p>
         </div>
         <div className='px-[20px]'>
           <p className='font-semibold'>Domicilio</p>

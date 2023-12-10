@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useContext, useRef } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import { debounce } from 'lodash'
-import { handleOrderInterface } from '@/services/socket/handlers'
+import { handleOrder } from '@/services/socket/handlers'
 import { SocketContext } from '@/context/providers/socket.provider'
 import { type OrderInterface } from '@/interfaces'
 import { useRouter } from 'next/navigation'
@@ -81,7 +81,7 @@ const OrderReqModal: React.FunctionComponent = () => {
   )
 
   useEffect(() => {
-    handleOrderInterface(socket, incomingOrder)
+    handleOrder(socket, incomingOrder)
   }, [socket])
 
   return (

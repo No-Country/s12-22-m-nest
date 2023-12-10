@@ -21,6 +21,14 @@ const CenterMap: FunctionComponent<Props> = ({ locations }) => {
         map?.setView(newCenter, map.getZoom(), {
           animate: true
         })
+      } else if (locations.shopCoordinates && map?.setView) {
+        const newCenter = new Leaflet.LatLng(
+          Number(locations.shopCoordinates.lat),
+          Number(locations.shopCoordinates.lon)
+        )
+        map?.setView(newCenter, map.getZoom(), {
+          animate: true
+        })
       }
     }
 

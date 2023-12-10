@@ -15,9 +15,8 @@ export const useCartStore = create<CartState>()(
       items: [],
       addItem: (item) => {
         set((state) => {
-          const itemInCart = state.items.find((i) => i.shop.id === item.shop.id)
-
-          if (itemInCart && itemInCart.shop.id !== item.shop.id) {
+          const items = state.items
+          if (items.length > 0 && item.shopId !== items[0].shop.id) {
             toast.error('No puedes agregar productos de otro restaurante')
             return state
           }

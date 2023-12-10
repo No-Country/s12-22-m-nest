@@ -43,11 +43,11 @@ export const handleDealerStatus = (socket: Socket, router: AppRouterInstance): v
   })
 }
 
-export const handleOrderInterface = (
+export const handleOrder = (
   socket: Socket,
   debManageOrder: DebouncedFunc<(data: OrderInterface, callback: (accepted: boolean) => void) => void>
 ): void => {
-  socket.on('OrderInterface', (data, callback) => {
+  socket.on('orderRequest', (data, callback) => {
     debManageOrder(data, callback)
   })
 }

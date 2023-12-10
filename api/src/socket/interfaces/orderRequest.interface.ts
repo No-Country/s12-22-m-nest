@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { type Product, type Order } from 'src/order/entities/order.entity'
 import { type Chat } from 'src/chat/entities/chat.mongo-entity'
-import { type Shop } from 'src/shops/entities/shop.entity'
+import { type ShopResponse } from 'src/shops/entities/shop.entity'
 
 export interface OrderRequest
   extends Omit<
@@ -18,8 +18,4 @@ export interface OrderRequest
   products: Product[]
   chat: Chat
   shop: ShopResponse
-}
-
-export interface ShopResponse extends Omit<Shop, 'coordinates'> {
-  coordinates: Coordinates
 }
