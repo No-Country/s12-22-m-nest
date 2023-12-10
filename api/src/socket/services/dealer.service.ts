@@ -87,8 +87,8 @@ export class SocketDealerService {
 
     for (const dealer of dealers) {
       const distance = calculateDistance(
-        parseFloat(order.shopCoordinates.lat),
-        parseFloat(order.shopCoordinates.lon),
+        parseFloat(order.shop.coordinates.lat),
+        parseFloat(order.shop.coordinates.lon),
         parseFloat(dealer.coordinates.lat),
         parseFloat(dealer.coordinates.lon)
       )

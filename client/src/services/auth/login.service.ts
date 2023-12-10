@@ -1,3 +1,4 @@
+import { routes } from '@/utils/constants/routes.const'
 import { type SignInResponse, signIn } from 'next-auth/react'
 import { toast } from 'sonner'
 
@@ -6,7 +7,8 @@ export const loginService = async (email: string, password: string): Promise<Sig
   const responseNextAuth = await signIn('credentials', {
     email,
     password,
-    redirect: false
+    redirect: true,
+    callbackUrl: routes.customer.ACCOUNT
   })
 
   if (responseNextAuth?.error && responseNextAuth?.error !== null) {

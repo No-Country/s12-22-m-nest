@@ -7,7 +7,7 @@ const items = {
   dealer: [
     {
       key: routes.dealer.AVAILABILITY,
-      label: 'Inicio',
+      label: 'Repartir',
       href: routes.dealer.AVAILABILITY,
       visible: true
     },

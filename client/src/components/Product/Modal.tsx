@@ -7,6 +7,7 @@ import { Button } from '..'
 import Link from 'next/link'
 import { routes } from '@/utils/constants/routes.const'
 import { useCartStore } from '@/context/zustand/cart.store'
+import { useSession } from 'next-auth/react'
 
 interface Props {
   product: Product
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const ModalProduct: FunctionComponent<Props> = ({ product, onClose, isOpen }) => {
+  const { data: session, status } = useSession()
   const addItem = useCartStore((state) => state.addItem)
   return (
     <Modal size='5xl' isOpen={isOpen} onClose={onClose}>
@@ -45,14 +47,16 @@ const ModalProduct: FunctionComponent<Props> = ({ product, onClose, isOpen }) =>
                     </div>
                     <p className='text-base'>{product.description}</p>
                     <div>
-                      <Button
-                        title='Agregar al carrito'
-                        variant='solid'
-                        color='primary'
-                        onClick={() => {
-                          addItem(product.id)
-                        }}
-                      />
+                      {(session?.user?.type === 'customer' || status === 'unauthenticated') && (
+                        <Button
+                          title='Agregar al carrito'
+                          variant='solid'
+                          color='primary'
+                          onClick={() => {
+                            addItem(product)
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>

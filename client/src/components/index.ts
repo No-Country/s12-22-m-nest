@@ -7,6 +7,8 @@ export { default as ChatBox } from './ChatBox'
 export { default as ProfileAction } from './ProfileAction/ProfileAction'
 export { default as DynamicPopover } from './DynamicPopover'
 export { default as DynamicTable } from './DynamicTable'
+export { default as SimpleSelect } from './SimpleSelect'
+
 // Dealer components
 export { default as TopBarDealer } from './TopBar/Dealer/Dealer'
 export { default as TopBarClient } from './TopBar/Client/Client'

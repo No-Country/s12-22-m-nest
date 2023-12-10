@@ -27,7 +27,7 @@ const Hero: FunctionComponent<Props> = ({ session, user }) => (
             {user?.firstName} {user?.lastName}
           </b>
         </h1>
-        <p className='text-center lg:text-start'>Aqui puedes editar tu cuenta</p>
+        <p className='text-center lg:text-start'>Bienvenido a tu cuenta</p>
       </div>
     </div>
     <Button title='Historial de pedidos' href={routes.dealer.ORDER_HISTORY} />

@@ -7,7 +7,8 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-  MinLength
+  MinLength,
+  Matches
 } from 'class-validator'
 import { Order } from 'src/order/entities/order.entity'
 import {
@@ -48,8 +49,8 @@ export class User {
 
   @Column({ default: 'dealer' })
   @IsString()
-  @IsOptional()
-  type: 'customer' | 'dealer' | 'admin'
+  @Matches(/(dealer|customer)/)
+  type: 'customer' | 'dealer'
 
   @Column()
   @IsString()
@@ -66,6 +67,9 @@ export class User {
 
   @OneToMany(() => Order, (order) => order.dealer)
   orders: Order[]
+
+  @OneToMany(() => Order, (order) => order.client)
+  clientOrders: Order[]
 
   @CreateDateColumn({
     type: 'timestamp',

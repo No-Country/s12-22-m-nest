@@ -5,6 +5,8 @@ import Finished from './_finished/Finished'
 import authOptions from '@/app/api/auth/[...nextauth]/auth.const'
 import { getServerSession } from 'next-auth'
 import SocketProvider from '@/context/providers/socket.provider'
+import { routes } from '@/utils/constants/routes.const'
+import { redirect } from 'next/navigation'
 
 interface Props {
   params: {
@@ -15,6 +17,9 @@ interface Props {
 const OrderTracking: FunctionComponent<Props> = async ({ params }) => {
   const session = await getServerSession(authOptions)
   const { data: order } = await getOrder(params?.orderId ?? 'null')
+  if (session?.user?.id !== order?.clientId) {
+    redirect(routes.customer.HOME)
+  }
 
   return (
     <SocketProvider session={session} mode='client'>

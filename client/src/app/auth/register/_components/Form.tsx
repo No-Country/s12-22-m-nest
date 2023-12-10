@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/member-delimiter-style */
 'use client'
-import { Input, Button } from '@/components'
-import { type RegisterFormData } from '@/interfaces'
+import { Input, Button, SimpleSelect } from '@/components'
+import { type Type, type RegisterFormData } from '@/interfaces'
 import { registerService } from '@/services/auth/register.service'
 import { ScrollShadow } from '@nextui-org/react'
 import { type FunctionComponent } from 'react'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+import { type SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { routes } from '@/utils/constants/routes.const'
@@ -15,12 +16,26 @@ import {
   passwordValidations
 } from '@/utils/constants/validations.const'
 
+const roles: Array<{ value: Type; label: string }> = [
+  {
+    value: 'customer',
+    label: 'Cliente'
+  },
+  {
+    value: 'dealer',
+    label: 'Repartidor'
+  }
+]
+
 const Form: FunctionComponent = () => {
   const router = useRouter()
   const {
     register,
     formState: { errors, isSubmitting },
-    handleSubmit
+    handleSubmit,
+    setValue,
+    control,
+    getValues
   } = useForm<RegisterFormData>({
     mode: 'onChange'
   })
@@ -87,6 +102,25 @@ const Form: FunctionComponent = () => {
             validations: birthdateValidations
           }}
           errorMessage={errors?.birthdate?.message}
+        />
+        <Controller
+          name='type'
+          control={control}
+          rules={{ required: { value: true, message: 'Este campo es requerido' } }}
+          render={({ field }: any) => (
+            <SimpleSelect
+              name='role'
+              field={field}
+              label='¿Que tipo de usuario eres?'
+              defaultSelectedKeys={[getValues('type')]}
+              setSelected={(selected) => {
+                setValue('type', selected as Type)
+              }}
+              names={roles}
+              placeholder='Selecciona una opcion'
+              errorMessage={errors?.type?.message?.toString()}
+            />
+          )}
         />
         <Input
           type='password'

@@ -5,8 +5,14 @@ import { createPortal } from 'react-dom'
 import { useCartStore } from '@/context/zustand/cart.store'
 import { type Product } from '@/interfaces'
 import { getAllItems } from '@/services/cart/getAll.service'
+import { useSession } from 'next-auth/react'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import { routes } from '@/utils/constants/routes.const'
 
 const Cart: FunctionComponent = () => {
+  const router = useRouter()
+  const { status } = useSession()
   const [isOpen, setIsOpen] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
   const items = useCartStore((state) => state.items)
@@ -29,6 +35,15 @@ const Cart: FunctionComponent = () => {
     setIsOpen(false)
   }
 
+  const handleCheckout = (): void => {
+    if (status === 'unauthenticated') {
+      toast.info('Debes iniciar sesión para continuar')
+      return
+    }
+
+    router.push(routes.customer.CHECKOUT)
+  }
+
   return (
     <>
       <Button title='Carrito' variant='flat' onClick={handleOpen} />
@@ -40,7 +55,7 @@ const Cart: FunctionComponent = () => {
               <div className='h-auto w-full flex-grow  '>
                 <ProductCartGrid products={products} />
               </div>
-              <Button title='Pagar' variant='solid' color='primary' fullWidth />
+              <Button title='Pagar' variant='solid' color='primary' fullWidth onClick={handleCheckout} />
             </div>
           </div>,
           document.body

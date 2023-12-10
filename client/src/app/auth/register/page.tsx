@@ -7,7 +7,7 @@ const Register: FunctionComponent = async () => (
       <h1 className='text-3xl'>
         Registrarse en <b>LleGo!</b>
       </h1>
-      <p className='text-base'>Registro para repartidores</p>
+      <p className='text-base'>Te damos la bienvenida</p>
     </div>
     <div className='overflow-hidden md:max-h-[400px]'>
       <Form />

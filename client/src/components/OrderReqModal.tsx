@@ -70,6 +70,7 @@ const OrderReqModal: React.FunctionComponent = () => {
   const incomingOrder = useMemo(
     () =>
       debounce((data: OrderRequest, callback: (accepted: boolean) => void) => {
+        console.log('incomingOrder', data)
         handleInterval()
         callbackRef.current = callback
         setAsking(true)

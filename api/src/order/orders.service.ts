@@ -22,6 +22,8 @@ import { Shop } from 'src/shops/entities/shop.entity'
 import { findUser } from 'src/common/users.common'
 import { getFormatProducts } from 'src/utils/getFormatProducts.utils'
 import { Product } from 'src/products/entities/product.entity'
+import { calculateDistance } from 'src/utils/calculateDistance.utils'
+import { buildMapsUrl } from 'src/utils/buildMapsUrl.utils'
 
 @Injectable()
 export class OrderService {
@@ -63,40 +65,43 @@ export class OrderService {
       this.productRepository
     )
     const finalPrice = products.reduce((acc, curr) => acc + curr.price, 0)
-    const shopCoordinates = await findCoordinates(
-      this.httpService,
-      shop.address
-    )
 
     const shipCoordinates = await findCoordinates(
       this.httpService,
       body.shipAddress
     )
 
-    const order = this.orderRepository.create({
+    const distance = calculateDistance(
+      parseFloat(shipCoordinates.lat),
+      parseFloat(shipCoordinates.lon),
+      parseFloat(JSON.parse(shop.coordinates).lat),
+      parseFloat(JSON.parse(shop.coordinates).lon)
+    )
+
+    const orderCreation = this.orderRepository.create({
       dealerId: null,
+      clientId: client.id,
       shipAddress: body.shipAddress,
-      shopAddress: shop.address,
       shipCoordinates: JSON.stringify(shipCoordinates),
-      shopCoordinates: JSON.stringify(shopCoordinates),
       status: 'Pending',
       step: EnumSteps.LookingForDealer,
       chat: String(chat.id),
-      clientName: client.firstName + ' ' + client.lastName,
-      clientEmail: client.email,
-      shop: shop.name,
+      shopId: shop.id,
       price: finalPrice,
-      products: JSON.stringify(products)
+      products: JSON.stringify(products),
+      distance,
+      mapUrl: buildMapsUrl(shop.address).toString()
     })
 
-    await this.orderRepository.save(order)
+    await this.orderRepository.save(orderCreation)
+    const order = await findOrder(orderCreation.id, this.orderRepository)
     const orderRequest = formatOrder(order, chat)
 
-    await this.mailerService.sendMail({
-      receiverMail: client.email,
-      header: 'Sigue tu orden',
-      body: `Hola, este es el link para seguir tu orden:${process.env.CLIENT_URL}/order-tracking/${order.id}`
-    })
+    // await this.mailerService.sendMail({
+    //   receiverMail: client.email,
+    //   header: 'Sigue tu orden',
+    //   body: `Hola, este es el link para seguir tu orden:${process.env.CLIENT_URL}/order-tracking/${order.id}`
+    // })
 
     return await this.socketDealerService.handleFindDealer(
       this.socketGateway.server,
@@ -115,11 +120,12 @@ export class OrderService {
       this.chatModel
     )
     if (updateOrderDto.status === 'Canceled') {
-      await this.mailerService.sendMail({
-        receiverMail: updateOrderDto.clientEmail,
-        header: 'Tu orden ha sido cancelada',
-        body: 'Hola, te informamos que tu orden ha sido cancelada.'
-      })
+      // TODO: send email to client
+      // await this.mailerService.sendMail({
+      //   receiverMail: updateOrderDto.clientEmail,
+      //   header: 'Tu orden ha sido cancelada',
+      //   body: 'Hola, te informamos que tu orden ha sido cancelada.'
+      // })
     }
     return orderUpdated
   }

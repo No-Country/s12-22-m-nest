@@ -11,10 +11,10 @@ const Order: FunctionComponent<Props> = ({ order }) => (
   <div className='flex flex-col gap-4'>
     <div className='flex items-center gap-2'>
       <Image
-        alt='mcdonalds logo'
+        alt='shop logo'
         height={48}
         className='h-12 w-12 rounded-full object-cover'
-        src='https://seeklogo.com/images/M/mcdonald-s-logo-255A7B5646-seeklogo.com.png'
+        src={order?.shop || '/image/placeholder.png'}
         width={48}
       />
       <div>

@@ -2,7 +2,7 @@ export interface User {
   id: string
   firstName: string
   lastName: string
-  type: 'customer' | 'dealer'
+  type: Type
   email: string
   birthdate: Date | string
   password: string
@@ -10,3 +10,5 @@ export interface User {
   createdAt: Date
   updatedAt: Date
 }
+
+export type Type = 'customer' | 'dealer'

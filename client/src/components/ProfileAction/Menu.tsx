@@ -15,7 +15,7 @@ const Menu: FunctionComponent<Props> = ({ loggedUser }) => {
 
   return (
     <div className='flex w-full flex-col'>
-      {items.map((item, index) => (
+      {items?.map((item, index) => (
         <NextLink
           href={item.href}
           className={`w-full rounded-xl p-2 hover:bg-slate-100 ${item.color === 'danger' ? dangerStyle : ''}`}

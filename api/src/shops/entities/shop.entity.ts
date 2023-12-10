@@ -1,6 +1,7 @@
 // TODO: Fix eslint disable
 /* eslint-disable @typescript-eslint/indent */
 import { IsJSON, IsOptional, IsString } from 'class-validator'
+import { Order } from 'src/order/entities/order.entity'
 import { Product } from 'src/products/entities/product.entity'
 import {
   Column,
@@ -18,6 +19,9 @@ export class Shop {
 
   @OneToMany(() => Product, (product) => product.shop)
   products: Product[]
+
+  @OneToMany(() => Order, (order) => order.shop)
+  orders: Order[]
 
   @Column()
   @IsString()

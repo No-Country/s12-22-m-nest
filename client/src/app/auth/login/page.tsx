@@ -7,7 +7,7 @@ const Page: FunctionComponent = () => (
       <h1 className='text-3xl'>
         Ingresar a <b>LleGo!</b>
       </h1>
-      <p className='text-base'>Ingreso para repartidores</p>
+      <p className='text-base'>Te damos la bienvenida</p>
     </div>
     <Form />
   </div>

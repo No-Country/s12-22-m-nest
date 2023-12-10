@@ -1,9 +1,10 @@
 import { type Product } from '@/interfaces'
 import { getProduct } from '../products/getProduct.service'
 
-export const getAllItems = async (items: string[]): Promise<Product[]> => {
+export const getAllItems = async (items: Product[]): Promise<Product[]> => {
+  const ids = items.map((item) => item.id)
   const res = await Promise.all(
-    items.map(async (item) => {
+    ids.map(async (item) => {
       const { data: product } = await getProduct(item)
       if (!product) return null
       return product

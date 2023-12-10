@@ -14,7 +14,7 @@ interface Props {
 }
 
 const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'full' }) => {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -58,7 +58,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
       </div>
       {layout === 'full' && (
         <div className='flex items-center gap-3'>
-          <Cart />
+          {(session?.user?.type === 'customer' || status === 'unauthenticated') && <Cart />}
           <ProfileAction />
         </div>
       )}

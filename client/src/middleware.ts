@@ -3,8 +3,11 @@ import { withAuth } from 'next-auth/middleware'
 import { type NextMiddlewareResult } from 'next/dist/server/web/types'
 import { type NextFetchEvent, type NextRequest, NextResponse } from 'next/server'
 
+const checkStartsWith = (path: string, routes: string[]): boolean => routes.some((route) => path.startsWith(route))
+
 const middleware = async (req: NextRequest, event: NextFetchEvent): Promise<NextMiddlewareResult> => {
-  console.log('middleware', req.nextUrl.pathname)
+  const customerRoutes = ['/account', '/checkout', '/order-tracking/']
+  const dealerRoutes = ['/dealer/']
   const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET
@@ -26,9 +29,9 @@ const middleware = async (req: NextRequest, event: NextFetchEvent): Promise<Next
         secret: process.env.NEXTAUTH_SECRET
       })
 
-      if (req.nextUrl.pathname.startsWith('/dealer/') && token?.type === 'customer') {
+      if (checkStartsWith(req.nextUrl.pathname, dealerRoutes) && token?.type === 'customer') {
         return NextResponse.redirect(req.nextUrl.origin + '/')
-      } else if (req.nextUrl.pathname.startsWith('/order') && token?.type === 'dealer') {
+      } else if (checkStartsWith(req.nextUrl.pathname, customerRoutes) && token?.type === 'dealer') {
         return NextResponse.redirect(req.nextUrl.origin + '/dealer')
       }
     },
@@ -60,8 +63,8 @@ export const config = {
     // Dealer private routes
     '/dealer/:path*',
     // Customer private routes
-    '/account'
-    // Exceptions for order tracking in regex
-    // '/((?!api|_next/static|_next/image|favicon.ico|order-tracking).*)'
+    '/account',
+    '/checkout',
+    '/order-tracking/:path*'
   ]
 }
