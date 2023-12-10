@@ -1,7 +1,7 @@
 'use client'
 import { type FunctionComponent, useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import { type OrderInterface } from '@/interfaces/socket.interface'
+import { type OrderInterface } from '@/interfaces'
 import OrderManager from '../socketManager'
 import { SocketContext } from '@/context/providers/socket.provider'
 import { routes } from '@/utils/constants/routes.const'

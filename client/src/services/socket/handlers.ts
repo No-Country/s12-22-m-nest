@@ -1,5 +1,4 @@
-import { type Chat } from '@/interfaces'
-import { type Coordinates, type OrderInterface } from '@/interfaces/socket.interface'
+import { type Chat, type Coordinates, type OrderInterface } from '@/interfaces'
 import { routes } from '@/utils/constants/routes.const'
 import { getLocation } from '@/utils/getLocation.utils'
 import { type DebouncedFunc } from 'lodash'

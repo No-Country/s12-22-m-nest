@@ -1,5 +1,3 @@
-export type { OrderInterface } from './order.interface'
-
 export interface SockDealerData {
   coordinates: Coordinates
   active: boolean
