@@ -11,6 +11,11 @@ import GoingPage from './_going/Going'
 import ShopPage from './_shop/Shop'
 import ResidencePage from './_residence/Residence'
 import FinishedPage from './_finished/Finished'
+import { type Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Orden activa | LleGo!'
+}
 
 interface Props {
   params: {

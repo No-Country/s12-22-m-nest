@@ -3,6 +3,11 @@ import { getUser } from '@/services/users/getUser.service'
 import { getServerSession } from 'next-auth'
 import authOptions from '@/app/api/auth/[...nextauth]/auth.const'
 import Content from './_components/Content'
+import { type Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Checkout | LleGo!'
+}
 
 const Checkout: FunctionComponent = async () => {
   const session = await getServerSession(authOptions)

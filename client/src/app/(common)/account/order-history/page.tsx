@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 import { getUserOrders } from '@/services/users/getOrders.service'
 
 export const metadata: Metadata = {
-  title: 'Cuenta | LleGO!'
+  title: 'Historial del ordenes | LleGO!'
 }
 
 const Page: FunctionComponent = async () => {

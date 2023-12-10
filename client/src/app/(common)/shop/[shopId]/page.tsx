@@ -2,6 +2,11 @@ import { ProductGrid } from '@/components'
 import { getShop } from '@/services/shops/getShop.service'
 import Image from 'next/image'
 import { type FunctionComponent } from 'react'
+import { type Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Tienda | LleGo!'
+}
 
 interface Props {
   params: {

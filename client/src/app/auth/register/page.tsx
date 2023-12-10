@@ -1,5 +1,10 @@
 import { type FunctionComponent } from 'react'
 import Form from './_components/Form'
+import { type Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Registro | LleGo!'
+}
 
 const Register: FunctionComponent = async () => (
   <div className='flex w-full flex-col gap-5'>

@@ -7,6 +7,11 @@ import { getServerSession } from 'next-auth'
 import SocketProvider from '@/context/providers/socket.provider'
 import { routes } from '@/utils/constants/routes.const'
 import { redirect } from 'next/navigation'
+import { type Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Seguimiento de orden | LleGo!'
+}
 
 interface Props {
   params: {

@@ -1,6 +1,11 @@
 import { ProductGrid } from '@/components'
 import { getProducts } from '@/services/products/getProducts.service'
 import { type FunctionComponent } from 'react'
+import { type Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Inicio | LleGo!'
+}
 
 const Home: FunctionComponent = async () => {
   const { data: products } = await getProducts()
