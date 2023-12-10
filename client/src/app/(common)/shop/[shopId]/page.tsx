@@ -12,7 +12,6 @@ interface Props {
 const ShopPage: FunctionComponent<Props> = async ({ params }) => {
   const { data: shop } = await getShop(params.shopId)
   if (!shop) return null
-  console.log(shop)
   return (
     <main className='padding-general-x flex flex-col gap-10 pb-10 pt-[100px] lg:gap-10 '>
       <section className='flex w-full flex-col justify-between gap-5'>

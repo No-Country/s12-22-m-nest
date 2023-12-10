@@ -10,9 +10,6 @@ interface Props {
 const ProductsTable: FunctionComponent<Props> = ({ products }) => (
   <DynamicTable
     data={products}
-    classNames={{
-      wrapper: 'shadow-none'
-    }}
     rowsPerPage={4}
     columns={['Cantidad', 'Producto', 'Precio final']}
     renderRow={(product) => (
@@ -22,7 +19,7 @@ const ProductsTable: FunctionComponent<Props> = ({ products }) => (
           <p>{product.name}</p>
           <span className='text-xs font-light'>(${product.price})</span>
         </TableCell>
-        <TableCell className='text-base font-semibold'>${product.quantity * product.price}</TableCell>
+        <TableCell className='text-base font-semibold'>${product.price}</TableCell>
       </TableRow>
     )}
   />

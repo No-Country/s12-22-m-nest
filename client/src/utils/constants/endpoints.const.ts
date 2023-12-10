@@ -10,5 +10,7 @@ export const Endpoints = {
   REGISTER: '/api/auth/register',
   SEND_MESSAGE: (orderId: string) => `/api/chat/${orderId}/send`,
   FIND_PRODUCTS: '/api/products',
-  FIND_SHOP: (id: string) => `/api/shops/${id}`
+  FIND_SHOP: (id: string) => `/api/shops/${id}`,
+  CREATE_ORDER: '/api/orders',
+  FIND_PRODUCT: (id: string) => `/api/products/${id}`
 }

@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image'
-import { ProfileAction } from '@/components'
+import { Cart, ProfileAction } from '@/components'
 import { Navbar, NavbarBrand } from '@nextui-org/react'
 import NextLink from 'next/link'
 import { type FunctionComponent, useState } from 'react'
@@ -38,7 +38,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
       className={stylesNavbar}
       classNames={{
         wrapper: 'p-0 h-auto w-full max-w-full flex justify-between  2xl:container',
-        base: 'bg-transparent min-h-[95px] z-50',
+        base: 'bg-transparent min-h-[95px] z-10',
         content: 'w-auto !grow-0',
         brand: 'max-w-[185px] ',
         item: `data-[active=true]:font-semibold font-light ${textColor}`
@@ -56,7 +56,12 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
           </NavbarBrand>
         </NextLink>
       </div>
-      {layout === 'full' && <ProfileAction />}
+      {layout === 'full' && (
+        <div className='flex items-center gap-3'>
+          <Cart />
+          <ProfileAction />
+        </div>
+      )}
     </Navbar>
   )
 }

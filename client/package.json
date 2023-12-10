@@ -27,7 +27,8 @@
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
     "sonner": "^1.2.3",
-    "swr": "^2.2.4"
+    "swr": "^2.2.4",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.8",
