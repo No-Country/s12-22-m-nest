@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation'
 import { type Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Esperando una order | LleGo!'
+  title: 'Esperando una orden | LleGo!'
 }
 
 const Page: FunctionComponent = async () => {
