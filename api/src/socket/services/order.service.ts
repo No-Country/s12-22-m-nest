@@ -6,7 +6,7 @@ import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { checkIsAvailable } from 'src/utils/isAvailable.utils'
 import { Order } from 'src/order/entities/order.entity'
-import { findOrder } from 'src/order/common'
+import { findOrder } from 'src/common/orders.common'
 
 @Injectable()
 export class SocketOrderService {
