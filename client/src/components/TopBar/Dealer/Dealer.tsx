@@ -62,10 +62,10 @@ const TopBarDealer: FunctionComponent<Props> = ({
 
   return (
     <BaseTopBar>
-      <div className='flex w-full items-center justify-between flex-col sm:flex-row gap-5 sm:gap-0 2xl:container'>
-        <div className={`flex w-full flex-col ${!switch_ && 'items-center sm:items-start'} gap-y-1`}>
-          <div className='flex w-full items-center gap-10 md:gap-3'>
-            <h1 className={`text-lg ${!switch_ && 'mx-auto sm:mx-0'} md:text-2xl`}>{Title[title]}</h1>
+      <div className='flex w-full flex-col items-start justify-between gap-3 2xl:container sm:flex-row sm:gap-0'>
+        <div className={'flex w-full flex-col items-start gap-y-1'}>
+          <div className='flex w-full items-start gap-10 md:gap-3'>
+            <h1 className='text-2xl'>{Title[title]}</h1>
             {switch_ && (
               <Switch
                 isSelected={isSwitchActive}
@@ -78,7 +78,7 @@ const TopBarDealer: FunctionComponent<Props> = ({
           </div>
           <p>{Description[description]}</p>
         </div>
-        <div className='flex gap-2 flex-col sm:flex-row'>
+        <div className='flex flex-row gap-2'>
           {button && <Button title={buttonTitle} onClick={buttonAction} />}
           {mapButton && (
             <Link target='_blank' href={mapButtonLink.toString() ?? ''}>
