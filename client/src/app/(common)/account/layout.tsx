@@ -5,7 +5,7 @@ interface Props {
   children: React.ReactNode
 }
 
-const AccountLayout: FunctionComponent<Props> = ({ children }) => (
+const AccountLayout: FunctionComponent<Props> = async ({ children }) => (
   <>
     <Header />
     {children}

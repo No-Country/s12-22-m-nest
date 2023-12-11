@@ -27,6 +27,7 @@ export const useCartStore = create<CartState>()(
             return state
           }
 
+          toast.success('Producto agregado al carrito')
           return { items: [...state.items, item] }
         })
       },

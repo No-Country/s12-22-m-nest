@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 'use client'
 import { useState, type FunctionComponent, useEffect } from 'react'
 import { Button, ProductCartGrid } from '.'
@@ -56,15 +57,23 @@ const Cart: FunctionComponent = () => {
               <div className='absolute right-2 top-2 cursor-pointer p-2' onClick={handleClose}>
                 <Image src='/icon/cross.svg' alt='cross' width={18} height={18} />
               </div>
-              <div className='flex w-full flex-grow flex-col overflow-hidden'>
-                <h2 className='text-xl font-semibold'>Carrito</h2>
-                <div className='max-h-auto overflow-y-scroll'>
-                  <ProductCartGrid products={products} />
+              {products.length === 0 ? (
+                <div className='flex h-full w-full items-center justify-center '>
+                  <p className='text-center font-semibold'>Tu carrito está vacío</p>
                 </div>
-              </div>
-              <div className='w-full'>
-                <Button title='Ir a pagar' fullWidth onClick={handleCheckout} />
-              </div>
+              ) : (
+                <>
+                  <div className='flex w-full flex-grow flex-col overflow-hidden'>
+                    <h2 className='text-xl font-semibold'>Carrito</h2>
+                    <div className='max-h-auto overflow-y-scroll'>
+                      <ProductCartGrid products={products} />
+                    </div>
+                  </div>
+                  <div className='w-full'>
+                    <Button title='Ir a pagar' fullWidth onClick={handleCheckout} />
+                  </div>
+                </>
+              )}
             </div>
           </div>,
           document.body

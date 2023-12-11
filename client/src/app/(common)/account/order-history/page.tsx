@@ -11,9 +11,7 @@ export const metadata: Metadata = {
 
 const Page: FunctionComponent = async () => {
   const session = await getServerSession(authOptions)
-  if (!session) return null
-  const { data } = await getUserOrders(session?.user?.id)
-  console.log(data)
+  const { data } = await getUserOrders(session?.user?.id ?? '')
   return (
     <main className='padding-general-x flex flex-col gap-10 pb-10 pt-[100px] lg:gap-5 '>
       <section className='flex flex-col gap-4'>
