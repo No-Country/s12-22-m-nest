@@ -1,6 +1,7 @@
 // TODO: Fix eslint disable
 /* eslint-disable @typescript-eslint/indent */
 import { IsJSON, IsOptional, IsString } from 'class-validator'
+import { Order } from 'src/order/entities/order.entity'
 import { Product } from 'src/products/entities/product.entity'
 import {
   Column,
@@ -11,6 +12,10 @@ import {
   UpdateDateColumn
 } from 'typeorm'
 
+export interface ShopResponse extends Omit<Shop, 'coordinates'> {
+  coordinates: Coordinates
+}
+
 @Entity()
 export class Shop {
   @PrimaryGeneratedColumn('uuid')
@@ -18,6 +23,12 @@ export class Shop {
 
   @OneToMany(() => Product, (product) => product.shop)
   products: Product[]
+
+  @Column()
+  mapUrl: string
+
+  @OneToMany(() => Order, (order) => order.shop)
+  orders: Order[]
 
   @Column()
   @IsString()

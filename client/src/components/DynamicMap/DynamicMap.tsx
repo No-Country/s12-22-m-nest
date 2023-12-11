@@ -9,7 +9,7 @@ import CenterMap from './CenterMap'
 export interface Location {
   shipCoordinates: Coordinates | undefined | null
   shopCoordinates: Coordinates | undefined | null
-  dealerCoordinates: Coordinates | null
+  dealerCoordinates: Coordinates | null | undefined
 }
 
 interface Props {
@@ -39,7 +39,7 @@ const Map: FunctionComponent<Props> = ({ locations }) => (
           ? [Number(locations.dealerCoordinates.lat), Number(locations.dealerCoordinates.lon)]
           : [-34.6037345, -58.3841453]
       }
-      zoom={12}
+      zoom={15}
       scrollWheelZoom={false}
       style={{ height: '100%', width: '100%', zIndex: 0 }}
     >

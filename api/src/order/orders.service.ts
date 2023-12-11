@@ -18,6 +18,12 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { createChat, findChat } from 'src/common/chat.common'
 import { MailerService } from 'src/mailer/mailer.service'
+import { Shop } from 'src/shops/entities/shop.entity'
+import { findUser } from 'src/common/users.common'
+import { getFormatProducts } from 'src/utils/getFormatProducts.utils'
+import { Product } from 'src/products/entities/product.entity'
+import { calculateDistance } from 'src/utils/calculateDistance.utils'
+import { buildMapsUrl } from 'src/utils/buildMapsUrl.utils'
 
 @Injectable()
 export class OrderService {
@@ -26,6 +32,10 @@ export class OrderService {
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Shop)
+    private readonly shopRepository: Repository<Shop>,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
     @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
     private readonly httpService: HttpService,
     private readonly socketOrderService: SocketOrderService,
@@ -46,41 +56,52 @@ export class OrderService {
 
   async create(body: CreateOrderDto): Promise<any> {
     const chat = await createChat(this.chatModel)
-
-    const shopCoordinates = await findCoordinates(
-      this.httpService,
-      body.shopAddress
+    const client = await findUser(body.client, this.userRepository)
+    const shop = await this.shopRepository.findOne({
+      where: { id: body.shop }
+    })
+    const products = await getFormatProducts(
+      body.products,
+      this.productRepository
     )
+    const finalPrice = products.reduce((acc, curr) => acc + curr.price, 0)
 
     const shipCoordinates = await findCoordinates(
       this.httpService,
       body.shipAddress
     )
 
-    const order = this.orderRepository.create({
+    const distance = calculateDistance(
+      parseFloat(shipCoordinates.lat),
+      parseFloat(shipCoordinates.lon),
+      parseFloat(JSON.parse(shop.coordinates).lat),
+      parseFloat(JSON.parse(shop.coordinates).lon)
+    )
+
+    const orderCreation = this.orderRepository.create({
       dealerId: null,
-      shipAddress: body.shipAddress ?? '',
-      shopAddress: body.shopAddress ?? '',
+      clientId: client.id,
+      shipAddress: body.shipAddress,
       shipCoordinates: JSON.stringify(shipCoordinates),
-      shopCoordinates: JSON.stringify(shopCoordinates),
       status: 'Pending',
       step: EnumSteps.LookingForDealer,
       chat: String(chat.id),
-      clientName: body.clientName,
-      clientEmail: body.clientEmail,
-      shop: 'McDonalds',
-      price: 300,
-      products: JSON.stringify(body.products)
+      shopId: shop.id,
+      price: finalPrice,
+      products: JSON.stringify(products),
+      distance,
+      shipMapUrl: buildMapsUrl(shop.address).toString()
     })
 
-    await this.orderRepository.save(order)
+    await this.orderRepository.save(orderCreation)
+    const order = await findOrder(orderCreation.id, this.orderRepository)
     const orderRequest = formatOrder(order, chat)
 
-    await this.mailerService.sendMail({
-      receiverMail: order.clientEmail,
-      header: 'Sigue tu orden',
-      body: `Hola, este es el link para seguir tu orden:${process.env.CLIENT_URL}/order-tracking/${order.id}`
-    })
+    // await this.mailerService.sendMail({
+    //   receiverMail: client.email,
+    //   header: 'Sigue tu orden',
+    //   body: `Hola, este es el link para seguir tu orden:${process.env.CLIENT_URL}/order-tracking/${order.id}`
+    // })
 
     return await this.socketDealerService.handleFindDealer(
       this.socketGateway.server,
@@ -99,11 +120,12 @@ export class OrderService {
       this.chatModel
     )
     if (updateOrderDto.status === 'Canceled') {
-      await this.mailerService.sendMail({
-        receiverMail: updateOrderDto.clientEmail,
-        header: 'Tu orden ha sido cancelada',
-        body: 'Hola, te informamos que tu orden ha sido cancelada.'
-      })
+      // TODO: send email to client
+      // await this.mailerService.sendMail({
+      //   receiverMail: updateOrderDto.clientEmail,
+      //   header: 'Tu orden ha sido cancelada',
+      //   body: 'Hola, te informamos que tu orden ha sido cancelada.'
+      // })
     }
     return orderUpdated
   }

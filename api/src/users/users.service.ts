@@ -59,7 +59,8 @@ export class UsersService {
   }
 
   async findUserOrders(id: string): Promise<OrderRequest[]> {
-    return await findOrdersByUser(id, this.orderRepository)
+    const user = await findUser(id, this.userRepository)
+    return await findOrdersByUser(id, user.type, this.orderRepository)
   }
 
   async updatePassword(

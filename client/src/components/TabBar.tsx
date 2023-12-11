@@ -2,12 +2,6 @@
 import { Tabs as TabsUI, Tab } from '@nextui-org/react'
 import { type FunctionComponent, type ComponentProps } from 'react'
 
-export interface TabBarItemProps {
-  title: string
-  content: JSX.Element
-  visible?: boolean
-}
-
 interface CustomProps {
   items: TabBarItemProps[]
   tabClassName?: string

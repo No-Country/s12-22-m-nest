@@ -7,6 +7,7 @@ import { Repository } from 'typeorm'
 import { HttpService } from '@nestjs/axios'
 import { findCoordinates } from 'src/utils/findCoordinates.utils'
 import { formatShop } from 'src/utils/formatShop.utils'
+import { buildMapsUrl } from 'src/utils/buildMapsUrl.utils'
 
 @Injectable()
 export class ShopsService {
@@ -22,10 +23,13 @@ export class ShopsService {
       createShopDto.address
     )
 
+    const mapUrl = buildMapsUrl(createShopDto.address)
+
     return await this.shopRepository.save({
       ...createShopDto,
       coordinates: JSON.stringify(coordinates),
-      thumbnail: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png'
+      thumbnail: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png',
+      mapUrl: mapUrl.toString()
     })
   }
 
@@ -36,7 +40,7 @@ export class ShopsService {
   async findOne(id: string) {
     const shop = await this.shopRepository.findOne({
       where: { id },
-      relations: ['products']
+      relations: ['products', 'products.shop']
     })
 
     return formatShop(shop)

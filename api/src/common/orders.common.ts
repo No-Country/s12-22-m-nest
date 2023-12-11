@@ -42,9 +42,13 @@ export const findActiveOrderByDealer = async (
 
 export const findOrdersByUser = async (
   userId: string,
+  type: 'customer' | 'dealer',
   orderRepository: Repository<Order>
 ) => {
-  const orders = await orderRepository.findBy({ dealerId: userId })
+  const orders = await orderRepository.findBy({
+    ...(type === 'customer' && { clientId: userId }),
+    ...(type === 'dealer' && { dealerId: userId })
+  })
   console.log('findOrdersByUser', orders)
   const formatedOrders = orders.map((order) => {
     return formatOrder(order, null)

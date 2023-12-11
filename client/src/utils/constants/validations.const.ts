@@ -58,3 +58,7 @@ export const firstNameValidations: RegisterOptions = {
 export const lastNameValidations: RegisterOptions = {
   required
 }
+
+export const addressValidations: RegisterOptions = {
+  required
+}

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { type CreateProductDto } from './dto/create-product.dto'
 import { type UpdateProductDto } from './dto/update-product.dto'
 import { Product } from './entities/product.entity'
@@ -13,6 +13,7 @@ export class ProductsService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
+    console.log(createProductDto)
     return await this.productRepository.save({
       ...createProductDto,
       thumbnail: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png'
@@ -20,16 +21,32 @@ export class ProductsService {
   }
 
   async findAll() {
-    return await this.productRepository.find()
+    const products = await this.productRepository.find({ relations: ['shop'] })
+    return products.map((product) => {
+      product.shop = {
+        ...product.shop,
+        coordinates: JSON.parse(product.shop.coordinates)
+      }
+      return product
+    })
   }
 
   async findOne(id: string) {
-    const shop = await this.productRepository.findOne({
+    const product = await this.productRepository.findOne({
       where: { id },
       relations: ['shop']
     })
 
-    return shop
+    if (!product) throw new NotFoundException('Product not found')
+
+    console.log(product)
+
+    product.shop = {
+      ...product.shop,
+      coordinates: JSON.parse(product.shop.coordinates)
+    }
+
+    return product
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {

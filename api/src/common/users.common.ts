@@ -82,7 +82,7 @@ export const findUserByCriteria = async (
     user = await userRepository.findOne({
       where: { id: criteria.id },
       select,
-      ...(populate && { relations: ['orders'] })
+      ...(populate && { relations: ['orders', 'clientOrders'] })
     })
   } else {
     user = await userRepository.findOne({
