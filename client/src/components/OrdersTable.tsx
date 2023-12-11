@@ -13,12 +13,12 @@ const OrdersTable: FunctionComponent<Props> = ({ orders }) => (
     data={orders}
     rowsPerPage={4}
     columns={['Fecha', 'Orden', 'Distancia', 'Tienda']}
-    renderRow={(order) => (
+    renderRow={(order: OrderInterface) => (
       <TableRow key={order.id}>
         <TableCell className='font-semibold'>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
         <TableCell>{order.id.slice(0, 5)}</TableCell>
         <TableCell>{order.distance}km</TableCell>
-        <TableCell>{order.shop}</TableCell>
+        <TableCell>{order.shop.name}</TableCell>
       </TableRow>
     )}
   />

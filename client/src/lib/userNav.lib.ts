@@ -16,6 +16,12 @@ const items = {
       label: 'Cuenta',
       href: routes.dealer.ACCOUNT,
       visible: true
+    },
+    {
+      key: routes.dealer.ORDER_HISTORY,
+      label: 'Pedidos',
+      href: routes.dealer.ORDER_HISTORY,
+      visible: true
     }
   ],
   customer: [
@@ -23,6 +29,12 @@ const items = {
       key: routes.customer.HOME,
       label: 'Inicio',
       href: routes.customer.HOME,
+      visible: true
+    },
+    {
+      key: routes.customer.ORDER_HISTORY,
+      label: 'Pedidos',
+      href: routes.customer.ORDER_HISTORY,
       visible: true
     },
     {
