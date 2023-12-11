@@ -1,4 +1,4 @@
-import { Footer, Header } from '@/components'
+import { Footer } from '@/components'
 import { type FunctionComponent } from 'react'
 
 interface Props {
@@ -7,7 +7,6 @@ interface Props {
 
 const CommonLayout: FunctionComponent<Props> = ({ children }) => (
   <>
-    <Header />
     {children}
     <Footer />
   </>

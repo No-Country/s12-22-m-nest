@@ -11,9 +11,10 @@ import { usePathname } from 'next/navigation'
 interface Props {
   theme?: 'light' | 'transparent'
   layout?: 'simple' | 'full'
+  withBorder?: boolean
 }
 
-const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'full' }) => {
+const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'full', withBorder = false }) => {
   const { data: session, status } = useSession()
   const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
@@ -38,7 +39,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
       className={stylesNavbar}
       classNames={{
         wrapper: 'p-0 h-auto w-full max-w-full flex justify-between  2xl:container',
-        base: 'bg-transparent min-h-[95px] z-10',
+        base: `bg-transparent  min-h-[100px] z-10 ${withBorder ? 'border-b' : ''}`,
         content: 'w-auto !grow-0',
         brand: 'max-w-[185px] ',
         item: `data-[active=true]:font-semibold font-light ${textColor}`
