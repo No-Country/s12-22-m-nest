@@ -5,7 +5,7 @@ interface Props {
   children: React.ReactNode
 }
 
-const DealerLayout: FunctionComponent<Props> = async ({ children }) => (
+const DealerLayout: FunctionComponent<Props> = ({ children }) => (
   <>
     <Header theme='light' />
     {children}

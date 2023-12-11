@@ -1,13 +1,14 @@
-import { Footer, Header } from '@/components'
+import { Footer } from '@/components'
 import { type FunctionComponent } from 'react'
+import DealerMiddleware from '../dealer.middleware'
 
 interface Props {
   children: React.ReactNode
 }
 
-const CommonLayout: FunctionComponent<Props> = ({ children }) => (
+const CommonLayout: FunctionComponent<Props> = async ({ children }) => (
   <>
-    <Header />
+    <DealerMiddleware />
     {children}
     <Footer />
   </>

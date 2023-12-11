@@ -18,6 +18,7 @@ interface Props {
 const Content: FunctionComponent<Props> = ({ user }) => {
   const [products, setProducts] = useState<Product[]>([])
   const items = useCartStore((state) => state.items)
+  const cleanCart = useCartStore((state) => state.cleanCart)
   const router = useRouter()
 
   const {
@@ -49,6 +50,7 @@ const Content: FunctionComponent<Props> = ({ user }) => {
       const { data: res } = await createOrder(order)
       toast.success('Compra realizada con exito')
       router.push(routes.customer.ORDER_TRACKING(res?.id ?? ''))
+      cleanCart()
     } catch (error) {
       console.log(error)
     }
