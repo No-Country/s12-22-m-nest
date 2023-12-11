@@ -38,7 +38,7 @@ const Header: FunctionComponent<Props> = ({ theme = 'transparent', layout = 'ful
   const bgColor = theme === 'transparent' ? (isScrolled ? 'bg-[#FFFFFF1]' : 'bg-transparent') : 'bg-white'
 
   const blur = isScrolled
-  const stylesNavbar = 'px-10 fixed py-6' + ' ' + bgColor
+  const stylesNavbar = 'padding-general-x fixed py-6' + ' ' + bgColor
 
   const textColor = isScrolled ? 'text-black' : theme === 'transparent' ? 'text-white' : 'text-black'
 
