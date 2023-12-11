@@ -22,6 +22,11 @@ export class ShopsController {
     return await this.shopsService.findOne(id)
   }
 
+  @Get(':id/active-orders')
+  async findActiveOrders(@Param('id') id: string) {
+    return await this.shopsService.findShopActiveOrders(id)
+  }
+
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateShopDto: UpdateShopDto) {
     return await this.shopsService.update(id, updateShopDto)

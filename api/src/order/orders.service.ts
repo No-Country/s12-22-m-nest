@@ -88,7 +88,7 @@ export class OrderService {
       chat: String(chat.id),
       shopId: shop.id,
       price: finalPrice,
-      products: JSON.stringify(products),
+      products,
       distance,
       shipMapUrl: buildMapsUrl(shop.address).toString()
     })

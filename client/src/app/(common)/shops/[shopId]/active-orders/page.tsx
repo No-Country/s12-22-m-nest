@@ -1,6 +1,7 @@
 import { getShop } from '@/services/shops/getShop.service'
 import { type FunctionComponent } from 'react'
 import { type Metadata } from 'next'
+import Orders from './_components/Orders'
 
 export const metadata: Metadata = {
   title: 'Tienda | LleGo!'
@@ -18,6 +19,7 @@ const ActiveOrders: FunctionComponent<Props> = async ({ params }) => {
   return (
     <>
       <h2 className='text-2xl font-semibold'>Ordenes activas</h2>
+      <Orders shop={shop} />
     </>
   )
 }

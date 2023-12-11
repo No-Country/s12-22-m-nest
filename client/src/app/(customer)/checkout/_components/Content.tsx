@@ -47,7 +47,8 @@ const Content: FunctionComponent<Props> = ({ user }) => {
         shop: products[0].shop.id
       }
       console.log(order)
-      const { data: res } = await createOrder(order)
+      const { data: res, error } = await createOrder(order)
+      if (error) throw new Error()
       toast.success('Compra realizada con exito')
       router.push(routes.customer.ORDER_TRACKING(res?.id ?? ''))
       cleanCart()
