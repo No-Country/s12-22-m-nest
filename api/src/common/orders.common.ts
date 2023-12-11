@@ -42,7 +42,7 @@ export const findActiveOrderByDealer = async (
 
 export const findOrdersByUser = async (
   userId: string,
-  type: 'customer' | 'dealer',
+  type: 'customer' | 'dealer' | 'shop',
   orderRepository: Repository<Order>
 ) => {
   const orders = await orderRepository.findBy({
