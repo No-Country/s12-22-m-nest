@@ -109,6 +109,7 @@ const OrderReqModal: React.FunctionComponent = () => {
       isDismissable={false}
       placement='center'
       onKeyDown={handleKeyDown}
+      className='w-[300px] sm:w-full'
     >
       <ModalContent>
         <ModalHeader className='flex flex-col gap-1'>Pedido Entrante</ModalHeader>
