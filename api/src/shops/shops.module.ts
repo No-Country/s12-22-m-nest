@@ -4,10 +4,11 @@ import { ShopsController } from './shops.controller'
 import { Shop } from './entities/shop.entity'
 import { HttpModule } from '@nestjs/axios'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service'
 
 @Module({
   imports: [TypeOrmModule.forFeature([Shop]), HttpModule],
   controllers: [ShopsController],
-  providers: [ShopsService]
+  providers: [ShopsService, CloudinaryService]
 })
 export class ShopsModule {}

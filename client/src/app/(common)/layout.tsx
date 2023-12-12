@@ -1,6 +1,6 @@
-import { Footer } from '@/components'
 import { type FunctionComponent } from 'react'
 import DealerMiddleware from '../dealer.middleware'
+import { Footer } from '@/components'
 
 interface Props {
   children: React.ReactNode

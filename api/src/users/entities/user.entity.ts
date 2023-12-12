@@ -11,11 +11,14 @@ import {
   Matches
 } from 'class-validator'
 import { Order } from 'src/order/entities/order.entity'
+import { Shop } from 'src/shops/entities/shop.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
@@ -47,10 +50,10 @@ export class User {
   @IsISO8601()
   birthdate: Date
 
-  @Column({ default: 'dealer' })
+  @Column()
   @IsString()
-  @Matches(/(dealer|customer)/)
-  type: 'customer' | 'dealer'
+  @Matches(/(dealer|customer|shop)/)
+  type: 'customer' | 'dealer' | 'shop'
 
   @Column()
   @IsString()
@@ -64,6 +67,17 @@ export class User {
   @IsString()
   @IsOptional()
   profileImage: string
+
+  @Column({
+    nullable: true
+  })
+  @IsString()
+  @IsOptional()
+  shopId: string | null
+
+  @OneToOne(() => Shop, { eager: true })
+  @JoinColumn()
+  shop: Shop
 
   @OneToMany(() => Order, (order) => order.dealer)
   orders: Order[]

@@ -1,8 +1,12 @@
+import { type Shop } from '.'
+
 export interface User {
   id: string
   firstName: string
   lastName: string
   type: Type
+  shop?: Shop | null
+  shopId?: string | null
   email: string
   birthdate: Date | string
   password: string
@@ -11,4 +15,4 @@ export interface User {
   updatedAt: Date
 }
 
-export type Type = 'customer' | 'dealer'
+export type Type = 'customer' | 'dealer' | 'shop'

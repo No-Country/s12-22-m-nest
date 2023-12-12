@@ -1,9 +1,9 @@
-import type { User } from '@/interfaces'
+import type { Type, User } from '@/interfaces'
 import { routes } from '@/utils/constants/routes.const'
 
-export const itemsNavBuilder = (currentUser: User): ItemNavInterface[] => items[currentUser.type]
+export const itemsNavBuilder = (currentUser: User): ItemNavInterface[] => items(currentUser)[currentUser?.type]
 
-const items = {
+const items = (user: User): Record<Type, ItemNavInterface[]> => ({
   dealer: [
     {
       key: routes.dealer.AVAILABILITY,
@@ -26,12 +26,6 @@ const items = {
   ],
   customer: [
     {
-      key: routes.customer.HOME,
-      label: 'Inicio',
-      href: routes.customer.HOME,
-      visible: true
-    },
-    {
       key: routes.customer.ORDER_HISTORY,
       label: 'Pedidos',
       href: routes.customer.ORDER_HISTORY,
@@ -43,5 +37,25 @@ const items = {
       href: routes.customer.ACCOUNT,
       visible: true
     }
+  ],
+  shop: [
+    {
+      key: routes.shop.SHOP(user?.shopId || ''),
+      label: 'Tienda',
+      href: routes.shop.SHOP(user?.shopId || ''),
+      visible: true
+    },
+    {
+      key: routes.shop.ORDER_HISTORY,
+      label: 'Pedidos',
+      href: routes.shop.ORDER_HISTORY,
+      visible: true
+    },
+    {
+      key: routes.shop.ACCOUNT,
+      label: 'Cuenta',
+      href: routes.shop.ACCOUNT,
+      visible: true
+    }
   ]
-}
+})

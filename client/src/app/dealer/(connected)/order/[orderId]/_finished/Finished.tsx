@@ -2,7 +2,7 @@
 import { type FunctionComponent, useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import { type OrderInterface } from '@/interfaces'
-import OrderManager from '../socketManager'
+import OrderManager from '../orderManager'
 import { SocketContext } from '@/context/providers/socket.provider'
 import { routes } from '@/utils/constants/routes.const'
 
