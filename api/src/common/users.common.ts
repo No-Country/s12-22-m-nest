@@ -78,12 +78,20 @@ export const findUserByCriteria = async (
   }
 
   let user: User
+
   if (criteria.id) {
     user = await userRepository.findOne({
       where: { id: criteria.id },
       select,
       ...(populate && { relations: ['orders', 'clientOrders'] })
     })
+
+    if (user.shop) {
+      user.shop = {
+        ...user.shop,
+        coordinates: JSON.parse(user.shop.coordinates)
+      }
+    }
   } else {
     user = await userRepository.findOne({
       where: { email: criteria.email },

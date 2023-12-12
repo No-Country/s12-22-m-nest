@@ -3,10 +3,11 @@
 import { routes } from '@/utils/constants/routes.const'
 import { Switch } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
-import { type FunctionComponent } from 'react'
+import { useContext, type FunctionComponent } from 'react'
 import BaseTopBar from './Base'
 import { Button } from '@/components'
 import Link from 'next/link'
+import { SocketContext } from '@/context/providers/socket.provider'
 
 export enum Title {
   DISCONNECTED = 'Actualmente estás desconectado',
@@ -58,7 +59,21 @@ const TopBarDealer: FunctionComponent<Props> = ({
   mapButtonLink = ''
 }) => {
   const router = useRouter()
-  const pushLocation = description === 'DISCONNECTED' ? routes.dealer.WAITING_ORDER : routes.dealer.AVAILABILITY
+  const socket = useContext(SocketContext)
+
+  const handleSwitch = (val: boolean): void => {
+    console.log('handleSwitch', val)
+    if (val) {
+      if (description === 'DISCONNECTED') {
+        router.push(routes.dealer.WAITING_ORDER)
+      } else {
+        router.push(routes.dealer.AVAILABILITY)
+      }
+    } else {
+      router.push(routes.dealer.AVAILABILITY)
+      socket.disconnect()
+    }
+  }
 
   return (
     <BaseTopBar>
@@ -69,8 +84,8 @@ const TopBarDealer: FunctionComponent<Props> = ({
             {switch_ && (
               <Switch
                 isSelected={isSwitchActive}
-                onValueChange={() => {
-                  router.push(pushLocation)
+                onValueChange={(e) => {
+                  handleSwitch(e)
                 }}
                 size='sm'
               />

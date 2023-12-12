@@ -6,12 +6,16 @@ export class SocketMainService {
   public readonly connectedClients = new Map<string, Socket>()
   public socket: Server = null
 
-  handleConnection(socket: Socket): void {
+  async handleConnection(socket: Socket) {
     this.connectedClients.set(socket.id, socket)
     console.log('connected', socket.id, socket.handshake.query.userId)
+    if (socket.handshake.query.type === 'shop') {
+      await socket.join(socket.handshake.query.userId)
+      socket.to(socket.handshake.query.userId).emit('message', 'Bienvenido')
+    }
   }
 
-  handleDisconnect(socket: Socket): void {
+  handleDisconnect(socket: Socket) {
     this.connectedClients.delete(socket.id)
     console.log('disconnected', socket.id, socket.handshake.query.userId)
   }

@@ -100,7 +100,7 @@ export class OrderService {
       chat: String(chat.id),
       shopId: shop.id,
       price: finalPrice,
-      products: JSON.stringify(products),
+      products,
       distance,
       shipMapUrl: buildMapsUrl(shop.address).toString(),
       paymentStatus: 'Pending',
@@ -111,7 +111,7 @@ export class OrderService {
     await this.orderRepository.save(orderCreation)
     const order = await findOrder(orderCreation.id, this.orderRepository)
     // const orderRequest = formatOrder(order, chat)
-    const paymentLink = await this.paymentsService.create(order, products, distance)
+    const paymentLink = await this.paymentsService.create(order, order.products, distance)
     console.log(paymentLink)
     // await this.mailerService.sendMail({
     //   receiverMail: client.email,

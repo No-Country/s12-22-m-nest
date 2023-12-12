@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import Stripe from 'stripe'
-import { type ProductOrder } from 'src/products/entities/product.entity'
 import { ConfigService } from '@nestjs/config'
 import { Order } from 'src/order/entities/order.entity'
 import { findOrder } from 'src/common/orders.common'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
+import { type Product } from 'src/products/entities/product.entity'
 // const stripeCliKey = process.env.STRIPE_WEBHOOK_SECRET
 
 @Injectable()
@@ -25,7 +25,7 @@ export class PaymentsService {
 
   private readonly frontendUrl = this.configService.get<string>('FRONTEND_URL')
   private readonly stripeCliKey = this.configService.get<string>('STRIPE_WEBHOOK_SECRET')
-  async create(order: Order, orderProducts: ProductOrder[], orderDistance: number) {
+  async create(order: Order, orderProducts: Product[], orderDistance: number) {
     const products = []
     // const exampleProducts = [ // productos de ejemplo, se recibira como param luego
     //   {
@@ -44,10 +44,11 @@ export class PaymentsService {
       const producto = orderProducts[i]
 
       products.push({
-        quantity: producto.quantity,
+        quantity: 1,
         price_data: {
           product_data: {
-            name: producto.name
+            name: producto.name,
+            images: [producto.thumbnail]
           },
           currency: 'usd',
           unit_amount: producto.price

@@ -18,7 +18,7 @@ export interface OrderInterface {
   client: User
   clientId: string
   shipAddress: string
-  status: 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
+  status: OrderStatus
   step: TSteps
   chat: Chat
   price: number
@@ -30,3 +30,5 @@ export interface OrderInterface {
   distance: number
   shipMapUrl: URL
 }
+
+export type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
