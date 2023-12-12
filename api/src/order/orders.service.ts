@@ -24,6 +24,7 @@ import { getFormatProducts } from 'src/utils/getFormatProducts.utils'
 import { Product } from 'src/products/entities/product.entity'
 import { calculateDistance } from 'src/utils/calculateDistance.utils'
 import { buildMapsUrl } from 'src/utils/buildMapsUrl.utils'
+import { PaymentsService } from 'src/payments/payments.service'
 
 @Injectable()
 export class OrderService {
@@ -41,13 +42,24 @@ export class OrderService {
     private readonly socketOrderService: SocketOrderService,
     private readonly socketGateway: SocketGateway,
     private readonly socketDealerService: SocketDealerService,
-    private readonly mailerService: MailerService
+    private readonly mailerService: MailerService,
+    private readonly paymentsService: PaymentsService
   ) {}
 
   async findOne(id: string) {
     const order = await findOrder(id, this.orderRepository, true)
     const chat = await findChat(order.chat, this.chatModel)
     return formatOrder(order, chat)
+  }
+
+  async findDealer(id: string) {
+    const order = await findOrder(id, this.orderRepository)
+    const chat = await findChat(order.chat, this.chatModel)
+    const orderRequest = formatOrder(order, chat)
+    return await this.socketDealerService.handleFindDealer(
+      this.socketGateway.server,
+      orderRequest
+    )
   }
 
   async findAll() {
@@ -90,23 +102,28 @@ export class OrderService {
       price: finalPrice,
       products: JSON.stringify(products),
       distance,
-      shipMapUrl: buildMapsUrl(shop.address).toString()
+      shipMapUrl: buildMapsUrl(shop.address).toString(),
+      paymentStatus: 'Pending',
+      dealerRevenue: distance,
+      shopRevenue: finalPrice
     })
 
     await this.orderRepository.save(orderCreation)
     const order = await findOrder(orderCreation.id, this.orderRepository)
-    const orderRequest = formatOrder(order, chat)
-
+    // const orderRequest = formatOrder(order, chat)
+    const paymentLink = await this.paymentsService.create(order, products, distance)
+    console.log(paymentLink)
     // await this.mailerService.sendMail({
     //   receiverMail: client.email,
     //   header: 'Sigue tu orden',
     //   body: `Hola, este es el link para seguir tu orden:${process.env.CLIENT_URL}/order-tracking/${order.id}`
     // })
 
-    return await this.socketDealerService.handleFindDealer(
-      this.socketGateway.server,
-      orderRequest
-    )
+    // return await this.socketDealerService.handleFindDealer(
+    //  this.socketGateway.server,
+    //  orderRequest
+    // )
+    return paymentLink
   }
 
   async updateOrder(id: string, updateOrderDto: UpdateOrderDto) {
