@@ -14,7 +14,7 @@ export { default as TopBarDealer } from './TopBar/Dealer/Dealer'
 export { default as TopBarClient } from './TopBar/Client/Client'
 export { default as OrderReqModal } from './OrderReqModal'
 export { default as ProductsTable } from './ProductsTable'
-export { default as OrdersTable } from './OrdersTable'
+export { default as OrdersTable } from './OrdersTable/OrdersTable'
 export { default as Footer } from './Footer'
 export { default as Header } from './Header/Header'
 

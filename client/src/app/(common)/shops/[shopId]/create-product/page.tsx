@@ -1,6 +1,7 @@
 import { getShop } from '@/services/shops/getShop.service'
 import { type FunctionComponent } from 'react'
 import { type Metadata } from 'next'
+import ProductForm from './_components/Form'
 
 export const metadata: Metadata = {
   title: 'Tienda | LleGo!'
@@ -18,6 +19,7 @@ const CreateProduct: FunctionComponent<Props> = async ({ params }) => {
   return (
     <>
       <h2 className='text-2xl font-semibold'>Crear un producto</h2>
+      <ProductForm />
     </>
   )
 }

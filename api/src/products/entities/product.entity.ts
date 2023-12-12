@@ -1,6 +1,6 @@
 // TODO: Fix eslint disable
 /* eslint-disable @typescript-eslint/indent */
-import { IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
 import { Order } from 'src/order/entities/order.entity'
 import { Shop } from 'src/shops/entities/shop.entity'
 import {
@@ -40,7 +40,7 @@ export class Product {
   description: string
 
   @Column()
-  @IsNumber()
+  @IsNotEmpty()
   price: number
 
   @Column()

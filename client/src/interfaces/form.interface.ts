@@ -25,3 +25,11 @@ export interface OrderFormProps {
   shop: string
   products: string[]
 }
+
+export interface CreateProductProps {
+  name: string
+  price: number
+  thumbnail: File | FileList
+  description: string
+  shopId: string
+}

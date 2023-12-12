@@ -14,5 +14,6 @@ export const Endpoints = {
   CREATE_ORDER: '/api/orders',
   FIND_PRODUCT: (id: string) => `/api/products/${id}`,
   FIND_SHOPS: '/api/shops',
-  FIND_SHOP_ACTIVE_ORDERS: (id: string) => `/api/shops/${id}/active-orders`
+  FIND_SHOP_ACTIVE_ORDERS: (id: string) => `/api/shops/${id}/active-orders`,
+  CREATE_PRODUCT: '/api/products'
 }

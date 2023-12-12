@@ -62,3 +62,20 @@ export const lastNameValidations: RegisterOptions = {
 export const addressValidations: RegisterOptions = {
   required
 }
+
+export type ProductValidations = 'name' | 'description' | 'price' | 'thumbnail'
+
+export const productValidations: Record<ProductValidations, RegisterOptions> = {
+  name: {
+    required
+  },
+  description: {
+    required
+  },
+  price: {
+    required
+  },
+  thumbnail: {
+    required
+  }
+}

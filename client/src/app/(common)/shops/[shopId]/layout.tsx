@@ -34,7 +34,7 @@ const ShopLayout: FunctionComponent<Props> = async ({ children, params }) => {
               </div>
             </div>
           </div>
-          <div className='flex w-full flex-col gap-5 p-10'>{children}</div>
+          <div className='padding-general-x flex w-full flex-col gap-5 py-10'>{children}</div>
         </section>
       </main>
     </>
