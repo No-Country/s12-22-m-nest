@@ -24,6 +24,11 @@ export class OrderController {
     return await this.orderService.findOne(id)
   }
 
+  @Get(':id/find-dealer')
+  async findDealer(@Param('id') id: string) {
+    return await this.orderService.findDealer(id)
+  }
+
   @Put(':id')
   async updateOrder(
     @Param('id') orderId: string,

@@ -8,15 +8,12 @@ import { HttpService } from '@nestjs/axios'
 import { findCoordinates } from 'src/utils/findCoordinates.utils'
 import { formatShop } from 'src/utils/formatShop.utils'
 import { buildMapsUrl } from 'src/utils/buildMapsUrl.utils'
-import { Order } from 'src/order/entities/order.entity'
 
 @Injectable()
 export class ShopsService {
   constructor(
     @InjectRepository(Shop)
     private readonly shopRepository: Repository<Shop>,
-    @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>,
     private readonly httpService: HttpService
   ) {}
 
@@ -32,7 +29,8 @@ export class ShopsService {
       ...createShopDto,
       coordinates: JSON.stringify(coordinates),
       thumbnail: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png',
-      mapUrl: mapUrl.toString()
+      mapUrl: mapUrl.toString(),
+      stripeId: null
     })
   }
 
@@ -47,14 +45,6 @@ export class ShopsService {
     })
 
     return formatShop(shop)
-  }
-
-  async findShopActiveOrders(id: string) {
-    return await this.orderRepository.find({
-      where: {
-        shopId: id
-      }
-    })
   }
 
   async update(id: string, updateShopDto: UpdateShopDto) {
