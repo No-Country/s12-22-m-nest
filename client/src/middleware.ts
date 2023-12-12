@@ -112,6 +112,7 @@ export const config = {
     '/dealer/:path*',
     // Customer private routes
     '/account',
+    '/account/:path*',
     '/checkout',
     '/order-tracking/:path*',
     // Shop private routes
