@@ -93,7 +93,7 @@ const InfoSheets: FunctionComponent<Props> = ({ order }) => {
             <ChatBox mode='customer' orderId={order?.id} chat={order?.chat} />
           </div>
         ) : (
-          <ProductsTable products={order.products} />
+          <ProductsTable products={order?.products} />
         )}
       </CardBody>
     </Card>
