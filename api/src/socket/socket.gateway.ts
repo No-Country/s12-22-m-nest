@@ -9,6 +9,7 @@ import { type Socket, type Server } from 'socket.io'
 import { SocketDealerService } from './services/dealer.service'
 import { SocketOrderService } from './services/order.service'
 import { SocketMainService } from './services/main.service'
+import { SocketShopService } from './services/shop.service'
 
 @WebSocketGateway({ cors: true })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -17,11 +18,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly socketOrderService: SocketOrderService,
     private readonly socketDealerService: SocketDealerService,
-    private readonly socketMainService: SocketMainService
+    private readonly socketMainService: SocketMainService,
+    private readonly socketShopService: SocketShopService
   ) {}
 
-  handleConnection(socket: Socket): void {
-    this.socketMainService.handleConnection(socket)
+  async handleConnection(socket: Socket) {
+    await this.socketMainService.handleConnection(socket)
   }
 
   handleDisconnect(socket: Socket): void {
@@ -50,5 +52,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('joinOrderDealer')
   async handleJoinOrderDealer(client: any, data: any) {
     await this.socketOrderService.joinOrderDealer(client, data)
+  }
+
+  @SubscribeMessage('updateOrderStatus')
+  handleUpdateOrderStatus(client: any, data: any) {
+    this.socketShopService.updateActiveOrders(client, data)
   }
 }
