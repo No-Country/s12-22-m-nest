@@ -33,3 +33,11 @@ export interface CreateProductProps {
   description: string
   shopId: string
 }
+
+export interface ShopFormProps {
+  name: string
+  description: string
+  address: string
+  phone: string
+  thumbnail: FileList | File
+}

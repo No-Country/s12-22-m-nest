@@ -79,3 +79,23 @@ export const productValidations: Record<ProductValidations, RegisterOptions> = {
     required
   }
 }
+
+export type ShopValidations = 'name' | 'description' | 'address' | 'phone' | 'thumbnail'
+
+export const shopValidations: Record<ShopValidations, RegisterOptions> = {
+  name: {
+    required
+  },
+  description: {
+    required
+  },
+  address: {
+    required
+  },
+  phone: {
+    required
+  },
+  thumbnail: {
+    required
+  }
+}
