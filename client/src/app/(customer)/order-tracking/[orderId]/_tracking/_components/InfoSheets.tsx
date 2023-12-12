@@ -90,7 +90,7 @@ const InfoSheets: FunctionComponent<Props> = ({ order }) => {
         ) : handleView ? (
           <div>
             <OrderInfo order={order} />
-            <ChatBox mode='client' orderId={order?.id} chat={order?.chat} />
+            <ChatBox mode='customer' orderId={order?.id} chat={order?.chat} />
           </div>
         ) : (
           <ProductsTable products={order.products} />

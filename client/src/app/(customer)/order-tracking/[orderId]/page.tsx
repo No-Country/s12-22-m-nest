@@ -27,7 +27,7 @@ const OrderTracking: FunctionComponent<Props> = async ({ params }) => {
   }
 
   return (
-    <SocketProvider session={session} mode='client'>
+    <SocketProvider session={session} mode='customer'>
       <main className='relative flex min-h-screen flex-col items-start'>
         {order?.status === 'In Progress' ? <Tracking order={order} /> : <Finished order={order} />}
       </main>
