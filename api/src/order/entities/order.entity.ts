@@ -14,8 +14,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
+import { TransformRevenue } from '../decorators/transform-revenue.decorator'
 
 type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
+type PaymentStatus = 'Pending' | 'Completed' | 'Failure'
 
 // export interface Product {
 //   name: string
@@ -99,4 +101,15 @@ export class Order {
     onUpdate: 'CURRENT_TIMESTAMP'
   })
   updatedAt: Date
+
+  @Column('float')
+  @TransformRevenue(0.5) // Regla para cumplir 1/2 USD por kilometro
+  dealerRevenue: number
+
+  @Column('float')
+  @TransformRevenue(0.7) // Regla para cumplir 70% del precio final para el shop
+  shopRevenue: number
+
+  @Column()
+  paymentStatus: PaymentStatus
 }

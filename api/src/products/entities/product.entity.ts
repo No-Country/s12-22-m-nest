@@ -13,12 +13,6 @@ import {
   UpdateDateColumn
 } from 'typeorm'
 
-export interface ProductOrder {
-  name: string
-  quantity: number
-  price: number
-}
-
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn('uuid')

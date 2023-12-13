@@ -8,6 +8,7 @@ import SocketProvider from '@/context/providers/socket.provider'
 import { routes } from '@/utils/constants/routes.const'
 import { redirect } from 'next/navigation'
 import { type Metadata } from 'next'
+import { Header } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Seguimiento de orden | LleGo!'
@@ -27,11 +28,14 @@ const OrderTracking: FunctionComponent<Props> = async ({ params }) => {
   }
 
   return (
-    <SocketProvider session={session} mode='customer'>
-      <main className='relative flex min-h-screen flex-col items-start'>
-        {order?.status === 'In Progress' ? <Tracking order={order} /> : <Finished order={order} />}
-      </main>
-    </SocketProvider>
+    <>
+      <Header layout='simple' theme='light' />
+      <SocketProvider session={session} mode='customer'>
+        <main className='relative flex min-h-screen flex-col items-start'>
+          {order?.status === 'In Progress' ? <Tracking order={order} /> : <Finished order={order} />}
+        </main>
+      </SocketProvider>
+    </>
   )
 }
 
