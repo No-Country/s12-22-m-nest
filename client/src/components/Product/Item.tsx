@@ -17,7 +17,7 @@ const ProductItem: FunctionComponent<Props> = ({ product }) => {
   }
 
   return (
-    <div className='min-w-[150px] md:min-w-[200px]'>
+    <div className='min-w-[120px] w-[120px] sm:w-[150px] md:min-w-[200px]'>
       <div className='flex cursor-pointer flex-col gap-3' onClick={handleOpen}>
         <div className='relative aspect-square w-full'>
           <Image

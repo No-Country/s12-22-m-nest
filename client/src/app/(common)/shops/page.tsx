@@ -1,4 +1,4 @@
-import { Header, ShopGrid } from '@/components'
+import { Header, ShopGrid, ShopPagination } from '@/components'
 import { getShops } from '@/services/shops/getShops.service'
 import { type FunctionComponent } from 'react'
 
@@ -11,6 +11,7 @@ const ShopsPage: FunctionComponent = async () => {
         <section className='flex w-full flex-col gap-5  2xl:container'>
           <h2 className='text-2xl font-semibold'>Tiendas 🏪</h2>
           <ShopGrid shops={shops ?? []} />
+          <ShopPagination shops={shops ?? []}/>
         </section>
       </main>
     </>

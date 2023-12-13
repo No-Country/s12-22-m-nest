@@ -9,7 +9,7 @@ interface Props {
 }
 
 const DynamicCarrousel: FunctionComponent<Props> = ({ products, shops }) => (
-    <div className='flex gap-4 overflow-x-auto scroll-smooth'>
+    <div className='flex gap-4 overflow-x-auto'>
           { products?.map(item => (
             <ProductItem product={item} key={item.id}/>
           ))
