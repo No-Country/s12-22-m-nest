@@ -12,6 +12,7 @@ import { ChatModule } from './chat/chat.module'
 import { CloudinaryModule } from './cloudinary/cloudinary.module'
 import { ShopsModule } from './shops/shops.module'
 import { ProductsModule } from './products/products.module'
+import { PaymentsModule } from './payments/payments.module'
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { ProductsModule } from './products/products.module'
       password: process.env.PG_PASSWORD,
       database: process.env.PG_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
-      ssl: true, // Cambiar a true en producción
+      ssl: true,
       synchronize: true
     }),
     OrderModule,
@@ -35,7 +36,8 @@ import { ProductsModule } from './products/products.module'
     ChatModule,
     CloudinaryModule,
     ShopsModule,
-    ProductsModule
+    ProductsModule,
+    PaymentsModule
   ],
   controllers: [AppController],
   providers: [AppService],

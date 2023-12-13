@@ -32,7 +32,8 @@ export class ShopsService {
       ...createShopDto,
       coordinates: JSON.stringify(coordinates),
       thumbnail: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png',
-      mapUrl: mapUrl.toString()
+      mapUrl: mapUrl.toString(),
+      stripeId: null
     })
   }
 
@@ -49,16 +50,17 @@ export class ShopsService {
     return formatShop(shop)
   }
 
+  async update(id: string, updateShopDto: UpdateShopDto) {
+    return await this.shopRepository.update({ id }, updateShopDto)
+  }
+
   async findShopActiveOrders(id: string) {
     return await this.orderRepository.find({
       where: {
-        shopId: id
+        shopId: id,
+        status: 'In Progress'
       }
     })
-  }
-
-  async update(id: string, updateShopDto: UpdateShopDto) {
-    return await this.shopRepository.update({ id }, updateShopDto)
   }
 
   async remove(id: string) {
