@@ -12,12 +12,6 @@ import { toast } from 'sonner'
 import { Howl } from 'howler'
 import { clientUrl } from '@/utils/constants/env.const'
 
-const sound = new Howl({
-  src: [clientUrl + '/sound/incomingOrder.mp3'],
-  loop: true,
-  html5: true
-})
-
 const OrderReqModal: React.FunctionComponent = () => {
   const router = useRouter()
   const [remainingTime, setRemainingTime] = useState(30)
@@ -27,6 +21,7 @@ const OrderReqModal: React.FunctionComponent = () => {
   const intervalRef = useRef<NodeJS.Timeout>()
   const { isOpen, onOpenChange, onClose } = useDisclosure()
   const socket = useContext(SocketContext)
+  const soundRef = useRef<Howl>()
 
   const handleReject = (): void => {
     callbackRef.current?.(false)
@@ -50,7 +45,7 @@ const OrderReqModal: React.FunctionComponent = () => {
     setRemainingTime(30)
     setReqOrder(null)
     callbackRef.current = undefined
-    sound.stop()
+    soundRef?.current?.stop()
     clearInterval(intervalRef.current)
   }
 
@@ -80,7 +75,7 @@ const OrderReqModal: React.FunctionComponent = () => {
     () =>
       debounce((data: OrderInterface, callback: (accepted: boolean) => void) => {
         console.log('incomingOrder', clientUrl + '/sound/incomingOrder.mp3')
-        sound.play()
+        soundRef?.current?.play()
         handleInterval()
         callbackRef.current = callback
         setAsking(true)
@@ -98,7 +93,19 @@ const OrderReqModal: React.FunctionComponent = () => {
   }
 
   useEffect(() => {
+    const sound = new Howl({
+      src: [clientUrl + '/sound/incomingOrder.mp3'],
+      loop: true,
+      html5: true
+    })
+
+    soundRef.current = sound
+
     handleOrder(socket, incomingOrder)
+
+    return () => {
+      sound.unload()
+    }
   }, [socket])
 
   return (

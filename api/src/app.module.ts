@@ -10,8 +10,9 @@ import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
 import { ChatModule } from './chat/chat.module'
 import { CloudinaryModule } from './cloudinary/cloudinary.module'
-import { ShopsModule } from './shops/shops.module';
-import { ProductsModule } from './products/products.module';
+import { ShopsModule } from './shops/shops.module'
+import { ProductsModule } from './products/products.module'
+import { PaymentsModule } from './payments/payments.module'
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { ProductsModule } from './products/products.module';
     ChatModule,
     CloudinaryModule,
     ShopsModule,
-    ProductsModule
+    ProductsModule,
+    PaymentsModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -19,7 +19,7 @@ const Page: FunctionComponent = async () => {
           <h1 className='text-2xl'>Estas son las ordenes que has realizado</h1>
           <p>Si tienes alguna duda, puedes contactarnos</p>
         </div>
-        <OrdersTable orders={Array.isArray(data) ? data : []} />
+        <OrdersTable orders={Array.isArray(data) ? data : []} mode={session?.user?.type ?? 'customer'} />
       </section>
     </main>
   )

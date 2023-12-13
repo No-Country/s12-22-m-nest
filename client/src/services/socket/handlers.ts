@@ -71,6 +71,7 @@ export const handleJoinOrderClient = (
 }
 
 export const handleSystemMessage = (socket: Socket): void => {
+  console.log('handleSystemMessage')
   socket.on('message', (data: string) => {
     console.log('message', data)
     return data
@@ -80,6 +81,13 @@ export const handleSystemMessage = (socket: Socket): void => {
 export const handleChat = (socket: Socket, update: KeyedMutator<OrderInterface>): void => {
   socket.on('updatedChat', async (data: Chat) => {
     console.log('updatedChat', data)
+    await update()
+  })
+}
+
+export const handleUpdateActiveOrders = (socket: Socket, update: KeyedMutator<OrderInterface[]>): void => {
+  socket.on('updatedActiveOrders', async () => {
+    console.log('updatedActiveOrders')
     await update()
   })
 }

@@ -1,12 +1,12 @@
 'use client'
-import { type Chat } from '@/interfaces'
+import { type Type, type Chat } from '@/interfaces'
 import { handleSendMessage } from '@/services/orders/sendMessage.service'
 import { useSession } from 'next-auth/react'
 import { useState, type FunctionComponent } from 'react'
 import ChatIcon from '@/assets/ChatIcon'
 
 interface Props {
-  mode: 'client' | 'dealer'
+  mode: Type
   orderId: string
   chat: Chat | null
 }
@@ -22,10 +22,10 @@ const ChatBox: FunctionComponent<Props> = ({ mode, orderId, chat }) => {
   return (
     <>
       <button
-        className='fixed bottom-6 right-6 rounded-full bg-green-700 p-[10px] text-center fill-green-50 duration-150'
+        className='fixed bottom-6 right-6 rounded-full bg-green-700 fill-green-50 p-[10px] text-center duration-150'
         onClick={handleChatVisibility}
       >
-        <ChatIcon fillColor='#f0fdf4'/>
+        <ChatIcon fillColor='#f0fdf4' />
       </button>
       {chatVisibility && (
         <div className='flex flex-col gap-3 border border-red-700 bg-blue-400 px-5 py-7'>
@@ -34,7 +34,7 @@ const ChatBox: FunctionComponent<Props> = ({ mode, orderId, chat }) => {
             {Array.isArray(chat?.messages) &&
               chat?.messages?.map((message, index) => (
                 <div key={index} className='border bg-violet-700'>
-                  <p className='font-semibold text-white'>{message.sender ?? 'client'}</p>
+                  <p className='font-semibold text-white'>{message.sender ?? 'customer'}</p>
                   <p className='text-white'>{message.body}</p>
                 </div>
               ))}

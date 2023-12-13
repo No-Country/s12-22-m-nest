@@ -4,6 +4,6 @@
 
 @layer base {
   .padding-general-x {
-    @apply px-10;
+    @apply px-5 md:px-10;
   }
 }

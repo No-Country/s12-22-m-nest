@@ -29,7 +29,8 @@ export class ShopsService {
       ...createShopDto,
       coordinates: JSON.stringify(coordinates),
       thumbnail: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png',
-      mapUrl: mapUrl.toString()
+      mapUrl: mapUrl.toString(),
+      stripeId: null
     })
   }
 

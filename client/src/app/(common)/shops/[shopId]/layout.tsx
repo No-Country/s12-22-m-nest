@@ -1,20 +1,16 @@
-import { Header, ProductGrid } from '@/components'
+import { Header } from '@/components'
 import { getShop } from '@/services/shops/getShop.service'
 import Image from 'next/image'
 import { type FunctionComponent } from 'react'
-import { type Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Tienda | LleGo!'
-}
 
 interface Props {
+  children: React.ReactNode
   params: {
     shopId: string
   }
 }
 
-const ShopPage: FunctionComponent<Props> = async ({ params }) => {
+const ShopLayout: FunctionComponent<Props> = async ({ children, params }) => {
   const { data: shop } = await getShop(params.shopId)
   if (!shop) return null
   return (
@@ -38,14 +34,11 @@ const ShopPage: FunctionComponent<Props> = async ({ params }) => {
               </div>
             </div>
           </div>
-          <div className='flex w-full flex-col gap-5 p-10'>
-            <h2 className='text-2xl font-semibold'>Productos</h2>
-            <ProductGrid products={shop.products ?? []} />
-          </div>
+          <div className='padding-general-x flex w-full flex-col gap-5 py-10'>{children}</div>
         </section>
       </main>
     </>
   )
 }
 
-export default ShopPage
+export default ShopLayout

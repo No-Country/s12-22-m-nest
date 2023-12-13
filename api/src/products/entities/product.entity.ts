@@ -1,21 +1,17 @@
 // TODO: Fix eslint disable
 /* eslint-disable @typescript-eslint/indent */
-import { IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { Order } from 'src/order/entities/order.entity'
 import { Shop } from 'src/shops/entities/shop.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
-
-export interface ProductOrder {
-  name: string
-  quantity: number
-  price: number
-}
 
 @Entity()
 export class Product {
@@ -38,7 +34,7 @@ export class Product {
   description: string
 
   @Column()
-  @IsNumber()
+  @IsNotEmpty()
   price: number
 
   @Column()
@@ -58,4 +54,7 @@ export class Product {
     onUpdate: 'CURRENT_TIMESTAMP'
   })
   updatedAt: Date
+
+  @ManyToMany(() => Order, (order) => order.products)
+  orders: Order[]
 }

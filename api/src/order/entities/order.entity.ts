@@ -1,25 +1,29 @@
 // TODO: Fix eslint disable
 /* eslint-disable @typescript-eslint/indent */
-import { IsJSON } from 'class-validator'
 import { TSteps } from 'src/order/entities/step.interface'
+import { Product } from 'src/products/entities/product.entity'
 import { Shop } from 'src/shops/entities/shop.entity'
 import { User } from 'src/users/entities/user.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
+import { TransformRevenue } from '../decorators/transform-revenue.decorator'
 
 type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
+type PaymentStatus = 'Pending' | 'Completed' | 'Failure'
 
-export interface Product {
-  name: string
-  quantity: number
-  price: number
-}
+// export interface Product {
+//   name: string
+//   quantity: number
+//   price: number
+// }
 
 @Entity()
 export class Order {
@@ -69,9 +73,12 @@ export class Order {
   // @OneToOne (()=> Product ,(product)=> product ,{eager:true})
   // @JoinColumn()
   // TODO: podemos validar que sea un json?
-  @Column()
-  @IsJSON()
-  products: string
+  // @OneToMany(() => Order, (order) => order.shop)
+  // products: string
+
+  @ManyToMany(() => Product, { eager: true })
+  @JoinTable()
+  products: Product[]
 
   @Column()
   status: OrderStatus
@@ -94,4 +101,15 @@ export class Order {
     onUpdate: 'CURRENT_TIMESTAMP'
   })
   updatedAt: Date
+
+  @Column('float')
+  @TransformRevenue(0.5) // Regla para cumplir 1/2 USD por kilometro
+  dealerRevenue: number
+
+  @Column('float')
+  @TransformRevenue(0.7) // Regla para cumplir 70% del precio final para el shop
+  shopRevenue: number
+
+  @Column()
+  paymentStatus: PaymentStatus
 }
