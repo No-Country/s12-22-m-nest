@@ -49,6 +49,7 @@ export class SocketOrderService {
 
   async joinOrderClient(socket: Socket, data: { orderId: string }) {
     await socket.join(data.orderId)
+    console.log('joinOrderClient', data.orderId)
     socket.to(data.orderId).emit('message', 'El cliente se ha unido a la orden')
   }
 

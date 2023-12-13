@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Order } from './entities/order.entity'
 import { Repository } from 'typeorm'
@@ -56,6 +56,7 @@ export class OrderService {
     const order = await findOrder(id, this.orderRepository)
     const chat = await findChat(order.chat, this.chatModel)
     const orderRequest = formatOrder(order, chat)
+    if (order.status !== 'Pending') throw new BadRequestException('Order is not pending')
     return await this.socketDealerService.handleFindDealer(
       this.socketGateway.server,
       orderRequest

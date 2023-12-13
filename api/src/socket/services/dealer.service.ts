@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   ServiceUnavailableException,
@@ -56,7 +57,8 @@ export class SocketDealerService {
     socket.data = {
       coordinates: data.coordinates,
       active: data.active,
-      taken: !isAvailable
+      taken: !isAvailable,
+      asking: false
     }
 
     console.log(
@@ -81,11 +83,13 @@ export class SocketDealerService {
     socket.to(data.orderId).emit('updatedDealerLocation', data)
   }
 
-  async handleFindDealer(socket: Server, order: OrderRequest, attempt = 1) {
+  async handleFindDealer(server: Server, order: OrderRequest, attempt = 1) {
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
+
     let currentDealer: FormatedSockDealer | null = null
 
     for (const dealer of dealers) {
+      const socket = this.connectedClients.get(dealer.sockId)
       const distance = calculateDistance(
         parseFloat(order.shop.coordinates.lat),
         parseFloat(order.shop.coordinates.lon),
@@ -94,14 +98,15 @@ export class SocketDealerService {
       )
 
       if (distance <= 5000) {
+        socket.data.asking = true
         console.log('Preguntando a dealer', dealer)
         const acceptOrder = await this.socketOrderService.sendOrderRequest(
           dealer.sockId,
           order
         )
+        socket.data.asking = false
         if (acceptOrder) {
           currentDealer = dealer
-          const socket = this.connectedClients.get(currentDealer.sockId)
           socket.data.taken = true
           break
         }
@@ -112,15 +117,17 @@ export class SocketDealerService {
       console.log(
         `No dealer found. Retrying in 1 minute (attempt ${attempt}/5)`
       )
-      await new Promise((resolve) => setTimeout(resolve, 30000))
-      await this.handleFindDealer(socket, order, attempt + 1)
+      await new Promise((resolve) => setTimeout(resolve, 60000))
+      await this.handleFindDealer(server, order, attempt + 1)
     }
+
+    if (order.status !== 'Pending') throw new BadRequestException('Order is not pending')
 
     if (currentDealer === null) {
       await updateOrder(
         order.id,
         {
-          status: 'Canceled'
+          status: 'In Progress'
         },
         this.orderRepository,
         this.userRepository,

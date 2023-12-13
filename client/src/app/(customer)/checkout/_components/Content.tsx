@@ -9,7 +9,6 @@ import { addressValidations } from '@/utils/constants/validations.const'
 import { createOrder } from '@/services/orders/create.service'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { routes } from '@/utils/constants/routes.const'
 
 interface Props {
   user: User
@@ -48,9 +47,9 @@ const Content: FunctionComponent<Props> = ({ user }) => {
       }
       console.log(order)
       const { data: res, error } = await createOrder(order)
-      if (error) throw new Error()
+      if (error || !res) throw new Error()
       toast.success('Compra realizada con exito')
-      router.push(routes.customer.ORDER_TRACKING(res?.id ?? ''))
+      router.push(res)
       cleanCart()
     } catch (error) {
       console.log(error)
