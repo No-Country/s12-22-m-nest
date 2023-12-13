@@ -20,6 +20,7 @@ export { default as Header } from './Header/Header'
 
 export { default as ProductGrid } from './Product/Grid'
 export { default as ProductItem } from './Product/Item'
+export { default as ProductPagination } from './Product/Pagination'
 export { default as ProductCartGrid } from './Product/CartGrid'
 export { default as ProductCartItem } from './Product/CartItem'
 export { default as ShopItem } from './Shop/Item'

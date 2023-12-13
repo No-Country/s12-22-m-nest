@@ -1,4 +1,4 @@
-import { Header, ProductGrid } from '@/components'
+import { Header, ProductGrid, ProductPagination } from '@/components'
 import { getProducts } from '@/services/products/getProducts.service'
 import { type FunctionComponent } from 'react'
 
@@ -11,6 +11,7 @@ const OroductsPage: FunctionComponent = async () => {
         <section className='flex w-full flex-col gap-5  2xl:container'>
           <h2 className='text-2xl font-semibold'>Todos los productos 🚀</h2>
           <ProductGrid products={products ?? []} />
+          <ProductPagination products={products ?? []} />
         </section>
       </main>
     </>
