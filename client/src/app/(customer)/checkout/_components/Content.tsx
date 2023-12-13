@@ -59,11 +59,11 @@ const Content: FunctionComponent<Props> = ({ user }) => {
 
   return (
     <>
-      <section className='flex w-full flex-col justify-between gap-5'>
+      <section className='flex w-full flex-col justify-between gap-5 2xl:container'>
         <h1 className='text-2xl font-semibold'>Ya casi es tuyo</h1>
         <ProductsTable products={products} />
       </section>
-      <section className='flex w-full flex-col justify-between gap-5'>
+      <section className='flex w-full flex-col justify-between gap-5 2xl:container'>
         <h1 className='text-2xl font-semibold'>Datos de envio</h1>
         <form className='flex flex-col items-end gap-4' onSubmit={handleSubmit(onSubmit)}>
           <Input

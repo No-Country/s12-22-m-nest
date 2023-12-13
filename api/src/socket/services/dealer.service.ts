@@ -81,7 +81,7 @@ export class SocketDealerService {
     socket.to(data.orderId).emit('updatedDealerLocation', data)
   }
 
-  async handleFindDealer(socket: Server, order: OrderRequest) {
+  async handleFindDealer(socket: Server, order: OrderRequest, attempt = 1) {
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
     let currentDealer: FormatedSockDealer | null = null
 
@@ -108,8 +108,26 @@ export class SocketDealerService {
       }
     }
 
-    // TODO: O se cancela la orden o se pone en espera
+    if (!currentDealer && attempt < 5) {
+      console.log(
+        `No dealer found. Retrying in 1 minute (attempt ${attempt}/5)`
+      )
+      await new Promise((resolve) => setTimeout(resolve, 30000))
+      await this.handleFindDealer(socket, order, attempt + 1)
+    }
+
     if (currentDealer === null) {
+      await updateOrder(
+        order.id,
+        {
+          status: 'Canceled'
+        },
+        this.orderRepository,
+        this.userRepository,
+        this.socketOrderService,
+        this.socketGateway,
+        this.chatModel
+      )
       throw new ServiceUnavailableException("We couldn't find a dealer")
     }
 

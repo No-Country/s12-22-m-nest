@@ -14,7 +14,6 @@ export const routes = {
     ...common,
     HOME: '/',
     CHECKOUT: '/checkout',
-    ORDER: (id: string) => `/order/${id}`,
     ORDER_TRACKING: (id: string) => `/order-tracking/${id}`,
     SHOP: (id: string) => `/shops/${id}`
   },

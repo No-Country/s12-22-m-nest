@@ -52,7 +52,8 @@ export class ShopsService {
   async findShopActiveOrders(id: string) {
     return await this.orderRepository.find({
       where: {
-        shopId: id
+        shopId: id,
+        status: 'In Progress'
       }
     })
   }

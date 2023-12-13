@@ -46,6 +46,7 @@ const OrderReqModal: React.FunctionComponent = () => {
     setReqOrder(null)
     callbackRef.current = undefined
     soundRef?.current?.stop()
+    soundRef?.current?.unload()
     clearInterval(intervalRef.current)
   }
 
@@ -75,6 +76,7 @@ const OrderReqModal: React.FunctionComponent = () => {
     () =>
       debounce((data: OrderInterface, callback: (accepted: boolean) => void) => {
         console.log('incomingOrder', clientUrl + '/sound/incomingOrder.mp3')
+        soundRef?.current?.load()
         soundRef?.current?.play()
         handleInterval()
         callbackRef.current = callback
@@ -98,6 +100,8 @@ const OrderReqModal: React.FunctionComponent = () => {
       loop: true,
       html5: true
     })
+
+    sound.unload()
 
     soundRef.current = sound
 

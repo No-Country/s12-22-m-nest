@@ -46,7 +46,7 @@ const OrderActiveItem: FunctionComponent<Props> = ({ order }) => (
         <p className='text-xs font-semibold'>Estado: {formatStatus(order.step)}</p>
       </div>
     </div>
-    <div>
+    <div className='flex w-full flex-col gap-2'>
       {order.products.map((product: Product) => (
         <div key={product.id} className='flex items-center gap-2 rounded-lg bg-gray-100 p-2'>
           <Image
