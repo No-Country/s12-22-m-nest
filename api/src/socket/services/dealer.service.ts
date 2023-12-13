@@ -19,7 +19,7 @@ import { type OrderRequest } from '../interfaces/orderRequest.interface'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/users/entities/user.entity'
 import { Repository } from 'typeorm'
-import { updateOrder } from 'src/common/orders.common'
+import { findOrder, updateOrder } from 'src/common/orders.common'
 import { checkIsAvailable } from 'src/utils/isAvailable.utils'
 import { Order } from 'src/order/entities/order.entity'
 import { SocketGateway } from '../socket.gateway'
@@ -89,6 +89,8 @@ export class SocketDealerService {
     let currentDealer: FormatedSockDealer | null = null
 
     for (const dealer of dealers) {
+      const updatedOrder = await findOrder(order.id, this.orderRepository)
+      if (updatedOrder.status !== 'Pending') throw new BadRequestException('Order is not pending')
       const socket = this.connectedClients.get(dealer.sockId)
       const distance = calculateDistance(
         parseFloat(order.shop.coordinates.lat),
@@ -120,8 +122,6 @@ export class SocketDealerService {
       await new Promise((resolve) => setTimeout(resolve, 60000))
       await this.handleFindDealer(server, order, attempt + 1)
     }
-
-    if (order.status !== 'Pending') throw new BadRequestException('Order is not pending')
 
     if (currentDealer === null) {
       await updateOrder(
