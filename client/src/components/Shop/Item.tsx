@@ -11,7 +11,7 @@ interface Props {
 
 const ShopItem: FunctionComponent<Props> = ({ shop }) => (
   <Link href={routes.customer.SHOP(shop.id)}>
-    <div className='flex cursor-pointer flex-col gap-3'>
+    <div className='flex cursor-pointer flex-col gap-3 min-w-[150px] md:min-w-[200px]'>
       <div className='relative aspect-square w-full'>
         <Image
           src={shop.thumbnail || '/image/placeholder.png'}
