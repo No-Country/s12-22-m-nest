@@ -23,7 +23,6 @@ import { clientUrl } from '@/utils/constants/env.const'
 const OrderReqModal: React.FunctionComponent = () => {
   const router = useRouter()
   const [remainingTime, setRemainingTime] = useState(30)
-  const [asking, setAsking] = useState(false)
   const [loading, setLoading] = useState(false)
   const [reqOrder, setReqOrder] = useState<OrderInterface | null>(null)
   const callbackRef = useRef<(accepted: boolean) => void>()
@@ -51,7 +50,6 @@ const OrderReqModal: React.FunctionComponent = () => {
 
   const toInitialStatus = (): void => {
     onClose()
-    setAsking(false)
     setRemainingTime(30)
     setReqOrder(null)
     callbackRef.current = undefined
@@ -86,7 +84,6 @@ const OrderReqModal: React.FunctionComponent = () => {
         soundRef?.current?.play()
         handleInterval()
         callbackRef.current = callback
-        setAsking(true)
         setReqOrder(data)
         onOpenChange()
       }, 2000),

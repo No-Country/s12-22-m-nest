@@ -15,7 +15,7 @@ const Page: FunctionComponent = async () => {
   return (
     <main className=' flex min-h-screen flex-col items-start pt-[100px] '>
       <TopBarDealer title='DISCONNECTED' description='DISCONNECTED' switch={true} isSwitchActive={false} />
-      <section className='relative h-full w-screen flex-grow'>
+      <section className='relative h-full w-full flex-grow'>
         <DynamicMap
           locations={{
             shipCoordinates: null,

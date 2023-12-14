@@ -1,5 +1,5 @@
 'use client'
-import { Button, Input } from '@/components'
+import { Button, Input, Textarea } from '@/components'
 import { type CreateProductProps } from '@/interfaces'
 import { productValidations } from '@/utils/constants/validations.const'
 import { type FunctionComponent } from 'react'
@@ -65,9 +65,10 @@ const ProductForm: FunctionComponent = () => {
           }}
           errorMessage={errors?.price?.message}
         />
-        <Input
+        <Textarea
           type='text'
           label='Descripcion'
+          rows={1}
           placeholder='Ingrese una descripcion'
           name='description'
           hookForm={{

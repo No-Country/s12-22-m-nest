@@ -18,9 +18,9 @@ const Finished: FunctionComponent<Props> = ({ order }) => {
   return (
     <>
       <DynamicMap locations={mapData} />
-      <div className='absolute left-0 top-0 z-[1] h-full w-full '>
+      <div className='absolute left-0 top-0 z-[1] h-full w-full  '>
         <div className='absolute left-0 top-0 z-[0] h-full w-full bg-black opacity-30 backdrop-blur-lg' />
-        <div className='z-[1] flex h-full w-full items-center justify-center  backdrop-blur-sm'>
+        <div className='padding-general-x z-[1] flex h-full w-full items-end justify-center py-10 backdrop-blur-sm  lg:items-center'>
           <Card>
             <CardHeader>
               <h1 className='mx-auto'>

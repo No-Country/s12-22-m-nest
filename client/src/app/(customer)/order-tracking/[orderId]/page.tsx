@@ -42,20 +42,18 @@ const OrderTracking: FunctionComponent<Props> = async ({ params }) => {
           <ProfileAction status='authenticated' loggedUser={user as User} />
         </div>
       </Navbar>
-      <main className='relative flex h-screen max-h-screen flex-col items-start justify-start'>
-        <section className='flex h-full w-full'>
-          <Template order={order as OrderInterface} key={order?.id}>
-            {order?.status === 'Pending' ? (
-              <Waiting order={order} />
-            ) : order?.status === 'In Progress' ? (
-              <Tracking order={order} />
-            ) : order?.status === 'Canceled' ? (
-              <Canceled order={order} />
-            ) : (
-              <Finished order={order} />
-            )}
-          </Template>
-        </section>
+      <main className='relative flex flex-col items-start justify-start lg:h-screen'>
+        <Template order={order as OrderInterface} key={order?.id}>
+          {order?.status === 'Pending' ? (
+            <Waiting order={order} />
+          ) : order?.status === 'In Progress' ? (
+            <Tracking order={order} />
+          ) : order?.status === 'Canceled' ? (
+            <Canceled order={order} />
+          ) : (
+            <Finished order={order} />
+          )}
+        </Template>
       </main>
     </SocketProvider>
   )

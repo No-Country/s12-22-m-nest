@@ -47,12 +47,15 @@
     - Hacer interfaz
 11. **Checkout (/checkout)** **THOMAS**
     - Si no hay productos, mostrar un mensaje
-    - Integrar con sistema de pagos (esperar backend)
+    - Integrar con sistema de pagos (esperar backend) (OK)
 12. **Order tracking (/order-tracking/:id)** **THOMAS**
-    - Arreglar layout (header)
-    - Responsive
+    - Arreglar layout (header) (OK)
+    - Responsive (OK)
 13. **Dealer landing (/dealer)**
     - Hacer interfaz
-14. **Dealer order (/dealer/order/:id)**
-    - Mejorar diseño, integrap mapa
-    - Overflow
+14. **Dealer order (/dealer/order/:id)** **THOMAS**
+    - Mejorar diseño,
+    - integrap mapa (OK)
+    - Overflow (OK)
+15. **Hacer pagina de ordenes activas para el cliente** **THOMAS**
+    - Hacer interfaz

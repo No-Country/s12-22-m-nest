@@ -1,7 +1,22 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
-import { type TSteps, EnumSteps } from '@/interfaces'
+import { type TSteps, EnumSteps, type PaymentStatus } from '@/interfaces'
 
-const status: Record<TSteps, { title: string; message: string }> = {
+export const paymentStatus: Record<PaymentStatus, { title: string; message: string }> = {
+  Pending: {
+    title: 'Pago pendiente',
+    message: 'Tu pago está pendiente'
+  },
+  Completed: {
+    title: 'Pago completado',
+    message: 'Tu pago ha sido completado'
+  },
+  Failure: {
+    title: 'Pago fallido',
+    message: 'Tu pago ha fallado'
+  }
+}
+
+export const status: Record<TSteps, { title: string; message: string }> = {
   [EnumSteps.LookingForDealer]: {
     title: 'Buscando repartidor',
     message: 'Estamos buscando un repartidor para tu pedido'
@@ -27,5 +42,3 @@ const status: Record<TSteps, { title: string; message: string }> = {
     message: 'Tu pedido ha sido entregado'
   }
 }
-
-export default status

@@ -63,15 +63,6 @@ export class ShopsService {
     return await this.shopRepository.update({ id }, updateShopDto)
   }
 
-  async findShopActiveOrders(id: string) {
-    return await this.orderRepository.find({
-      where: {
-        shopId: id,
-        status: 'In Progress'
-      }
-    })
-  }
-
   async remove(id: string) {
     return await this.shopRepository.delete({ id })
   }

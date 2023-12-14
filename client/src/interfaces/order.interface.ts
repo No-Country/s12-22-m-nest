@@ -2,6 +2,8 @@ import { type User, type Chat, type Coordinates, type Product, type Shop } from 
 
 export type TSteps = 1 | 2 | 3 | 4 | 5 | 6
 
+export type PaymentStatus = 'Pending' | 'Completed' | 'Failure'
+
 export enum EnumSteps {
   LookingForDealer = 1,
   GoingToShop = 2,
@@ -29,6 +31,9 @@ export interface OrderInterface {
   updatedAt: string
   distance: number
   shipMapUrl: URL
+  dealerRevenue: number
+  paymentStatus: PaymentStatus
+  shopRevenue: number
 }
 
 export type OrderStatus = 'Pending' | 'In Progress' | 'Delivered' | 'Canceled'
