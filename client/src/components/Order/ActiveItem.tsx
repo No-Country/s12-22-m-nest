@@ -29,7 +29,7 @@ const formatStatus = (status: TSteps): string => {
 
 const OrderActiveItem: FunctionComponent<Props> = ({ order }) => (
   <div key={order.id} className='flex flex-col gap-4 rounded-xl border p-5 '>
-    <div className='flex items-center justify-between'>
+    <div className='flex flex-col gap-2 sm:gap-0 items-start sm:items-center justify-between sm:flex-row'>
       <div className='flex items-center gap-2'>
         <Image
           alt='profile image'

@@ -20,14 +20,18 @@ const Orders: FunctionComponent<Props> = ({ shop, session }) => {
 
   useEffect(() => {
     handleUpdateActiveOrders(socket, mutate)
-  }, [])
+  }, [socket, mutate])
 
   return (
     <>
       <ShopManager socket={socket} />
-      <div className='flex flex-col gap-5'>
+      {
+        orders && orders?.length > 1
+          ? <div className='flex flex-col gap-5'>
         {orders?.map((order) => order.step > 1 && order.step < 6 && <OrderActiveItem key={order.id} order={order} />)}
       </div>
+          : <p className='py-[80px] font-light text-center'>No hay órdenes activas</p>
+      }
     </>
   )
 }
