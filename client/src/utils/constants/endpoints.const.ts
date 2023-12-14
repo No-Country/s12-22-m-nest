@@ -18,5 +18,6 @@ export const Endpoints = {
   CREATE_PRODUCT: '/api/products',
   UPDATE_PRODUCT: (id: string) => `/api/products/${id}`,
   CREATE_SHOP: '/api/shops',
-  UPDATE_SHOP: (id: string) => `/api/shops/${id}`
+  UPDATE_SHOP: (id: string) => `/api/shops/${id}`,
+  FIND_DEALER_FOR_ORDER: (id: string) => `/api/orders/${id}/find-dealer`
 }

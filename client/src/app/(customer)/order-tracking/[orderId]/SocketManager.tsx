@@ -5,7 +5,7 @@ import { type Socket } from 'socket.io-client'
 import { useParams } from 'next/navigation'
 
 interface Props {
-  children: JSX.Element
+  children: React.ReactNode
   socket: Socket
 }
 

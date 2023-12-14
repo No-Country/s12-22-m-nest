@@ -31,7 +31,7 @@ const Residence: FunctionComponent<Props> = ({ order: fallbackData }) => {
       handleChat(socket, mutate)
 
       socket.on('updateOrder', async (data: OrderInterface) => {
-        console.log('updateOrder', data)
+        console.log('updateOrder Residence')
         await mutate()
       })
     }

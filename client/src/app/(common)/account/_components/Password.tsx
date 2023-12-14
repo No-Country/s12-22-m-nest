@@ -32,7 +32,6 @@ const PasswordForm: FunctionComponent<Props> = ({ user }) => {
       const { error } = await updatePassword(user?.id, data, session?.user?.sessionId ?? '')
       if (error) throw new Error()
       router.refresh()
-      console.log('session?.user?.id', session?.user?.id)
       await mutate(Endpoints.FIND_USER(session?.user?.id ?? ''))
       toast.success('Se actualizó correctamente')
     } catch (error) {

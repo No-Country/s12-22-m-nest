@@ -30,6 +30,7 @@ const Shop: FunctionComponent<Props> = ({ order: fallbackData }) => {
     const handleSystem = async (): Promise<void> => {
       handleChat(socket, mutate)
       socket.on('updateOrder', async (data: OrderInterface) => {
+        console.log('updateOrder Shop')
         await mutate()
       })
     }

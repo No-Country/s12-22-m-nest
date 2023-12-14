@@ -16,7 +16,6 @@ export const checkAvailability = async (userId: string): Promise<Response<CheckA
 
   if (response.error) {
     console.error(response.error)
-    throw new Error(response?.error?.message)
   }
 
   return response

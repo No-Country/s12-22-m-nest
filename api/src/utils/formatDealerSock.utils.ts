@@ -9,7 +9,8 @@ export const formatDealerSock = (
       return (
         client.handshake.query.type === 'dealer' &&
         client.data.active &&
-        client.data.taken === false
+        client.data.taken === false &&
+        client.data.asking === false
       )
     })
     .map((dealer) => {
@@ -18,7 +19,8 @@ export const formatDealerSock = (
         clientId: dealer.handshake.query.userId.toString(),
         coordinates: dealer.data.coordinates as Coordinates,
         active: dealer.data.active as boolean,
-        taken: dealer.data.taken as boolean
+        taken: dealer.data.taken as boolean,
+        asking: dealer.data.asking as boolean
       }
     })
 

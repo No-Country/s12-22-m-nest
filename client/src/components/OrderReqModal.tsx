@@ -1,21 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import React, { useState, useEffect, useMemo, useContext, useRef } from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  CircularProgress
+} from '@nextui-org/react'
 import { debounce } from 'lodash'
 import { handleOrder } from '@/services/socket/handlers'
 import { SocketContext } from '@/context/providers/socket.provider'
 import { type OrderInterface } from '@/interfaces'
 import { useRouter } from 'next/navigation'
 import { routes } from '@/utils/constants/routes.const'
-import { toast } from 'sonner'
 import { Howl } from 'howler'
 import { clientUrl } from '@/utils/constants/env.const'
 
 const OrderReqModal: React.FunctionComponent = () => {
   const router = useRouter()
   const [remainingTime, setRemainingTime] = useState(30)
-  const [asking, setAsking] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [reqOrder, setReqOrder] = useState<OrderInterface | null>(null)
   const callbackRef = useRef<(accepted: boolean) => void>()
   const intervalRef = useRef<NodeJS.Timeout>()
@@ -30,32 +38,30 @@ const OrderReqModal: React.FunctionComponent = () => {
 
   const handleAccept = (): void => {
     callbackRef.current?.(true)
-    toast('Procesando...')
-    if (reqOrder) {
-      setTimeout(() => {
-        router.push(routes.dealer.ORDER(reqOrder?.id))
-      }, 1500)
-    }
+    // toast('Procesando...')
+    // if (reqOrder) {
+    //   setTimeout(() => {
+    //     router.push(routes.dealer.ORDER(reqOrder?.id))
+    //   }, 1500)
+    // }
+    setLoading(true)
     toInitialStatus()
   }
 
   const toInitialStatus = (): void => {
     onClose()
-    setAsking(false)
     setRemainingTime(30)
     setReqOrder(null)
     callbackRef.current = undefined
     soundRef?.current?.stop()
+    soundRef?.current?.unload()
     clearInterval(intervalRef.current)
   }
 
   const handleInterval = (): (() => void) | undefined => {
     const interval = setInterval(() => {
       setRemainingTime((prev) => {
-        console.log('remainingTime', prev - 1)
-
         if (prev <= 1) {
-          console.log('handleInterval', asking)
           handleReject()
           clearInterval(interval)
         }
@@ -74,11 +80,10 @@ const OrderReqModal: React.FunctionComponent = () => {
   const incomingOrder = useMemo(
     () =>
       debounce((data: OrderInterface, callback: (accepted: boolean) => void) => {
-        console.log('incomingOrder', clientUrl + '/sound/incomingOrder.mp3')
+        soundRef?.current?.load()
         soundRef?.current?.play()
         handleInterval()
         callbackRef.current = callback
-        setAsking(true)
         setReqOrder(data)
         onOpenChange()
       }, 2000),
@@ -99,51 +104,68 @@ const OrderReqModal: React.FunctionComponent = () => {
       html5: true
     })
 
+    sound.unload()
+
     soundRef.current = sound
 
     handleOrder(socket, incomingOrder)
 
+    socket.on('orderAssigned', (data: OrderInterface) => {
+      setTimeout(() => {
+        setLoading(false)
+        router.push(routes.dealer.ORDER(data?.id))
+      }, 2500)
+    })
+
     return () => {
       sound.unload()
+      socket.off('orderAssigned')
     }
   }, [socket])
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      hideCloseButton
-      isDismissable={false}
-      placement='center'
-      onKeyDown={handleKeyDown}
-    >
-      <ModalContent>
-        <ModalHeader className='flex flex-col gap-1'>Pedido Entrante</ModalHeader>
-        <ModalBody>
-          <div className='flex flex-col gap-1'>
-            <p className='text-sm'>Cliente: {reqOrder?.client.firstName + ' ' + reqOrder?.client.lastName}</p>
-            <p className='text-sm'>Tienda: {reqOrder?.shop?.name}</p>
-            <p className='text-sm'>Distancia: {reqOrder?.distance}km</p>
-          </div>
-        </ModalBody>
-        <ModalFooter className='flex items-center justify-between'>
-          <p className='text-sm'>{remainingTime}s</p>
-          <div className='flex gap-2'>
-            <Button color='danger' variant='flat' onPress={handleReject}>
-              Rechazar
-            </Button>
-            <Button
-              color='primary'
-              onPress={() => {
-                handleAccept()
-              }}
-            >
-              Aceptar
-            </Button>
-          </div>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        hideCloseButton
+        isDismissable={false}
+        placement='center'
+        onKeyDown={handleKeyDown}
+      >
+        <ModalContent>
+          <ModalHeader className='flex flex-col gap-1'>Pedido Entrante</ModalHeader>
+          <ModalBody>
+            <div className='flex flex-col gap-1'>
+              <p className='text-sm'>Cliente: {reqOrder?.client.firstName + ' ' + reqOrder?.client.lastName}</p>
+              <p className='text-sm'>Tienda: {reqOrder?.shop?.name}</p>
+              <p className='text-sm'>Distancia: {reqOrder?.distance}km</p>
+            </div>
+          </ModalBody>
+          <ModalFooter className='flex items-center justify-between'>
+            <p className='text-sm'>{remainingTime}s</p>
+            <div className='flex gap-2'>
+              <Button color='danger' variant='flat' onPress={handleReject}>
+                Rechazar
+              </Button>
+              <Button
+                color='primary'
+                onPress={() => {
+                  handleAccept()
+                }}
+              >
+                Aceptar
+              </Button>
+            </div>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {loading && (
+        <div className='fixed left-0 top-0 z-20 flex h-screen w-screen items-center justify-center bg-white'>
+          <CircularProgress color='primary' aria-label='Loading...' />
+        </div>
+      )}
+    </>
   )
 }
 
