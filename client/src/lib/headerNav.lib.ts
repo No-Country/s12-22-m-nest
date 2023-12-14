@@ -2,7 +2,6 @@ import type { Type, User } from '@/interfaces'
 import { routes } from '@/utils/constants/routes.const'
 
 export const headerNavBuilder = (currentUser: User): ItemNavInterface[] => {
-  console.log('currentUser', currentUser)
   if (currentUser && !currentUser.id) return items().customer
   return items(currentUser)[currentUser?.type]
 }

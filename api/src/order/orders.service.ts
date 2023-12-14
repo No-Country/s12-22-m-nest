@@ -105,8 +105,8 @@ export class OrderService {
       distance,
       shipMapUrl: buildMapsUrl(shop.address).toString(),
       paymentStatus: 'Pending',
-      dealerRevenue: distance,
-      shopRevenue: finalPrice
+      dealerRevenue: distance * 0.5,
+      shopRevenue: finalPrice * 0.7
     })
 
     await this.orderRepository.save(orderCreation)

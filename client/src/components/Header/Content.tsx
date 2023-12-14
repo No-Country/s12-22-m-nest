@@ -16,6 +16,7 @@ import { type User } from '@/interfaces'
 interface Props {
   theme?: 'light' | 'transparent'
   layout?: 'simple' | 'full'
+  logo?: 'white' | 'black'
   withBorder?: boolean
   session: Session | null
   user: User
@@ -25,11 +26,11 @@ const HeaderContent: FunctionComponent<Props> = ({
   theme = 'transparent',
   layout = 'full',
   withBorder = false,
+  logo = 'black',
   session,
   user: fallbackData
 }) => {
   const { status } = useSession()
-  console.log('serverUrl', serverUrl, session?.user?.email)
   const { data: user } = useSWR(serverUrl + session?.user?.email ?? '', {
     fallbackData
   })
@@ -42,13 +43,24 @@ const HeaderContent: FunctionComponent<Props> = ({
     setIsScrolled(position > 0)
   }
 
-  const logo =
-    session?.user?.type === 'customer' && !pathname.startsWith(routes.dealer.HOME)
-      ? '/icon/shop-logo.svg'
-      : session?.user?.type === 'dealer' &&
-          (pathname.startsWith(routes.dealer.HOME) || pathname.startsWith(routes.dealer.ACCOUNT))
-        ? '/icon/logo.svg'
-        : '/icon/shop-logo.svg'
+  const isShop =
+    (session?.user?.type === 'customer' && !pathname.startsWith(routes.dealer.HOME)) ||
+    pathname.startsWith(routes.dealer.ACCOUNT)
+
+  const logoSrc = isScrolled
+    ? isShop
+      ? '/icon/shop-logo-black.svg'
+      : '/icon/logo-black.svg'
+    : isShop
+      ? `/icon/shop-logo-${logo}.svg`
+      : `/icon/logo-${logo}.svg`
+
+  // session?.user?.type === 'customer' && !pathname.startsWith(routes.dealer.HOME)
+  //   ? `/icon/shop-logo-${logo}.svg`
+  //   : session?.user?.type === 'dealer' &&
+  //       (pathname.startsWith(routes.dealer.HOME) || pathname.startsWith(routes.dealer.ACCOUNT))
+  //     ? `/icon/logo-${logo}.svg`
+  //     : `/icon/shop-logo-${logo}.svg`
 
   const bgColor =
     theme === 'transparent' ? (isScrolled ? 'bg-[rgba(255,_255,_255,_0.70)]' : 'bg-transparent') : 'bg-white'
@@ -79,7 +91,7 @@ const HeaderContent: FunctionComponent<Props> = ({
       <div className='flex gap-3 '>
         <NextLink href={routes[session?.user?.type ?? 'customer'].HOME}>
           <NavbarBrand>
-            <Image src={logo} alt='Logo' width={120} height={50} />
+            <Image src={logoSrc} alt='Logo' width={120} height={60} className='h-[30px] w-full' />
           </NavbarBrand>
         </NextLink>
       </div>

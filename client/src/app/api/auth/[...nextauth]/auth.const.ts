@@ -54,7 +54,6 @@ export const authOptions: NextAuthOptions = {
     },
     session: async (arg) => {
       const { token, session } = arg
-      console.log('token', token)
       const getSession = async (): Promise<void> => {
         try {
           const { data } = await getRequest<User>({

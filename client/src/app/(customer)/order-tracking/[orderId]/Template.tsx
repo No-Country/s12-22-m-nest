@@ -27,16 +27,26 @@ const Template: FunctionComponent<Props> = ({ order: fallbackData, children }) =
 
   return (
     <SocketManager socket={socket}>
-      <div className='padding-general-x flex h-full w-full flex-col pb-5 sm:w-[350px]'>
+      <div className='padding-general-x flex h-full w-full flex-col border-r pb-5 sm:w-[350px]'>
         <div className='flex min-h-[100px] items-center'>
           <Image src='/icon/shop-logo.svg' alt='Logo' width={120} height={50} />
         </div>
-        <div className='flex h-auto flex-col gap-5 overflow-hidden'>
+        <div className='flex h-auto flex-col gap-5 overflow-hidden '>
           <div className='flex flex-col'>
             <p className='text-xs'>#{order?.id.slice(0, 5)}</p>
+
             <div>
-              <p className='text-xl font-semibold'>{status[order?.step ?? 1]?.title}</p>
-              <p>{status[order?.step ?? 1]?.message}</p>
+              {order?.status !== 'Canceled' ? (
+                <>
+                  <p className='text-xl font-semibold'>{status[order?.step ?? 1]?.title}</p>
+                  <p>{status[order?.step ?? 1]?.message}</p>
+                </>
+              ) : (
+                <>
+                  <p className='text-xl font-semibold'>Orden Cancelada</p>
+                  <p>Lo sentimos, tu orden ha sido cancelada.</p>
+                </>
+              )}
             </div>
           </div>
           <div className='max-h-auto overflow-y-auto'>
@@ -46,8 +56,10 @@ const Template: FunctionComponent<Props> = ({ order: fallbackData, children }) =
           </div>
         </div>
       </div>
-      <div className='relative flex-grow bg-gray-100'>{children}</div>
-      <ChatBox mode='customer' orderId={order?.id ?? ''} chat={order?.chat ?? null} />
+      <div className='relative flex-grow '>{children}</div>
+      {order?.status === 'In Progress' && (
+        <ChatBox mode='customer' orderId={order?.id ?? ''} chat={order?.chat ?? null} />
+      )}
     </SocketManager>
   )
 }

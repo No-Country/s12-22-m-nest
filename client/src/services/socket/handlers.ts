@@ -29,7 +29,7 @@ export const manageDealer = async (
 
   const { lat, lon } = await getLocationPromise()
   setDealerCoordinates({ lat, lon })
-  console.log('manageDealer', lat, lon)
+
   connect(lat, lon)
   setConnected(true)
 }
@@ -67,11 +67,9 @@ export const handleJoinOrderClient = (
   })
 
   setConnected(true)
-  console.log('joinOrderClient', orderId)
 }
 
 export const handleSystemMessage = (socket: Socket): void => {
-  console.log('handleSystemMessage')
   socket.on('message', (data: string) => {
     console.log('message', data)
     return data

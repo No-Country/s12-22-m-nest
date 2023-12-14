@@ -38,9 +38,7 @@ const Tracking: FunctionComponent<Props> = ({ order: fallbackData }) => {
       })
     })
     socket.on('updateOrder', async (data: OrderInterface) => {
-      console.log('updateOrder tracking')
       if (data.status !== 'In Progress') {
-        console.log('refresh')
         router.refresh()
       }
       await mutate()

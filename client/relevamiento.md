@@ -30,27 +30,29 @@
    - Titulo debe ser condicional
    - Limitar cantidad de paginas a 4
    - Ordenar por mas nuevo primero
-8. **Login (/auth/login)**
-   - Arreglar el responsive
-   - Agregar header
+8. **Login (/auth/login)** **THOMAS**
+   - Arreglar el responsive (OK)
+   - Agregar header (OK)
    - Manejar errores
-   - Agregar link a register
-9. **Register (/auth/register)**
-   - Arreglar el responsive
-   - Agregar header
+   - Agregar link a register (OK)
+9. **Register (/auth/register)** **THOMAS**
+   - Arreglar el responsive (OK)
+   - Agregar header (OK)
    - Manejar errores
-   - Agregar link a login
+   - Agregar link a login (OK)
    - Agregar campos para tienda
    - Hacer multi step form (si sobra tiempo)
-10. **Create Shop (/allies)**
-    - Cambiar ruta a `merchants` (ver middleware y archivo routes)
+10. **Create Shop (/allies)** **THOMAS**
+    - Cambiar ruta a `merchants` (ver middleware y archivo routes) (OK)
     - Hacer interfaz
-11. **Checkout (/checkout)**
+11. **Checkout (/checkout)** **THOMAS**
     - Si no hay productos, mostrar un mensaje
     - Integrar con sistema de pagos (esperar backend)
-12. **Order tracking (/order-tracking/:id)**
+12. **Order tracking (/order-tracking/:id)** **THOMAS**
     - Arreglar layout (header)
+    - Responsive
 13. **Dealer landing (/dealer)**
     - Hacer interfaz
 14. **Dealer order (/dealer/order/:id)**
     - Mejorar diseño, integrap mapa
+    - Overflow

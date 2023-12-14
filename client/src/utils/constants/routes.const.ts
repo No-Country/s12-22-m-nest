@@ -26,7 +26,7 @@ export const routes = {
   },
   shop: {
     ...common,
-    HOME: '/allies',
+    HOME: '/merchants ',
     SHOP: (id: string) => `/shops/${id}`,
     ACTIVE_ORDERS: (id: string) => `/shops/${id}/active-orders`,
     CREATE_PRODUCT: (id: string) => `/shops/${id}/create-product`

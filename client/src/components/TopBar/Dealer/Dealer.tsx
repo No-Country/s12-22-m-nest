@@ -62,7 +62,6 @@ const TopBarDealer: FunctionComponent<Props> = ({
   const socket = useContext(SocketContext)
 
   const handleSwitch = (val: boolean): void => {
-    console.log('handleSwitch', val)
     if (val) {
       if (description === 'DISCONNECTED') {
         router.push(routes.dealer.WAITING_ORDER)

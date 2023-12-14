@@ -45,14 +45,13 @@ const Content: FunctionComponent<Props> = ({ user }) => {
         products: products.map((product) => product.id),
         shop: products[0].shop.id
       }
-      console.log(order)
       const { data: res, error } = await createOrder(order)
       if (error || !res) throw new Error()
       toast.success('Compra realizada con exito')
       router.push(res)
       cleanCart()
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
