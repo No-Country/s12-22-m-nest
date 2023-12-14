@@ -54,7 +54,7 @@ const Cart: FunctionComponent = () => {
       {isOpen &&
         createPortal(
           <div className='fixed left-0 top-0 z-20 flex h-screen w-screen flex-row items-end justify-start '>
-            <div className='h-full w-full bg-[#00000079] ' onClick={handleClose}></div>
+            <div className='h-full w-auto bg-[#00000079] sm:w-full ' onClick={handleClose}></div>
             <div className='flex h-full w-full flex-col items-end justify-start gap-2 bg-white px-5 pb-10  pt-5 sm:w-[350px] sm:min-w-[350px]'>
               <div className='absolute right-2 top-2 cursor-pointer p-2' onClick={handleClose}>
                 <Image src='/icon/cross.svg' alt='cross' width={18} height={18} />
