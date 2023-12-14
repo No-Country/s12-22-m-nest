@@ -17,7 +17,7 @@ const Checkout: FunctionComponent = async () => {
   if (!user) return null
   return (
     <>
-      <Header />
+      <Header withBorder />
       <main className='padding-general-x flex flex-col items-center gap-10 pb-10 pt-[100px]  lg:gap-8 '>
         <Content user={user} />
       </main>
