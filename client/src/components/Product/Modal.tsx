@@ -25,13 +25,13 @@ const ModalProduct: FunctionComponent<Props> = ({ product, onClose, isOpen }) =>
           <>
             <ModalHeader className='flex flex-col gap-1' />
             <ModalBody>
-              <div className='flex flex-row gap-5'>
-                <div className='relative aspect-square min-w-[40%]'>
+              <div className='flex flex-col gap-5 md:flex-row'>
+                <div className='relative  aspect-video min-w-[40%] md:aspect-square'>
                   <Image
                     src={product.thumbnail || '/image/placeholder.png'}
                     alt={product.name}
                     fill
-                    className='aspect-square rounded-2xl object-cover'
+                    className='rounded-2xl object-cover '
                   />
                 </div>
                 <div className='flex w-auto flex-col gap-4'>

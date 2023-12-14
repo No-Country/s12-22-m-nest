@@ -35,7 +35,6 @@ const AccountForm: FunctionComponent<Props> = ({ user }) => {
       }
       await updateUser(user?.id, formData, session?.user?.sessionId ?? '')
       router.refresh()
-      console.log('session?.user?.id', session?.user?.id)
       await mutate(Endpoints.FIND_USER(session?.user?.id ?? ''))
       toast.success('Se actualizó correctamente')
     } catch (error) {

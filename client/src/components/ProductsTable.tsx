@@ -14,7 +14,7 @@ const ProductsTable: FunctionComponent<Props> = ({ products }) => (
     columns={['Cantidad', 'Producto', 'Precio final']}
     renderRow={(product) => (
       <TableRow key={product.id}>
-        <TableCell className='font-semibold'>{product.quantity}x</TableCell>
+        <TableCell className='font-semibold'>1x</TableCell>
         <TableCell>
           <p>{product.name}</p>
           <span className='text-xs font-light'>(${product.price})</span>

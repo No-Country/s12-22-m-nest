@@ -10,4 +10,5 @@ export interface FormatedSockDealer {
   coordinates: Coordinates
   active: boolean
   taken: boolean
+  asking: boolean
 }

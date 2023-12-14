@@ -50,10 +50,6 @@ export class ShopsService {
     return formatShop(shop)
   }
 
-  async update(id: string, updateShopDto: UpdateShopDto) {
-    return await this.shopRepository.update({ id }, updateShopDto)
-  }
-
   async findShopActiveOrders(id: string) {
     return await this.orderRepository.find({
       where: {
@@ -61,6 +57,10 @@ export class ShopsService {
         status: 'In Progress'
       }
     })
+  }
+
+  async update(id: string, updateShopDto: UpdateShopDto) {
+    return await this.shopRepository.update({ id }, updateShopDto)
   }
 
   async remove(id: string) {

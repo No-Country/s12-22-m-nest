@@ -48,11 +48,13 @@ const Cart: FunctionComponent = () => {
 
   return (
     <>
-      <Button title='Carrito' variant='flat' onClick={handleOpen} />
+      <div className='cursor-pointer rounded-full bg-green-100 p-3'>
+        <Image src='/icon/cart-green.svg' alt='cart' width={20} height={20} onClick={handleOpen} />
+      </div>
       {isOpen &&
         createPortal(
           <div className='fixed left-0 top-0 z-20 flex h-screen w-screen flex-row items-end justify-start '>
-            <div className='h-full w-full bg-[#00000079] ' onClick={handleClose}></div>
+            <div className='h-full w-auto bg-[#00000079] sm:w-full ' onClick={handleClose}></div>
             <div className='flex h-full w-full flex-col items-end justify-start gap-2 bg-white px-5 pb-10  pt-5 sm:w-[350px] sm:min-w-[350px]'>
               <div className='absolute right-2 top-2 cursor-pointer p-2' onClick={handleClose}>
                 <Image src='/icon/cross.svg' alt='cross' width={18} height={18} />

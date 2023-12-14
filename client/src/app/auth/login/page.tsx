@@ -1,6 +1,8 @@
 import { type FunctionComponent } from 'react'
 import Form from './_components/Form'
 import { type Metadata } from 'next'
+import Link from 'next/link'
+import { routes } from '@/utils/constants/routes.const'
 
 export const metadata: Metadata = {
   title: 'Ingresar | LleGo!'
@@ -15,6 +17,11 @@ const Page: FunctionComponent = () => (
       <p className='text-base'>Te damos la bienvenida</p>
     </div>
     <Form />
+    <Link href={routes.auth.REGISTER} className='flex w-full justify-center font-light'>
+      <p>
+        ¿No tienes una cuenta? <b className='font-semibold text-primary'>Registrate</b>
+      </p>
+    </Link>
   </div>
 )
 

@@ -26,7 +26,7 @@ import { PaymentsModule } from './payments/payments.module'
       password: process.env.PG_PASSWORD,
       database: process.env.PG_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
-      ssl: true,
+      ssl: true, // Cambiar a true en producción
       synchronize: true
     }),
     OrderModule,

@@ -58,7 +58,6 @@ const middleware = async (req: NextRequest, event: NextFetchEvent): Promise<Next
       }
 
       const id = req.nextUrl.pathname.slice(1).split('/')[1]
-      console.log('id', id, token?.shopId)
       if (checkStartsWith(req.nextUrl.pathname, shopRoutes)) {
         switch (token?.type) {
           case 'dealer':
