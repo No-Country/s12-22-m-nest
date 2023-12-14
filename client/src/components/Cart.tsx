@@ -48,7 +48,9 @@ const Cart: FunctionComponent = () => {
 
   return (
     <>
-      <Button title='Carrito' variant='flat' onClick={handleOpen} />
+      <div className='cursor-pointer rounded-full bg-green-100 p-3'>
+        <Image src='/icon/cart-green.svg' alt='cart' width={20} height={20} onClick={handleOpen} />
+      </div>
       {isOpen &&
         createPortal(
           <div className='fixed left-0 top-0 z-20 flex h-screen w-screen flex-row items-end justify-start '>
