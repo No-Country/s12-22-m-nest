@@ -50,6 +50,17 @@ export class SocketOrderService {
   async joinOrderClient(socket: Socket, data: { orderId: string }) {
     await socket.join(data.orderId)
     socket.to(data.orderId).emit('message', 'El cliente se ha unido a la orden')
+    const currentOrder = await findOrder(data.orderId, this.orderRepository, true)
+    const orderDealerId = currentOrder.dealerId
+    const targetSockets = Array.from(this.connectedClients.values()).filter(socket =>
+      socket.handshake.query.userId.toString() === orderDealerId && socket.handshake.query.type === 'dealer' &&
+      socket.data?.coordinates
+    )
+    console.log(targetSockets)
+    const coords: Coordinates = targetSockets[0]?.data?.coordinates
+    socket.emit('updatedDealerLocation', coords)
+    socket.emit('message', 'Ubicacion del dealer enviada!')
+    console.log('dealeeeer ', socket.handshake.query)
   }
 
   async joinOrderDealer(socket: Socket, data: { orderId: string }) {
