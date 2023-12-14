@@ -9,7 +9,8 @@ import {
   Put,
   UploadedFile,
   UseInterceptors,
-  BadRequestException
+  BadRequestException,
+  Query
 } from '@nestjs/common'
 import { ProductsService } from './products.service'
 import { CreateProductDto } from './dto/create-product.dto'
@@ -42,8 +43,13 @@ export class ProductsController {
   }
 
   @Get()
-  async findAll() {
-    return await this.productsService.findAll()
+  async findAll(
+    @Query('paginate') paginate: string = 'false',
+    @Query('page') page: number = 1,
+    @Query('pageSize') pageSize: number = 10
+  ) {
+    const paginateBool = paginate.toLowerCase() === 'true'
+    return await this.productsService.findAll(paginateBool, page, pageSize)
   }
 
   @Get(':id')

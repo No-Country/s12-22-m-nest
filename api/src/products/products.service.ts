@@ -20,15 +20,43 @@ export class ProductsService {
     })
   }
 
-  async findAll() {
-    const products = await this.productRepository.find({ relations: ['shop'] })
-    return products.map((product) => {
-      product.shop = {
-        ...product.shop,
-        coordinates: JSON.parse(product.shop.coordinates)
+  async findAll(paginate: boolean, page: number = 1, pageSize: number = 10) {
+    if (!paginate) {
+      const products = await this.productRepository.find({ relations: ['shop'] })
+      return products.map((product) => {
+        product.shop = {
+          ...product.shop,
+          coordinates: JSON.parse(product.shop.coordinates)
+        }
+        return product
+      })
+    } else {
+      const [results, total] = await this.productRepository.findAndCount({
+        relations: ['shop'],
+        take: pageSize,
+        skip: (page - 1) * pageSize
+      })
+
+      const paginatedProducts = results.map((product) => {
+        product.shop = {
+          ...product.shop,
+          coordinates: JSON.parse(product.shop.coordinates)
+        }
+        return product
+      })
+
+      const totalPages = Math.ceil(total / pageSize)
+      const remainingPages = totalPages - page
+
+      return {
+        products: paginatedProducts,
+        total,
+        page,
+        pageSize,
+        totalPages,
+        remainingPages
       }
-      return product
-    })
+    }
   }
 
   async findOne(id: string) {
