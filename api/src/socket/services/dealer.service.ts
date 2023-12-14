@@ -104,7 +104,7 @@ export class SocketDealerService {
         parseFloat(dealer.coordinates.lon)
       )
 
-      if (distance <= 5000) {
+      if (distance <= 50000000000) {
         socket.data.asking = true
         console.log('Preguntando a dealer', dealer)
         const acceptOrder = await this.socketOrderService.sendOrderRequest(
