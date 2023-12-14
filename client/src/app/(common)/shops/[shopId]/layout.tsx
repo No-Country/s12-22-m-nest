@@ -28,7 +28,7 @@ const ShopLayout: FunctionComponent<Props> = async ({ children, params }) => {
                   className='z-[0] object-cover '
                 />
               </div>
-              <div className='padding-general-x z-[1] flex w-auto flex-col gap-1 py-5 md:px-5'>
+              <div className='padding-general-x z-[1] flex w-auto flex-col gap-1 py-5 lg:px-5'>
                 <h1 className='text-xl font-semibold text-primary'>{shop.name}</h1>
                 <p className='text-sm font-light'>{shop.description}</p>
               </div>

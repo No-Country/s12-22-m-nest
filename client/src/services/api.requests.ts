@@ -22,6 +22,7 @@ export const getRequest = async <T>(params: GetRequestParams): Promise<Response<
       }
       return errorResponse
     }
+
     return { data: responseData, error: null }
   } catch (error: any) {
     return { data: null, error: { message: error.message, code: error.code || 500 } }

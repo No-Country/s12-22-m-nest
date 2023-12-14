@@ -73,7 +73,7 @@ export class PaymentsService {
       ],
       mode: 'payment',
       success_url: `${this.frontendUrl}/order-tracking/${order.id}`,
-      cancel_url: `${this.frontendUrl}/checkout/${order.id}`,
+      cancel_url: `${this.frontendUrl}/order-tracking/${order.id}`,
       payment_intent_data: {
         metadata: {
           // Añadir id de la orden para futura identificacion

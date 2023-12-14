@@ -17,9 +17,7 @@ const DealerConnectionService: FunctionComponent<Props> = ({ socket }) => {
   const handleManageDealer = useMemo(
     () =>
       debounce(async () => {
-        console.log('handleManageDealer')
         await manageDealer(socket, setConnected, dealerLocationContext.setDealerCoordinates)
-        console.log('connected ok')
       }, 1000),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [connected, socket, pathname]

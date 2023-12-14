@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'react'
-import { Footer, Header } from '@/components'
+import { Footer } from '@/components'
 import DealerMiddleware from '../dealer.middleware'
 
 interface Props {
@@ -8,7 +8,6 @@ interface Props {
 
 const ClientLayout: FunctionComponent<Props> = async ({ children }) => (
   <>
-    <Header />
     <DealerMiddleware />
     {children}
     <Footer />

@@ -16,7 +16,7 @@ export class ProductsService {
     console.log(createProductDto)
     return await this.productRepository.save({
       ...createProductDto,
-      thumbnail: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png'
+      thumbnail: createProductDto.thumbnail
     })
   }
 

@@ -46,6 +46,7 @@ const Going: FunctionComponent<Props> = ({ order: fallbackData }) => {
     const handleSystem = async (): Promise<void> => {
       handleChat(socket, mutate)
       socket.on('updateOrder', async (data: OrderInterface) => {
+        console.log('updateOrder Going')
         await mutate()
       })
     }
@@ -67,7 +68,7 @@ const Going: FunctionComponent<Props> = ({ order: fallbackData }) => {
           mapButtonLink={order?.step === EnumSteps.GoingToShop ? order?.shop.mapUrl : order?.shipMapUrl}
         />
         <ChatBox mode='dealer' orderId={fallbackData?.id} chat={order?.chat as Chat} />
-        <section className='relative h-full w-screen flex-grow '>
+        <section className='relative h-full w-full flex-grow '>
           <DynamicMap locations={mapData} />
           <OrderReqModal />
         </section>
