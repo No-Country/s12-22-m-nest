@@ -10,7 +10,6 @@ export const getUser = async (userId: string): Promise<Response<User>> => {
 
   if (response.error) {
     console.error(response.error)
-    throw new Error(response?.error?.message)
   }
 
   return response

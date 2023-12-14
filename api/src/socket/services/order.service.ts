@@ -7,13 +7,15 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { checkIsAvailable } from 'src/utils/isAvailable.utils'
 import { Order } from 'src/order/entities/order.entity'
 import { findOrder } from 'src/common/orders.common'
+import { SocketShopService } from './shop.service'
 
 @Injectable()
 export class SocketOrderService {
   constructor(
     private readonly socketMainService: SocketMainService,
     @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>
+    private readonly orderRepository: Repository<Order>,
+    private readonly socketShopService: SocketShopService
   ) {}
 
   private readonly connectedClients = this.socketMainService.connectedClients
@@ -42,11 +44,20 @@ export class SocketOrderService {
 
   updateOrder(socket: Server, order: OrderRequest) {
     socket.to(order.id).emit('updateOrder', order)
+    this.socketShopService.updateActiveOrders(socket, order.shopId)
   }
 
   async joinOrderClient(socket: Socket, data: { orderId: string }) {
     await socket.join(data.orderId)
+    console.log('joinOrderClient', data.orderId)
     socket.to(data.orderId).emit('message', 'El cliente se ha unido a la orden')
+    const currentOrder = await findOrder(data.orderId, this.orderRepository, true)
+    const targetSockets = Array.from(this.connectedClients.values()).filter(socket =>
+      socket.handshake.query.userId.toString() === currentOrder.dealerId && socket.handshake.query.type === 'dealer' &&
+      socket.data?.coordinates
+    )
+    const coords: Coordinates = targetSockets[0]?.data?.coordinates
+    socket.emit('updatedDealerLocation', coords)
   }
 
   async joinOrderDealer(socket: Socket, data: { orderId: string }) {

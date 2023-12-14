@@ -7,7 +7,7 @@ interface Props {
 }
 
 const ProductCartGrid: FunctionComponent<Props> = ({ products }) => (
-  <div className='grid w-full gap-3'>
+  <div className='grid w-full'>
     {products.map((product) => (
       <ProductCartItem key={product.id} product={product} />
     ))}

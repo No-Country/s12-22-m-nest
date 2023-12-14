@@ -9,7 +9,6 @@ import { addressValidations } from '@/utils/constants/validations.const'
 import { createOrder } from '@/services/orders/create.service'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { routes } from '@/utils/constants/routes.const'
 
 interface Props {
   user: User
@@ -18,6 +17,7 @@ interface Props {
 const Content: FunctionComponent<Props> = ({ user }) => {
   const [products, setProducts] = useState<Product[]>([])
   const items = useCartStore((state) => state.items)
+  const cleanCart = useCartStore((state) => state.cleanCart)
   const router = useRouter()
 
   const {
@@ -45,22 +45,23 @@ const Content: FunctionComponent<Props> = ({ user }) => {
         products: products.map((product) => product.id),
         shop: products[0].shop.id
       }
-      console.log(order)
-      const { data: res } = await createOrder(order)
+      const { data: res, error } = await createOrder(order)
+      if (error || !res) throw new Error()
       toast.success('Compra realizada con exito')
-      router.push(routes.customer.ORDER_TRACKING(res?.id ?? ''))
+      router.push(res)
+      cleanCart()
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
   return (
     <>
-      <section className='flex w-full flex-col justify-between gap-5'>
+      <section className='flex w-full flex-col justify-between gap-5 2xl:container'>
         <h1 className='text-2xl font-semibold'>Ya casi es tuyo</h1>
         <ProductsTable products={products} />
       </section>
-      <section className='flex w-full flex-col justify-between gap-5'>
+      <section className='flex w-full flex-col justify-between gap-5 2xl:container'>
         <h1 className='text-2xl font-semibold'>Datos de envio</h1>
         <form className='flex flex-col items-end gap-4' onSubmit={handleSubmit(onSubmit)}>
           <Input

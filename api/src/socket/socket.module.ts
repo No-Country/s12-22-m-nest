@@ -10,6 +10,7 @@ import { User } from 'src/users/entities/user.entity'
 import { Order } from 'src/order/entities/order.entity'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Chat, ChatSchema } from 'src/chat/entities/chat.mongo-entity'
+import { SocketShopService } from './services/shop.service'
 
 @Global()
 @Module({
@@ -23,7 +24,8 @@ import { Chat, ChatSchema } from 'src/chat/entities/chat.mongo-entity'
     SocketMainService,
     SocketDealerService,
     SocketOrderService,
-    SocketChatService
+    SocketChatService,
+    SocketShopService
   ],
   exports: [
     TypeOrmModule,
@@ -32,7 +34,8 @@ import { Chat, ChatSchema } from 'src/chat/entities/chat.mongo-entity'
     SocketMainService,
     SocketDealerService,
     SocketOrderService,
-    SocketChatService
+    SocketChatService,
+    SocketShopService
   ]
 })
 export class SocketModule {}

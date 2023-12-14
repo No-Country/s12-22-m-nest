@@ -1,5 +1,5 @@
 'use client'
-import { type Coordinates } from '@/interfaces'
+import { type Type, type Coordinates } from '@/interfaces'
 import DealerConnectionService from '@/services/socket/connection.service'
 import connector from '@/services/socket/connector.service'
 import { type Session } from 'next-auth'
@@ -8,7 +8,7 @@ import { type FunctionComponent, createContext, useMemo, useState } from 'react'
 interface Props {
   children: React.ReactNode
   session: Session | null
-  mode: 'dealer' | 'client'
+  mode: Type
 }
 
 interface DealerLocationContextProps {
@@ -23,7 +23,6 @@ export const DealerLocationContext = createContext<DealerLocationContextProps>({
 })
 
 const SocketProvider: FunctionComponent<Props> = ({ children, session, mode }) => {
-  console.log('SocketProvider', session?.user?.id)
   const socket = useMemo(() => connector(mode, session?.user?.id ?? 'null'), [mode, session?.user?.id])
   const [dealerCoordinates, setDealerCoordinates] = useState<Coordinates | null>(null)
   return (

@@ -5,7 +5,7 @@ import { type OrderInterface, type Chat } from '@/interfaces'
 import { updateOrderStatus } from '@/services/orders/updateStatus.service'
 import { ChatBox, TopBarDealer } from '@/components'
 import { handleChat } from '@/services/socket/handlers'
-import OrderManager from '../socketManager'
+import OrderManager from '../orderManager'
 import useSWR from 'swr'
 import { Endpoints } from '@/utils/constants/endpoints.const'
 import { SocketContext } from '@/context/providers/socket.provider'
@@ -30,6 +30,7 @@ const Shop: FunctionComponent<Props> = ({ order: fallbackData }) => {
     const handleSystem = async (): Promise<void> => {
       handleChat(socket, mutate)
       socket.on('updateOrder', async (data: OrderInterface) => {
+        console.log('updateOrder Shop')
         await mutate()
       })
     }

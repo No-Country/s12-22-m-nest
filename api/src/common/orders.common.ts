@@ -42,7 +42,7 @@ export const findActiveOrderByDealer = async (
 
 export const findOrdersByUser = async (
   userId: string,
-  type: 'customer' | 'dealer',
+  type: 'customer' | 'dealer' | 'shop',
   orderRepository: Repository<Order>
 ) => {
   const orders = await orderRepository.findBy({
@@ -72,13 +72,12 @@ export const updateOrder = async (
   })
   if (!order) throw new NotFoundException('Order not found')
   order = { ...order, ...updateOrderDto }
-  console.log(order)
-  await orderRepository.save(order)
-
+  await orderRepository.save({
+    ...order
+  })
   const chat = await findChat(order.chat, chatModel)
   const formatedOrder = formatOrder(order, chat)
-
   socketOrderService.updateOrder(socketGateway.server, formatedOrder)
-
+  console.log('formatedOrder', formatedOrder)
   return formatedOrder
 }

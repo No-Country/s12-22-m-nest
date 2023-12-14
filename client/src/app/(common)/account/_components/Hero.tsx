@@ -11,7 +11,7 @@ interface Props {
 }
 
 const Hero: FunctionComponent<Props> = ({ session, user }) => (
-  <section className='flex flex-col items-center justify-between gap-4 lg:flex-row'>
+  <section className='flex w-full flex-col items-center justify-between gap-4 2xl:container lg:flex-row'>
     <div className='flex flex-col items-center justify-center gap-3 lg:flex-row lg:justify-start'>
       <Image
         src={user?.profileImage || '/image/placeholder.png'}

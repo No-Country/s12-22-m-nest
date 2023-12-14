@@ -2,7 +2,6 @@
 import authOptions from '@/app/api/auth/[...nextauth]/auth.const'
 import { EnumSteps } from '@/interfaces'
 import { getOrder } from '@/services/orders/getOrder.service'
-import { checkAvailability } from '@/services/users/checkAvailability.service'
 import { routes } from '@/utils/constants/routes.const'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
@@ -25,13 +24,10 @@ interface Props {
 
 const MainPage: FunctionComponent<Props> = async ({ params }) => {
   const session = await getServerSession(authOptions)
-  if (!session) return
-  const { data } = await checkAvailability(session?.user?.id)
   const { data: order } = await getOrder(params?.orderId ?? 'null')
+  if (!order || !session?.user) return
 
-  console.log('order', order)
-
-  if (data?.isAvailable || data?.orderId !== params?.orderId) {
+  if (order.dealerId !== session?.user?.id) {
     redirect(routes.dealer.WAITING_ORDER)
   }
 

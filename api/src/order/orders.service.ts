@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Order } from './entities/order.entity'
 import { Repository } from 'typeorm'
@@ -24,6 +24,7 @@ import { getFormatProducts } from 'src/utils/getFormatProducts.utils'
 import { Product } from 'src/products/entities/product.entity'
 import { calculateDistance } from 'src/utils/calculateDistance.utils'
 import { buildMapsUrl } from 'src/utils/buildMapsUrl.utils'
+import { PaymentsService } from 'src/payments/payments.service'
 
 @Injectable()
 export class OrderService {
@@ -41,13 +42,25 @@ export class OrderService {
     private readonly socketOrderService: SocketOrderService,
     private readonly socketGateway: SocketGateway,
     private readonly socketDealerService: SocketDealerService,
-    private readonly mailerService: MailerService
+    private readonly mailerService: MailerService,
+    private readonly paymentsService: PaymentsService
   ) {}
 
   async findOne(id: string) {
     const order = await findOrder(id, this.orderRepository, true)
     const chat = await findChat(order.chat, this.chatModel)
     return formatOrder(order, chat)
+  }
+
+  async findDealer(id: string) {
+    const order = await findOrder(id, this.orderRepository)
+    const chat = await findChat(order.chat, this.chatModel)
+    const orderRequest = formatOrder(order, chat)
+    if (order.status !== 'Pending') throw new BadRequestException('Order is not pending')
+    return await this.socketDealerService.handleFindDealer(
+      this.socketGateway.server,
+      orderRequest
+    )
   }
 
   async findAll() {
@@ -88,25 +101,30 @@ export class OrderService {
       chat: String(chat.id),
       shopId: shop.id,
       price: finalPrice,
-      products: JSON.stringify(products),
+      products,
       distance,
-      shipMapUrl: buildMapsUrl(shop.address).toString()
+      shipMapUrl: buildMapsUrl(shop.address).toString(),
+      paymentStatus: 'Pending',
+      dealerRevenue: distance * 0.5,
+      shopRevenue: finalPrice * 0.7
     })
 
     await this.orderRepository.save(orderCreation)
     const order = await findOrder(orderCreation.id, this.orderRepository)
-    const orderRequest = formatOrder(order, chat)
-
+    // const orderRequest = formatOrder(order, chat)
+    const paymentLink = await this.paymentsService.create(order, order.products, distance)
+    console.log(paymentLink)
     // await this.mailerService.sendMail({
     //   receiverMail: client.email,
     //   header: 'Sigue tu orden',
     //   body: `Hola, este es el link para seguir tu orden:${process.env.CLIENT_URL}/order-tracking/${order.id}`
     // })
 
-    return await this.socketDealerService.handleFindDealer(
-      this.socketGateway.server,
-      orderRequest
-    )
+    // return await this.socketDealerService.handleFindDealer(
+    //  this.socketGateway.server,
+    //  orderRequest
+    // )
+    return paymentLink
   }
 
   async updateOrder(id: string, updateOrderDto: UpdateOrderDto) {

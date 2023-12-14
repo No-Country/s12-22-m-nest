@@ -13,15 +13,13 @@ export const metadata: Metadata = {
 
 const Page: FunctionComponent = async () => {
   const session = await getServerSession(authOptions)
-  if (!session) return null
-  const { data: user } = await getUser(session?.user?.id)
+  const { data: user } = await getUser(session?.user?.id ?? '')
   if (!user) return null
   const items = accountTabs(user)
-
   return (
-    <main className='padding-general-x flex flex-col gap-10 pb-10 pt-[100px] lg:gap-5 '>
+    <main className='padding-general-x flex flex-col items-center gap-10 pb-10 pt-[100px] lg:gap-5 '>
       <Hero session={session} user={user} />
-      <section className='flex flex-col gap-3'>
+      <section className='flex w-full flex-col gap-3 2xl:container'>
         <Tabs items={items} variant='solid' />
       </section>
     </main>

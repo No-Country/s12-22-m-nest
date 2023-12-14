@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   ServiceUnavailableException,
@@ -18,7 +19,7 @@ import { type OrderRequest } from '../interfaces/orderRequest.interface'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/users/entities/user.entity'
 import { Repository } from 'typeorm'
-import { updateOrder } from 'src/common/orders.common'
+import { findOrder, updateOrder } from 'src/common/orders.common'
 import { checkIsAvailable } from 'src/utils/isAvailable.utils'
 import { Order } from 'src/order/entities/order.entity'
 import { SocketGateway } from '../socket.gateway'
@@ -56,7 +57,8 @@ export class SocketDealerService {
     socket.data = {
       coordinates: data.coordinates,
       active: data.active,
-      taken: !isAvailable
+      taken: !isAvailable,
+      asking: false
     }
 
     console.log(
@@ -81,11 +83,20 @@ export class SocketDealerService {
     socket.to(data.orderId).emit('updatedDealerLocation', data)
   }
 
-  async handleFindDealer(socket: Server, order: OrderRequest) {
+  async handleFindDealer(server: Server, order: OrderRequest, attempt = 1) {
+    console.log('handleFindDealer xxx')
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
+    const updatedOrder = await findOrder(order.id, this.orderRepository)
     let currentDealer: FormatedSockDealer | null = null
+    if (updatedOrder.status !== 'Pending' && updatedOrder.paymentStatus !== 'Completed') {
+      console.log('Order is not pending')
+      throw new BadRequestException('Order is not pending or payment is not completed')
+    }
 
     for (const dealer of dealers) {
+      console.log('buscando for')
+
+      const socket = this.connectedClients.get(dealer.sockId)
       const distance = calculateDistance(
         parseFloat(order.shop.coordinates.lat),
         parseFloat(order.shop.coordinates.lon),
@@ -93,29 +104,49 @@ export class SocketDealerService {
         parseFloat(dealer.coordinates.lon)
       )
 
-      if (distance <= 15) {
+      if (distance <= 50000000000) {
+        socket.data.asking = true
         console.log('Preguntando a dealer', dealer)
         const acceptOrder = await this.socketOrderService.sendOrderRequest(
           dealer.sockId,
           order
         )
+        socket.data.asking = false
         if (acceptOrder) {
           currentDealer = dealer
-          const socket = this.connectedClients.get(currentDealer.sockId)
           socket.data.taken = true
           break
         }
       }
     }
 
-    // TODO: O se cancela la orden o se pone en espera
+    if (!currentDealer && attempt < 5) {
+      console.log('currentDealer recursion', currentDealer)
+      console.log(
+        `No dealer found. Retrying in 1 minute (attempt ${attempt}/5)`
+      )
+      await new Promise((resolve) => setTimeout(resolve, 60000))
+      await this.handleFindDealer(server, order, attempt + 1)
+    }
+
     if (currentDealer === null) {
+      await updateOrder(
+        order.id,
+        {
+          status: 'In Progress'
+        },
+        this.orderRepository,
+        this.userRepository,
+        this.socketOrderService,
+        this.socketGateway,
+        this.chatModel
+      )
       throw new ServiceUnavailableException("We couldn't find a dealer")
     }
 
     await this.connectedClients.get(currentDealer.sockId).join(order.id)
 
-    return await updateOrder(
+    const savedOrder = await updateOrder(
       order.id,
       {
         dealerId: currentDealer.clientId,
@@ -128,5 +159,10 @@ export class SocketDealerService {
       this.socketGateway,
       this.chatModel
     )
+
+    console.log('savedOrder', savedOrder)
+    server.to(order.id).emit('orderAssigned', savedOrder)
+
+    return savedOrder
   }
 }

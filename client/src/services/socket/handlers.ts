@@ -29,7 +29,7 @@ export const manageDealer = async (
 
   const { lat, lon } = await getLocationPromise()
   setDealerCoordinates({ lat, lon })
-  console.log('manageDealer', lat, lon)
+
   connect(lat, lon)
   setConnected(true)
 }
@@ -67,7 +67,6 @@ export const handleJoinOrderClient = (
   })
 
   setConnected(true)
-  console.log('joinOrderClient', orderId)
 }
 
 export const handleSystemMessage = (socket: Socket): void => {
@@ -80,6 +79,13 @@ export const handleSystemMessage = (socket: Socket): void => {
 export const handleChat = (socket: Socket, update: KeyedMutator<OrderInterface>): void => {
   socket.on('updatedChat', async (data: Chat) => {
     console.log('updatedChat', data)
+    await update()
+  })
+}
+
+export const handleUpdateActiveOrders = (socket: Socket, update: KeyedMutator<OrderInterface[]>): void => {
+  socket.on('updatedActiveOrders', async () => {
+    console.log('updatedActiveOrders')
     await update()
   })
 }

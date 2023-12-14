@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prod": "next build && next start"
   },
   "dependencies": {
+    "@maptiler/leaflet-maptilersdk": "^2.0.0",
     "@nextui-org/react": "^2.2.9",
     "@types/howler": "^2.2.11",
     "@types/lodash": "^4.14.202",

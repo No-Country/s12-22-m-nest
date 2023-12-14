@@ -21,7 +21,7 @@ const Content: FunctionComponent<Props> = ({ session }) => {
   }, [])
 
   return (
-    <section className='relative h-full w-screen flex-grow'>
+    <section className='relative h-full w-full flex-grow'>
       <DynamicMap
         locations={{
           shipCoordinates: null,

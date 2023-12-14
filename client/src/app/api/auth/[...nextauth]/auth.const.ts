@@ -33,6 +33,7 @@ export const authOptions: NextAuthOptions = {
           id: data?.user?.id ?? '',
           email: data?.user?.email ?? '',
           sessionId: data?.access_token ?? '',
+          shopId: data?.user?.shopId ?? null,
           type: data?.user?.type ?? 'customer'
         }
 
@@ -47,6 +48,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.sessionId = user.sessionId
         token.type = user.type
+        token.shopId = user.shopId
       }
       return await Promise.resolve(token)
     },
@@ -63,6 +65,7 @@ export const authOptions: NextAuthOptions = {
             id: data?.id ?? '',
             email: data?.email ?? '',
             sessionId: token.sessionId ?? '',
+            shopId: data?.shopId ?? null,
             type: data?.type ?? 'customer'
           }
         } catch (error) {
