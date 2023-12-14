@@ -6,7 +6,7 @@ import {
 } from 'cloudinary'
 import * as streamifier from 'streamifier'
 import { extractPublicId } from 'cloudinary-build-url'
-import { SharpPipe } from './pipe/Sharp.pipe'
+import { SharpPipe } from './Sharp.pipe'
 
 @Injectable()
 export class CloudinaryService {

@@ -5,9 +5,10 @@ import { Shop } from './entities/shop.entity'
 import { HttpModule } from '@nestjs/axios'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service'
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Shop]), HttpModule],
+  imports: [TypeOrmModule.forFeature([Shop]), HttpModule, CloudinaryModule],
   controllers: [ShopsController],
   providers: [ShopsService, CloudinaryService]
 })
