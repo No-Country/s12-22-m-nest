@@ -37,6 +37,7 @@ export const mutationRequest = async <T>(
   headers?: any
 ): Promise<Response<T>> => {
   try {
+    console.log('serverUrl', serverUrl, url)
     const axiosResponse: AxiosResponse<T> = await axiosInstance[method](url, body, headers)
     return { data: axiosResponse.data, error: null }
   } catch (error: any) {
