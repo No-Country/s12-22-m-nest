@@ -9,9 +9,10 @@ import { routes } from '@/utils/constants/routes.const'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { headerNavBuilder } from '@/lib/headerNav.lib'
-import { serverUrl } from '@/utils/constants/env.const'
 import { type Session } from 'next-auth'
 import { type User } from '@/interfaces'
+import MobileMenu from './MobileMenu'
+import { Endpoints } from '@/utils/constants/endpoints.const'
 
 interface Props {
   theme?: 'light' | 'transparent'
@@ -31,7 +32,7 @@ const HeaderContent: FunctionComponent<Props> = ({
   user: fallbackData
 }) => {
   const { status } = useSession()
-  const { data: user } = useSWR(serverUrl + session?.user?.email ?? '', {
+  const { data: user } = useSWR(Endpoints.FIND_USER(session?.user?.email ?? ''), {
     fallbackData
   })
   const headerNavItems = headerNavBuilder(user)
@@ -89,6 +90,14 @@ const HeaderContent: FunctionComponent<Props> = ({
       }}
     >
       <div className='flex gap-3 '>
+        <MobileMenu
+          isOpen={isMenuOpen}
+          toggle={() => {
+            setIsMenuOpen(!isMenuOpen)
+          }}
+          theme={theme}
+          isScrolled={isScrolled}
+        />
         <NextLink href={routes[session?.user?.type ?? 'customer'].HOME}>
           <NavbarBrand>
             <Image src={logoSrc} alt='Logo' width={120} height={60} className='h-[30px] w-full' />
