@@ -8,14 +8,12 @@ const axiosInstance = axios.create({
 
 export const getRequest = async <T>(params: GetRequestParams): Promise<Response<T>> => {
   try {
-    console.log('serverUrl', serverUrl)
     const response = await fetch(`${axiosInstance.defaults.baseURL}${params.url}`, {
       cache: params.cache || 'force-cache',
       next: { revalidate: params.validate || undefined }
     })
 
     const responseData = await response.json()
-    console.log('responseData', responseData)
     if (!response.ok) {
       const errorResponse: Response<T> = {
         data: null,
@@ -37,7 +35,6 @@ export const mutationRequest = async <T>(
   headers?: any
 ): Promise<Response<T>> => {
   try {
-    console.log('serverUrl', serverUrl, url)
     const axiosResponse: AxiosResponse<T> = await axiosInstance[method](url, body, headers)
     return { data: axiosResponse.data, error: null }
   } catch (error: any) {

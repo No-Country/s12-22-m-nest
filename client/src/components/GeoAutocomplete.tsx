@@ -4,17 +4,17 @@ import { geoApiKey } from '@/utils/constants/env.const'
 import { Autocomplete, AutocompleteItem } from '@nextui-org/react'
 import axios from 'axios'
 import { debounce } from 'lodash'
-import { type FunctionComponent, useMemo, useState } from 'react'
+import { type FunctionComponent, useMemo, useState, type Dispatch, type SetStateAction } from 'react'
 import { type FieldErrors, type RegisterOptions, type UseFormRegister } from 'react-hook-form'
 
 interface PropsGeo {
   address: string
-  setAddress: any
+  setAddress: Dispatch<SetStateAction<string>>
   errors: FieldErrors<ShippingFormProps>
-  name: string
+  name: keyof ShippingFormProps
   hookForm?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    register: UseFormRegister<any>
+    register: UseFormRegister<ShippingFormProps>
     validations: RegisterOptions
   }
 }
@@ -60,7 +60,7 @@ const GeoAutocomplete: FunctionComponent<PropsGeo> = ({ address, errors, name, s
       placeholder='Debe ser en formato: Calle 123, Ciudad, Estado, Pais'
       onInputChange={debouncedSearchHandler}
       onSelectionChange={(item) => {
-        setAddress(item)
+        setAddress(item.toString())
       }}
     >
       {(res) => <AutocompleteItem key={res?.place_id}>{formatAddress(res)}</AutocompleteItem>}

@@ -17,13 +17,7 @@
 3. **Register (/auth/register)**
    - Manejar errores (LEAN)
    - Agregar campos para tienda / onboarding
-4. **Shop landing (/merchants)** **THOMAS**
-   - Hacer interfaz
-5. **Checkout (/checkout)** **THOMAS**
-   - Si no hay productos, mostrar un mensaje
-6. **Dealer landing (/dealer)**
-   - Hacer interfaz
-7. **Dealer order (/dealer/order/:id)** **THOMAS**
+4. **Dealer order (/dealer/order/:id)** **THOMAS**
    - Mejorar diseño
-8. **Hacer pagina de ordenes activas para el cliente** **THOMAS**
+5. **Hacer pagina de ordenes activas para el cliente** **THOMAS**
    - Hacer interfaz

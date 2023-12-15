@@ -1,7 +1,7 @@
 'use client'
 import { type FunctionComponent, useEffect, useState } from 'react'
 import { useCartStore } from '@/context/zustand/cart.store'
-import { type ShippingFormProps, type Product, type User, type OrderFormProps } from '@/interfaces'
+import { type ShippingFormProps, type Product, type OrderFormProps } from '@/interfaces'
 import { getAllItems } from '@/services/cart/getAll.service'
 import { Button, GeoAutocomplete, ProductsTable } from '@/components'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -11,15 +11,15 @@ import { useRouter } from 'next/navigation'
 import { routes } from '@/utils/constants/routes.const'
 
 interface Props {
-  user: User
+  userId: string
 }
 
-const Content: FunctionComponent<Props> = ({ user }) => {
+const Content: FunctionComponent<Props> = ({ userId }) => {
   const [products, setProducts] = useState<Product[]>([])
   const items = useCartStore((state) => state.items)
   const cleanCart = useCartStore((state) => state.cleanCart)
   const router = useRouter()
-  const [address, setAddress] = useState<any>('')
+  const [address, setAddress] = useState<string>('')
   const {
     register,
     formState: { errors, isSubmitting },
@@ -41,7 +41,7 @@ const Content: FunctionComponent<Props> = ({ user }) => {
     try {
       const order: OrderFormProps = {
         ...data,
-        client: user.id,
+        client: userId,
         products: products.map((product) => product.id),
         shop: products[0].shop.id
       }
@@ -88,7 +88,7 @@ const Content: FunctionComponent<Props> = ({ user }) => {
               <GeoAutocomplete
                 address={address}
                 setAddress={setAddress}
-                name='shippingAddress'
+                name='shipAddress'
                 hookForm={{
                   register,
                   validations: { required: { value: true, message: 'Este campo es requerido' } }
