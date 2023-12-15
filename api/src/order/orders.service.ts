@@ -64,7 +64,11 @@ export class OrderService {
   }
 
   async findAll() {
-    return await this.orderRepository.find()
+    return await this.orderRepository.find({
+      order: {
+        updatedAt: 'DESC' // Ordenar por la columna date de forma descendente
+      }
+    })
   }
 
   async create(body: CreateOrderDto): Promise<any> {
