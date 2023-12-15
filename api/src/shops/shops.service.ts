@@ -31,7 +31,7 @@ export class ShopsService {
     return await this.shopRepository.save({
       ...createShopDto,
       coordinates: JSON.stringify(coordinates),
-      thumbnail: 'https://i.postimg.cc/WbGN7jvM/6yvpkj.png',
+      thumbnail: createShopDto.thumbnail,
       mapUrl: mapUrl.toString(),
       stripeId: null
     })

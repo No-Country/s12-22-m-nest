@@ -29,6 +29,7 @@ export const routes = {
     HOME: '/merchants ',
     SHOP: (id: string) => `/shops/${id}`,
     ACTIVE_ORDERS: (id: string) => `/shops/${id}/active-orders`,
-    CREATE_PRODUCT: (id: string) => `/shops/${id}/create-product`
+    CREATE_PRODUCT: (id: string) => `/shops/${id}/create-product`,
+    ONBOARDING: '/merchants/onboarding'
   }
 }
