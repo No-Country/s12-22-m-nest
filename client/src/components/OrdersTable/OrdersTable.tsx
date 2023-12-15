@@ -12,7 +12,7 @@ interface Props {
 const OrdersTable: FunctionComponent<Props> = ({ orders, mode }) => (
   <DynamicTable
     data={orders}
-    rowsPerPage={1}
+    rowsPerPage={4}
     columns={columns[mode]}
     renderRow={(order: OrderInterface) => rows(order)[mode]}
   />
