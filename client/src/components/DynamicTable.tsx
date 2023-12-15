@@ -44,6 +44,7 @@ const DynamicTable: FunctionComponent<ExtendedProps> = ({ data, rowsPerPage = 4,
             size='sm'
             color='primary'
             page={page}
+            boundaries={0}
             total={pages}
             onChange={(page) => {
               setPage(page)

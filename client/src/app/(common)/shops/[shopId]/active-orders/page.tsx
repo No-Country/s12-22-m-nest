@@ -21,7 +21,7 @@ const ActiveOrders: FunctionComponent<Props> = async ({ params }) => {
   if (!shop) return null
   return (
     <>
-      <h2 className='text-2xl font-semibold'>Ordenes activas</h2>
+      <h2 className='text-2xl font-semibold'>Órdenes activas</h2>
       <Orders shop={shop} session={session} />
     </>
   )
