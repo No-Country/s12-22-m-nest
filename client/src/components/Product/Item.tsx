@@ -7,9 +7,10 @@ import { useDisclosure } from '@nextui-org/react'
 
 interface Props {
   product: Product
+  classname?: string
 }
 
-const ProductItem: FunctionComponent<Props> = ({ product }) => {
+const ProductItem: FunctionComponent<Props> = ({ product, classname }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleOpen = (): void => {
@@ -17,8 +18,8 @@ const ProductItem: FunctionComponent<Props> = ({ product }) => {
   }
 
   return (
-    <div className='min-w-[120px] w-[120px] sm:w-[150px] md:min-w-[200px]'>
-      <div className='flex cursor-pointer flex-col gap-3' onClick={handleOpen}>
+    <>
+      <div className={`flex basis-52 cursor-pointer flex-col gap-3 ${classname}`} onClick={handleOpen}>
         <div className='relative aspect-square w-full'>
           <Image
             src={product.thumbnail || '/image/placeholder.png'}
@@ -36,7 +37,7 @@ const ProductItem: FunctionComponent<Props> = ({ product }) => {
         </div>
       </div>
       <ModalProduct product={product} isOpen={isOpen} onClose={onClose} />
-    </div>
+    </>
   )
 }
 

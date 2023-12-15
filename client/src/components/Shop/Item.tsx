@@ -7,11 +7,12 @@ import { type FunctionComponent } from 'react'
 
 interface Props {
   shop: Shop
+  classname?: string
 }
 
-const ShopItem: FunctionComponent<Props> = ({ shop }) => (
+const ShopItem: FunctionComponent<Props> = ({ shop, classname }) => (
   <Link href={routes.customer.SHOP(shop.id)}>
-    <div className='flex cursor-pointer flex-col gap-3 min-w-[150px] md:min-w-[200px]'>
+    <div className={`flex cursor-pointer flex-col gap-3 basis-52 ${classname}`}>
       <div className='relative aspect-square w-full'>
         <Image
           src={shop.thumbnail || '/image/placeholder.png'}

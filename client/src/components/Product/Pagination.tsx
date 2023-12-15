@@ -23,18 +23,12 @@ const ProductPagination: FunctionComponent<Props> = ({ products, rowsPerPage = 1
 
   return (
     <div>
-        <div className='w-full flex-wrap gap-8 flex justify-center md:justify-start'>
-            {
-                items.map(item => (
-                    <ProductItem key={item.id} product={item} />
-                ))
-            }
-        </div>
-        <div
-          className={'m bg-red-500 grid w-full grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]'}>
-          {items?.map((product) => (
-            <ProductItem key={product.id} product={product} />
-          ))}
+        <div className='grid w-full grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] mb-[20px]'>
+          {
+            items?.map((product) => (
+              <ProductItem key={product.id} product={product} />
+            ))
+          }
         </div>
         {pages > 1 && (
         <div className='flex w-full justify-center'>

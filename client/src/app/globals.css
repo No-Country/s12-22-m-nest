@@ -6,4 +6,10 @@
   .padding-general-x {
     @apply px-5 md:px-10;
   }
+  .scrollbar-general::-webkit-scrollbar {
+    @apply bg-transparent h-[5px]
+  }
+  .scrollbar-general::-webkit-scrollbar-thumb {
+    @apply bg-gradient-to-r from-gray-100 via-[#166534] to-gray-100 rounded-full
+  }
 }

@@ -9,7 +9,7 @@ interface Props {
   rowsPerPage?: number
 }
 
-const ShopPagination: FunctionComponent<Props> = ({ shops, rowsPerPage = 8 }) => {
+const ShopPagination: FunctionComponent<Props> = ({ shops, rowsPerPage = 12 }) => {
   const [page, setPage] = useState(1)
 
   const pages = Math.ceil(shops.length / rowsPerPage)
@@ -23,7 +23,7 @@ const ShopPagination: FunctionComponent<Props> = ({ shops, rowsPerPage = 8 }) =>
 
   return (
     <div>
-        <div className='w-full flex-wrap gap-8 flex justify-center md:justify-start'>
+        <div className='grid w-full grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]'>
             {
                 items.map(item => (
                     <ShopItem key={item.id} shop={item} />

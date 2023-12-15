@@ -8,18 +8,18 @@ interface Props {
   shops?: Shop[] | null
 }
 
-const DynamicCarrousel: FunctionComponent<Props> = ({ products, shops }) => (
-    <div className='flex gap-4 overflow-x-auto'>
+const DynamicFlex: FunctionComponent<Props> = ({ products, shops }) => (
+    <div className='flex gap-4 overflow-x-auto pb-5 scrollbar-general'>
           { products?.map(item => (
-            <ProductItem product={item} key={item.id}/>
+            <ProductItem product={item} classname='min-w-[100px] sm:min-w-[200px]' key={item.id}/>
           ))
           }
           {
             shops?.map(item => (
-              <ShopItem shop={item} key={item.id}/>
+              <ShopItem shop={item} classname='min-w-[100px] sm:min-w-[200px]' key={item.id}/>
             ))
           }
     </div>
 )
 
-export default DynamicCarrousel
+export default DynamicFlex
