@@ -22,6 +22,7 @@ const Form: FunctionComponent = () => {
     try {
       const res = await loginService(data.email, data.password)
       if (res?.url) {
+        toast.success('Ingresando a su Cuenta')
         router.push(res.url)
       }
     } catch (error) {
