@@ -1,55 +1,78 @@
 'use client'
-import { type Type, type Chat } from '@/interfaces'
+import { useState, useEffect } from 'react'
+import { Type, Chat } from '@/interfaces'
 import { handleSendMessage } from '@/services/orders/sendMessage.service'
-import { useSession } from 'next-auth/react'
-import { useState, type FunctionComponent } from 'react'
 import ChatIcon from '@/assets/ChatIcon'
+import io, { Socket } from 'socket.io-client'
+import { useSession } from 'next-auth/react'
+import Button from './Button'
+import Input from './Input'
+import { serverUrl } from '@/utils/constants/env.const'
 
+interface User {
+  role: string
+}
+interface Message {
+  id: string
+  sender: string
+  text: string
+}
 interface Props {
   mode: Type
   orderId: string
   chat: Chat | null
 }
 
-const ChatBox: FunctionComponent<Props> = ({ mode, orderId, chat }) => {
+const ChatBox: React.FC<Props> = ({ mode, orderId, chat }) => {
   const { data: session } = useSession()
-  const [chatVisibility, setChatVisibility] = useState<boolean>(false)
+  const [messageInput, setMessageInput] = useState<string>('')
+  const [chatOpen, setChatOpen] = useState<boolean>(false)
+  const [selectedChat, setSelectedChat] = useState<string>('customer')
 
-  const handleChatVisibility = (): void => {
-    setChatVisibility(!chatVisibility)
+  const toggleChat = (): void => {
+    setChatOpen(!chatOpen)
   }
 
+  const handleSendMessageClick = async (e: React.ChangeEvent<HTMLFormElement>): Promise<void> => {
+    try {
+    e.preventDefault()
+    const { message } = e.target
+    if (message.value.length <= 0) return
+      await handleSendMessage(orderId, mode, session?.user?.id ?? '', message.value)
+      setMessageInput('')
+    } catch (error) {
+      console.error('Error sending message:', error)
+    }
+  }
   return (
     <>
-      <button
-        className='fixed bottom-6 right-6 rounded-full bg-green-700 fill-green-50 p-[10px] text-center duration-150'
-        onClick={handleChatVisibility}
-      >
-        <ChatIcon fillColor='#f0fdf4' />
-      </button>
-      {chatVisibility && (
-        <div className='flex flex-col gap-3 border border-red-700 bg-blue-400 px-5 py-7'>
-          <h1 className='font-semibold text-red-800'>Test Chat Box</h1>
-          <div className='flex max-h-[300px] flex-col gap-2 overflow-y-auto'>
-            {Array.isArray(chat?.messages) &&
-              chat?.messages?.map((message, index) => (
-                <div key={index} className='border bg-violet-700'>
-                  <p className='font-semibold text-white'>{message.sender ?? 'customer'}</p>
-                  <p className='text-white'>{message.body}</p>
+      <Button color='primary' variant='solid' className='fixed bottom-6 right-6' onClick={toggleChat}>
+        <ChatIcon fillColor='white' />
+      </Button>
+      {chatOpen && (
+        <div className='fixed z-20 bottom-0 right-0 m-4 w-80 rounded-lg border border-gray-300 bg-white p-4 shadow-lg'>
+          <div className='mb-4 flex items-center justify-between'>
+            <Button rounded color={selectedChat === 'customer' ? 'primary' : 'default'}>
+              Customer
+            </Button>
+          </div>
+          <div className='h-40 overflow-y-auto'>
+            { chat?.messages.map((msg, index) => (
+                <div key={index} className='mb-2 border p-2'>
+                  <p className='font-semibold'>{msg.sender}</p>
+                  <p>{msg.body}</p>
                 </div>
               ))}
           </div>
-          <form
-            onSubmit={(event) => {
-              void handleSendMessage(event, orderId, mode, session?.user?.id ?? 'null')
-            }}
-            className=' flex gap-2 py-3'
-          >
-            <input type='text' name='message' className='w-full border border-red-800' />
-            <button type='submit' className='bg-red-800 px-4 py-2 text-white'>
-              Send
-            </button>
-          </form>
+          <div className='mt-4 flex flex-col md:flex-row md:items-center'>
+            <form onSubmit={handleSendMessageClick}>
+              <Input type='text' name='message' value={messageInput} placeholder='Type a message...' />
+
+              <Button type='submit' width='100%' color='primary'>
+                Enviar
+              </Button>
+            </form>
+          </div>
         </div>
       )}
     </>
