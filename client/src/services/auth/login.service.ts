@@ -7,10 +7,10 @@ export const loginService = async (email: string, password: string): Promise<Sig
   const responseNextAuth = await signIn('credentials', {
     email,
     password,
-    redirect: true,
+    redirect: false,
     callbackUrl: routes.customer.ACCOUNT
   })
-
+  console.log(responseNextAuth)
   if (responseNextAuth?.error && responseNextAuth?.error !== null) {
     console.error(responseNextAuth?.error)
     toast.error('Error al iniciar sesión')
