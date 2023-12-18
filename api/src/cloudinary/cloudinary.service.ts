@@ -6,25 +6,31 @@ import {
 } from 'cloudinary'
 import * as streamifier from 'streamifier'
 import { extractPublicId } from 'cloudinary-build-url'
+import { SharpPipe } from './Sharp.pipe'
 
 @Injectable()
 export class CloudinaryService {
+  constructor(private readonly sharpPipe: SharpPipe) {}
   async uploadImage(
     file: Express.Multer.File
   ): Promise<UploadApiResponse | UploadApiErrorResponse> {
     if (!file?.buffer) {
       throw new BadRequestException('File Missing!')
     }
+
+    const optimizedImagePath = await this.sharpPipe.transform(file)
     return await new Promise<UploadApiResponse | UploadApiErrorResponse>(
       (resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           (error, result) => {
-            if (error) { reject(error); return }
+            if (error) {
+              reject(error)
+              return
+            }
             resolve(result)
           }
         )
-
-        streamifier.createReadStream(file.buffer).pipe(uploadStream)
+        streamifier.createReadStream(optimizedImagePath).pipe(uploadStream)
       }
     )
   }

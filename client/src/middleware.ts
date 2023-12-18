@@ -14,7 +14,7 @@ const middleware = async (req: NextRequest, event: NextFetchEvent): Promise<Next
   const origin = req.nextUrl.origin
   const customerRoutes = ['/checkout', '/order-tracking/']
   const dealerRoutes = ['/dealer/']
-  const shopRoutes = ['/shops/']
+  const shopRoutes = ['/shops/', '/merchants/onboarding']
   const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET
@@ -65,7 +65,7 @@ const middleware = async (req: NextRequest, event: NextFetchEvent): Promise<Next
           case 'customer':
             return NextResponse.redirect(origin + customerRedirect)
           case 'shop':
-            if (token?.shopId !== id) {
+            if (token?.shopId !== id && req.nextUrl.pathname !== '/merchants/onboarding') {
               return NextResponse.redirect(origin + shopRedirect)
             }
         }
@@ -108,13 +108,16 @@ export const config = {
     // Auth routes
     '/auth/:path*',
     // Dealer private routes
-    '/dealer/:path*',
+    '/dealer/availability',
+    '/dealer/order/:path*',
+    '/dealer/waiting-order',
     // Customer private routes
     '/account',
     '/account/:path*',
     '/checkout',
     '/order-tracking/:path*',
     // Shop private routes
+    '/merchants/onboarding',
     '/shops/:path/active-orders',
     '/shops/:path/create-product'
   ]

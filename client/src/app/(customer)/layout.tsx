@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'react'
 import { Footer } from '@/components'
-import DealerMiddleware from '../dealer.middleware'
+import RoleMiddleware from '../role.middleware'
 
 interface Props {
   children: React.ReactNode
@@ -8,7 +8,7 @@ interface Props {
 
 const ClientLayout: FunctionComponent<Props> = async ({ children }) => (
   <>
-    <DealerMiddleware />
+    <RoleMiddleware />
     {children}
     <Footer />
   </>

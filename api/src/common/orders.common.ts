@@ -49,12 +49,13 @@ export const findOrdersByUser = async (
     ...(type === 'customer' && { clientId: userId }),
     ...(type === 'dealer' && { dealerId: userId })
   })
-  console.log('findOrdersByUser', orders)
-  const formatedOrders = orders.map((order) => {
+  const sortedOrders = orders.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+
+  const formattedOrders = sortedOrders.map((order) => {
     return formatOrder(order, null)
   })
 
-  return formatedOrders
+  return formattedOrders
 }
 
 export const updateOrder = async (

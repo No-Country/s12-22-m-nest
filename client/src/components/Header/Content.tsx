@@ -90,14 +90,16 @@ const HeaderContent: FunctionComponent<Props> = ({
       }}
     >
       <div className='flex gap-3 '>
-        <MobileMenu
-          isOpen={isMenuOpen}
-          toggle={() => {
-            setIsMenuOpen(!isMenuOpen)
-          }}
-          theme={theme}
-          isScrolled={isScrolled}
-        />
+        {layout === 'full' && (
+          <MobileMenu
+            isOpen={isMenuOpen}
+            toggle={() => {
+              setIsMenuOpen(!isMenuOpen)
+            }}
+            theme={theme}
+            isScrolled={isScrolled}
+          />
+        )}
         <NextLink href={routes[session?.user?.type ?? 'customer'].HOME}>
           <NavbarBrand>
             <Image src={logoSrc} alt='Logo' width={120} height={60} className='h-[30px] w-full' />
