@@ -26,7 +26,7 @@ const ModalProduct: FunctionComponent<Props> = ({ product, onClose, isOpen }) =>
             <ModalHeader className='flex flex-col gap-1' />
             <ModalBody>
               <div className='flex flex-col gap-5 md:flex-row'>
-                <div className='relative  aspect-video min-w-[40%] md:aspect-square'>
+                <div className='relative aspect-video h-full max-h-[200px]  min-w-[40%] md:aspect-square md:max-h-none'>
                   <Image
                     src={product.thumbnail || '/image/placeholder.png'}
                     alt={product.name}
