@@ -31,7 +31,6 @@ export class ProductsController {
     @Body() createProductDto: CreateProductDto,
     @UploadedFile() thumbnail: Express.Multer.File
   ) {
-    console.log(createProductDto)
     if (thumbnail) {
       createProductDto.thumbnail = (
         await this.cloudinaryService.uploadImage(thumbnail)

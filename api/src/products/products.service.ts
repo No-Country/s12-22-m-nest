@@ -13,7 +13,6 @@ export class ProductsService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    console.log(createProductDto)
     return await this.productRepository.save({
       ...createProductDto,
       thumbnail: createProductDto.thumbnail
@@ -66,8 +65,6 @@ export class ProductsService {
     })
 
     if (!product) throw new NotFoundException('Product not found')
-
-    console.log(product)
 
     product.shop = {
       ...product.shop,

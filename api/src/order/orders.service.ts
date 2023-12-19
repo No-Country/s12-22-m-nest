@@ -176,7 +176,6 @@ export class OrderService {
     const formatedOrder = formatOrder(order, chat)
 
     await this.orderRepository.save(order)
-    console.log('formatedOrder', formatedOrder)
     this.socketOrderService.updateOrder(
       this.socketGateway.server,
       formatedOrder

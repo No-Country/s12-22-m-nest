@@ -25,14 +25,12 @@ const DealerConnectionService: FunctionComponent<Props> = ({ socket }) => {
 
   useEffect(() => {
     const handleSystem = async (): Promise<void> => {
-      console.log('handleSystem')
       await handleManageDealer()
     }
 
     void handleSystem()
 
     const intervalId = setInterval(async () => {
-      console.log('interval')
       await handleManageDealer()
     }, 30000)
 

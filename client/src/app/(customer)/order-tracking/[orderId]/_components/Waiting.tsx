@@ -33,7 +33,6 @@ const Waiting: FunctionComponent<Props> = ({ order: fallbackData }) => {
 
     socket.on('updateOrder', async (data: OrderInterface) => {
       if (data.status !== 'Pending') {
-        console.log('refresh')
         router.refresh()
       }
       await mutate()
