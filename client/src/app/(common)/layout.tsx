@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'react'
-import DealerMiddleware from '../dealer.middleware'
+import RoleMiddleware from '../role.middleware'
 import { Footer } from '@/components'
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 
 const CommonLayout: FunctionComponent<Props> = async ({ children }) => (
   <>
-    <DealerMiddleware />
+    <RoleMiddleware />
     {children}
     <Footer />
   </>

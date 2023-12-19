@@ -24,6 +24,10 @@ const roles: Array<{ value: Type; label: string }> = [
   {
     value: 'dealer',
     label: 'Repartidor'
+  },
+  {
+    value: 'shop',
+    label: 'Tienda'
   }
 ]
 

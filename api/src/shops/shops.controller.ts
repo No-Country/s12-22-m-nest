@@ -24,7 +24,15 @@ export class ShopsController {
   ) {}
 
   @Post()
-  async create(@Body() createShopDto: CreateShopDto) {
+  @UseInterceptors(FileInterceptor('thumbnail'))
+  async create(@Body() createShopDto: CreateShopDto,
+  @UploadedFile() thumbnail: Express.Multer.File
+  ) {
+    if (thumbnail) {
+      createShopDto.thumbnail = (
+        await this.cloudinaryService.uploadImage(thumbnail)
+      ).secure_url
+    }
     return await this.shopsService.create(createShopDto)
   }
 
