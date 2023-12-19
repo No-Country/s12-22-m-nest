@@ -88,13 +88,15 @@ export class SocketDealerService {
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
     const updatedOrder = await findOrder(order.id, this.orderRepository)
     let currentDealer: FormatedSockDealer | null = null
+
     if (updatedOrder.status !== 'Pending' && updatedOrder.paymentStatus !== 'Completed') {
-      console.log('Order is not pending')
       throw new BadRequestException('Order is not pending or payment is not completed')
     }
 
     for (const dealer of dealers) {
-      console.log('buscando for')
+      if (updatedOrder.status !== 'Pending' && updatedOrder.paymentStatus !== 'Completed') {
+        throw new BadRequestException('Order is not pending or payment is not completed')
+      }
 
       const socket = this.connectedClients.get(dealer.sockId)
       const distance = calculateDistance(
