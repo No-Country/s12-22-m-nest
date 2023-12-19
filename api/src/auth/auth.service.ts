@@ -60,7 +60,6 @@ export class AuthService {
       if (error instanceof JsonWebTokenError) {
         throw new UnauthorizedException('Invalid token signature')
       }
-      console.log('Token error: ', error)
       throw new UnauthorizedException('Invalid token')
     }
   }

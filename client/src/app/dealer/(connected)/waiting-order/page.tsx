@@ -4,6 +4,7 @@ import { type FunctionComponent } from 'react'
 import Content from './_components/Content'
 import { TopBarDealer } from '@/components'
 import { type Metadata } from 'next'
+import RoleMiddleware from '@/app/role.middleware'
 
 export const metadata: Metadata = {
   title: 'Esperando una orden | LleGo!'
@@ -14,10 +15,13 @@ const Page: FunctionComponent = async () => {
   if (!session) return
 
   return (
-    <main className=' flex min-h-screen flex-col items-start pt-[100px] '>
-      <TopBarDealer title='CONNECTED' description='WAITING_ORDER' switch={true} isSwitchActive={true} />
-      <Content session={session} />
-    </main>
+    <>
+      <RoleMiddleware />
+      <main className=' flex min-h-screen flex-col items-start pt-[100px] '>
+        <TopBarDealer title='CONNECTED' description='WAITING_ORDER' switch={true} isSwitchActive={true} />
+        <Content session={session} />
+      </main>
+    </>
   )
 }
 

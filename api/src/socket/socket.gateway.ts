@@ -40,7 +40,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('updateDealerLocation')
   async handleUpdateDealerLocation(client: any, data: any) {
-    console.log('updateDealerLocation', data)
     await this.socketDealerService.updateDealerLocation(client, data)
   }
 

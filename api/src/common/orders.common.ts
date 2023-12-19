@@ -29,7 +29,6 @@ export const findActiveOrderByDealer = async (
   id: string,
   orderRepository: Repository<Order>
 ) => {
-  console.log('findActiveOrderByDealer', id)
   const orders = await orderRepository.find({
     where: {
       dealerId: id,
@@ -79,6 +78,5 @@ export const updateOrder = async (
   const chat = await findChat(order.chat, chatModel)
   const formatedOrder = formatOrder(order, chat)
   socketOrderService.updateOrder(socketGateway.server, formatedOrder)
-  console.log('formatedOrder', formatedOrder)
   return formatedOrder
 }

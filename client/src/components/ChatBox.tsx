@@ -21,7 +21,6 @@ const ChatBox: React.FC<Props> = ({ mode, orderId, chat, order }) => {
   const formRef = useRef<HTMLFormElement>(null)
   const [messageInput, setMessageInput] = useState<string>('')
   const [chatOpen, setChatOpen] = useState<boolean>(false)
-  console.log('chat', chat)
 
   const toggleChat = (): void => {
     setChatOpen(!chatOpen)
