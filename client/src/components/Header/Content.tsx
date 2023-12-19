@@ -32,7 +32,7 @@ const HeaderContent: FunctionComponent<Props> = ({
   user: fallbackData
 }) => {
   const { status } = useSession()
-  const { data: user } = useSWR(Endpoints.FIND_USER(session?.user?.email ?? ''), {
+  const { data: user } = useSWR(Endpoints.FIND_USER(session?.user?.id ?? ''), {
     fallbackData
   })
   const headerNavItems = headerNavBuilder(user)

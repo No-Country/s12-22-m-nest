@@ -56,7 +56,7 @@ export class OrderService {
     const order = await findOrder(id, this.orderRepository)
     const chat = await findChat(order.chat, this.chatModel)
     const orderRequest = formatOrder(order, chat)
-    if (order.status !== 'Pending') throw new BadRequestException('Order is not pending')
+    if (order.status !== 'Pending' && order.paymentStatus !== 'Completed') throw new BadRequestException('Order is not pending or payment is not completed')
     return await this.socketDealerService.handleFindDealer(
       this.socketGateway.server,
       orderRequest
