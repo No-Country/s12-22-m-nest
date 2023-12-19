@@ -67,7 +67,7 @@ const Going: FunctionComponent<Props> = ({ order: fallbackData }) => {
           mapButton
           mapButtonLink={order?.step === EnumSteps.GoingToShop ? order?.shop.mapUrl : order?.shipMapUrl}
         />
-        <ChatBox mode='dealer' orderId={fallbackData?.id} chat={order?.chat as Chat} />
+        <ChatBox mode='dealer' orderId={fallbackData?.id} chat={order?.chat as Chat} order={order ?? null} />
         <section className='relative h-full w-full flex-grow '>
           <DynamicMap locations={mapData} />
           <OrderReqModal />

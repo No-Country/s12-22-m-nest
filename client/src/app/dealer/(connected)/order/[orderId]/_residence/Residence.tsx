@@ -52,7 +52,7 @@ const Residence: FunctionComponent<Props> = ({ order: fallbackData }) => {
         />
         <section className='padding-general-x w-full bg-gray-100 py-10'>
           <Client order={order ?? fallbackData} />
-          <ChatBox mode='dealer' orderId={fallbackData?.id} chat={order?.chat as Chat} />
+          <ChatBox mode='dealer' orderId={fallbackData?.id} chat={order?.chat as Chat} order={order ?? null} />
         </section>
       </main>
     </OrderManager>
