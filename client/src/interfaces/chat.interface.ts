@@ -1,5 +1,6 @@
 export interface Message {
-  sender: number
+  sender: string
+  customer: string
   body: string
   createdAt: Date
   updatedAt: Date
