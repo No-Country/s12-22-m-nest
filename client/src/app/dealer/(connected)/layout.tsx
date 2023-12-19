@@ -12,9 +12,8 @@ const ConnectedLayout: FunctionComponent<Props> = async ({ children }) => {
   if (!session) return
   return (
     <SocketProvider session={session} mode='dealer'>
-      {children} 
+      {children}
     </SocketProvider>
-    
   )
 }
 

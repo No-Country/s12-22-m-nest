@@ -63,7 +63,7 @@ const Template: FunctionComponent<Props> = ({ order: fallbackData, children }) =
         </div>
         <div className='relative h-full min-h-[calc(max(65vh,_500px))] flex-grow '>{children}</div>
         {order?.status === 'In Progress' && (
-          <ChatBox mode='customer' orderId={order?.id ?? ''} chat={order?.chat ?? null} />
+          <ChatBox mode='customer' orderId={order?.id ?? ''} chat={order?.chat ?? null} order={order ?? null} />
         )}
       </section>
     </SocketManager>

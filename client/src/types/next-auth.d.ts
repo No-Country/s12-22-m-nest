@@ -26,16 +26,7 @@ declare module 'next-auth' {
   }
 
   interface Session {
-    user: {
-      User: string
-      id: string
-      userName: string
-      data: {
-        firstName: string
-        Data: string
-        lastName: string
-      }
-    }
+    user: User
     token: {
       accessToken?: string
       idToken?: string
