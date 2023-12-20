@@ -8,7 +8,6 @@ export class SocketMainService {
 
   async handleConnection(socket: Socket) {
     this.connectedClients.set(socket.id, socket)
-    console.log('connected', socket.id, socket.handshake.query.userId)
     if (socket.handshake.query.type === 'shop') {
       await socket.join(socket.handshake.query.userId)
       socket.to(socket.handshake.query.userId).emit('message', 'Bienvenido')
@@ -17,6 +16,5 @@ export class SocketMainService {
 
   handleDisconnect(socket: Socket) {
     this.connectedClients.delete(socket.id)
-    console.log('disconnected', socket.id, socket.handshake.query.userId)
   }
 }

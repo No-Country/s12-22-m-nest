@@ -61,15 +61,7 @@ export class SocketDealerService {
       asking: false
     }
 
-    console.log(
-      'handleManageDealer',
-      socket.data,
-      socket.id,
-      socket.handshake.query.userId.toString()
-    )
     socket.emit('dealerStatus', { taken: !isAvailable, orderId })
-
-    console.log('data.taken', isAvailable)
 
     if (!isAvailable) {
       socket.to(orderId).emit('updatedDealerLocation', data.coordinates)
@@ -84,17 +76,22 @@ export class SocketDealerService {
   }
 
   async handleFindDealer(server: Server, order: OrderRequest, attempt = 1) {
-    console.log('handleFindDealer xxx')
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
-    const updatedOrder = await findOrder(order.id, this.orderRepository)
+
     let currentDealer: FormatedSockDealer | null = null
-    if (updatedOrder.status !== 'Pending' && updatedOrder.paymentStatus !== 'Completed') {
-      console.log('Order is not pending')
-      throw new BadRequestException('Order is not pending or payment is not completed')
-    }
 
     for (const dealer of dealers) {
-      console.log('buscando for')
+      const updatedOrder = await findOrder(order.id, this.orderRepository)
+
+      if (updatedOrder.status !== 'Pending' && updatedOrder.paymentStatus !== 'Completed') {
+        console.log('Order is not pending or payment is not completed')
+        throw new BadRequestException('Order is not pending or payment is not completed')
+      }
+
+      if (updatedOrder.dealerId !== null) {
+        console.log('Order already has a dealer')
+        throw new BadRequestException('Order already has a dealer')
+      }
 
       const socket = this.connectedClients.get(dealer.sockId)
       const distance = calculateDistance(
@@ -106,7 +103,6 @@ export class SocketDealerService {
 
       if (distance <= 50000000000) {
         socket.data.asking = true
-        console.log('Preguntando a dealer', dealer)
         const acceptOrder = await this.socketOrderService.sendOrderRequest(
           dealer.sockId,
           order
@@ -121,10 +117,6 @@ export class SocketDealerService {
     }
 
     if (!currentDealer && attempt < 5) {
-      console.log('currentDealer recursion', currentDealer)
-      console.log(
-        `No dealer found. Retrying in 1 minute (attempt ${attempt}/5)`
-      )
       await new Promise((resolve) => setTimeout(resolve, 60000))
       await this.handleFindDealer(server, order, attempt + 1)
     }
@@ -160,7 +152,6 @@ export class SocketDealerService {
       this.chatModel
     )
 
-    console.log('savedOrder', savedOrder)
     server.to(order.id).emit('orderAssigned', savedOrder)
 
     return savedOrder

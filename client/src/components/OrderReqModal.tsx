@@ -20,6 +20,12 @@ import { routes } from '@/utils/constants/routes.const'
 import { Howl } from 'howler'
 import { clientUrl } from '@/utils/constants/env.const'
 
+const sound = new Howl({
+  src: [clientUrl + '/sound/incomingOrder.mp3'],
+  loop: true,
+  html5: true
+})
+
 const OrderReqModal: React.FunctionComponent = () => {
   const router = useRouter()
   const [remainingTime, setRemainingTime] = useState(30)
@@ -38,12 +44,6 @@ const OrderReqModal: React.FunctionComponent = () => {
 
   const handleAccept = (): void => {
     callbackRef.current?.(true)
-    // toast('Procesando...')
-    // if (reqOrder) {
-    //   setTimeout(() => {
-    //     router.push(routes.dealer.ORDER(reqOrder?.id))
-    //   }, 1500)
-    // }
     setLoading(true)
     toInitialStatus()
   }
@@ -55,6 +55,7 @@ const OrderReqModal: React.FunctionComponent = () => {
     callbackRef.current = undefined
     soundRef?.current?.stop()
     soundRef?.current?.unload()
+    soundRef.current = undefined
     clearInterval(intervalRef.current)
   }
 
@@ -80,6 +81,7 @@ const OrderReqModal: React.FunctionComponent = () => {
   const incomingOrder = useMemo(
     () =>
       debounce((data: OrderInterface, callback: (accepted: boolean) => void) => {
+        soundRef.current = sound
         soundRef?.current?.load()
         soundRef?.current?.play()
         handleInterval()
@@ -98,18 +100,7 @@ const OrderReqModal: React.FunctionComponent = () => {
   }
 
   useEffect(() => {
-    const sound = new Howl({
-      src: [clientUrl + '/sound/incomingOrder.mp3'],
-      loop: true,
-      html5: true
-    })
-
-    sound.unload()
-
-    soundRef.current = sound
-
     handleOrder(socket, incomingOrder)
-
     socket.on('orderAssigned', (data: OrderInterface) => {
       setTimeout(() => {
         setLoading(false)
@@ -118,8 +109,10 @@ const OrderReqModal: React.FunctionComponent = () => {
     })
 
     return () => {
-      sound.unload()
-      socket.off('orderAssigned')
+      if (soundRef.current) {
+        soundRef.current.stop()
+        soundRef.current.unload()
+      }
     }
   }, [socket])
 

@@ -56,7 +56,7 @@ export class OrderService {
     const order = await findOrder(id, this.orderRepository)
     const chat = await findChat(order.chat, this.chatModel)
     const orderRequest = formatOrder(order, chat)
-    if (order.status !== 'Pending') throw new BadRequestException('Order is not pending')
+    if (order.status !== 'Pending' && order.paymentStatus !== 'Completed') throw new BadRequestException('Order is not pending or payment is not completed')
     return await this.socketDealerService.handleFindDealer(
       this.socketGateway.server,
       orderRequest
@@ -168,7 +168,9 @@ export class OrderService {
           : EnumSteps.Delivered
     }
 
+    console.log('Nuevo paso: ', order.step)
     if (order.step === EnumSteps.Delivered) {
+      console.log('Cambiando status a delivered')
       order.status = 'Delivered'
     }
 
@@ -176,7 +178,6 @@ export class OrderService {
     const formatedOrder = formatOrder(order, chat)
 
     await this.orderRepository.save(order)
-    console.log('formatedOrder', formatedOrder)
     this.socketOrderService.updateOrder(
       this.socketGateway.server,
       formatedOrder

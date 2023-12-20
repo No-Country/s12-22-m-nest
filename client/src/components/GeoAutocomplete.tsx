@@ -27,7 +27,6 @@ const GeoAutocomplete: FunctionComponent<PropsGeo> = ({ address, errors, name, s
       const { data } = await axios.get(
         `https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&limit=5&type=amenity&format=json&apiKey=${geoApiKey}`
       )
-      console.log(data)
       return data as Root
     } catch (error) {
       console.error(error)

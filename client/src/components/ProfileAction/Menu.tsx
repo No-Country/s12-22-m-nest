@@ -32,9 +32,9 @@ const Menu: FunctionComponent<Props> = ({ loggedUser }) => {
       ))}
       <button
         onClick={handleSignOut}
-        className={`w-full rounded-xl bg-white p-2 text-start font-semibold hover:bg-slate-100 ${dangerStyle}`}
+        className={`w-full rounded-xl bg-white p-2 text-start font-semibold hover:bg-red-100 ${dangerStyle}`}
       >
-        Logout
+        Cerrar sesión
       </button>
     </div>
   )

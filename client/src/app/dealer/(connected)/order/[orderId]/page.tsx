@@ -25,7 +25,7 @@ interface Props {
 const MainPage: FunctionComponent<Props> = async ({ params }) => {
   const session = await getServerSession(authOptions)
   const { data: order } = await getOrder(params?.orderId ?? 'null')
-  if (!order || !session?.user) return
+  if (!order || !session?.user?.id) return
 
   if (order.dealerId !== session?.user?.id) {
     redirect(routes.dealer.WAITING_ORDER)

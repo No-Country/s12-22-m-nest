@@ -31,7 +31,6 @@ const ToggleBtn: FunctionComponent<Props> = ({ isOpen, toggle, theme, isScrolled
 const MobileMenu: FunctionComponent<Props> = ({ isOpen, toggle, theme, isScrolled }: Props) => {
   const { data } = useSession()
   const { data: user } = useSWR(Endpoints.FIND_USER(data?.user?.id ?? ''))
-  console.log(user)
   const headerNavItems = headerNavBuilder(user)
   const pathname = usePathname()
   const activeClass = (href: string): any => (pathname === href ? '!font-semibold' : '!font-light')

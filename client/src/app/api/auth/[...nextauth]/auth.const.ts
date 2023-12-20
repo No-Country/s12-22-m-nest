@@ -23,7 +23,6 @@ export const authOptions: NextAuthOptions = {
       authorize: async (credentials, req) => {
         const email = credentials?.email ?? ''
         const password = credentials?.password ?? ''
-        console.log('credentials', credentials)
         const { data, error } = await mutationRequest<LoginResponse>('post', Endpoints.LOGIN, { email, password })
 
         if (error) {
