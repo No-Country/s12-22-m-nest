@@ -77,16 +77,20 @@ export class SocketDealerService {
 
   async handleFindDealer(server: Server, order: OrderRequest, attempt = 1) {
     const dealers = formatDealerSock(Array.from(this.connectedClients.values()))
-    const updatedOrder = await findOrder(order.id, this.orderRepository)
+
     let currentDealer: FormatedSockDealer | null = null
 
-    if (updatedOrder.status !== 'Pending' && updatedOrder.paymentStatus !== 'Completed') {
-      throw new BadRequestException('Order is not pending or payment is not completed')
-    }
-
     for (const dealer of dealers) {
+      const updatedOrder = await findOrder(order.id, this.orderRepository)
+
       if (updatedOrder.status !== 'Pending' && updatedOrder.paymentStatus !== 'Completed') {
+        console.log('Order is not pending or payment is not completed')
         throw new BadRequestException('Order is not pending or payment is not completed')
+      }
+
+      if (updatedOrder.dealerId !== null) {
+        console.log('Order already has a dealer')
+        throw new BadRequestException('Order already has a dealer')
       }
 
       const socket = this.connectedClients.get(dealer.sockId)
