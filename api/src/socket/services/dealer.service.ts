@@ -83,7 +83,7 @@ export class SocketDealerService {
     for (const dealer of dealers) {
       const updatedOrder = await findOrder(order.id, this.orderRepository)
 
-      if (updatedOrder.status !== 'Pending' && updatedOrder.paymentStatus !== 'Completed') {
+      if (updatedOrder.status !== 'Pending' || updatedOrder.paymentStatus !== 'Completed') {
         console.log('Order is not pending or payment is not completed')
         throw new BadRequestException('Order is not pending or payment is not completed')
       }
