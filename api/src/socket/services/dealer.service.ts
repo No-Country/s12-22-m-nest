@@ -85,8 +85,8 @@ export class SocketDealerService {
     }
 
     for (const dealer of dealers) {
-      if (updatedOrder.status !== 'Pending' && updatedOrder.paymentStatus !== 'Completed') {
-        throw new BadRequestException('Order is not pending or payment is not completed')
+      if (updatedOrder.dealerId !== null) {
+        throw new BadRequestException('Order already has a dealer')
       }
 
       const socket = this.connectedClients.get(dealer.sockId)

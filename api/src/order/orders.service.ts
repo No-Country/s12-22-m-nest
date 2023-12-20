@@ -168,7 +168,9 @@ export class OrderService {
           : EnumSteps.Delivered
     }
 
+    console.log('Nuevo paso: ', order.step)
     if (order.step === EnumSteps.Delivered) {
+      console.log('Cambiando status a delivered')
       order.status = 'Delivered'
     }
 
