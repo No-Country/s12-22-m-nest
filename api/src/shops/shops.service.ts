@@ -9,6 +9,7 @@ import { findCoordinates } from 'src/utils/findCoordinates.utils'
 import { formatShop } from 'src/utils/formatShop.utils'
 import { buildMapsUrl } from 'src/utils/buildMapsUrl.utils'
 import { Order } from 'src/order/entities/order.entity'
+import { User } from 'src/users/entities/user.entity'
 
 @Injectable()
 export class ShopsService {
@@ -17,8 +18,27 @@ export class ShopsService {
     private readonly shopRepository: Repository<Shop>,
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly httpService: HttpService
   ) {}
+
+  // async create(createShopDto: CreateShopDto) {
+  //   const coordinates = await findCoordinates(
+  //     this.httpService,
+  //     createShopDto.address
+  //   )
+
+  //   const mapUrl = buildMapsUrl(createShopDto.address)
+
+  //   return await this.shopRepository.save({
+  //     ...createShopDto,
+  //     coordinates: JSON.stringify(coordinates),
+  //     thumbnail: createShopDto.thumbnail,
+  //     mapUrl: mapUrl.toString(),
+  //     stripeId: null
+  //   })
+  // }
 
   async create(createShopDto: CreateShopDto) {
     const coordinates = await findCoordinates(
@@ -28,13 +48,21 @@ export class ShopsService {
 
     const mapUrl = buildMapsUrl(createShopDto.address)
 
-    return await this.shopRepository.save({
+    const shop = await this.shopRepository.save({
       ...createShopDto,
       coordinates: JSON.stringify(coordinates),
       thumbnail: createShopDto.thumbnail,
       mapUrl: mapUrl.toString(),
       stripeId: null
     })
+
+    const user = await this.userRepository.findOne({
+      where: { id: createShopDto.userId }
+    })
+
+    await this.userRepository.update({ id: user.id }, { shopId: shop.id })
+
+    return shop
   }
 
   async findAll() {

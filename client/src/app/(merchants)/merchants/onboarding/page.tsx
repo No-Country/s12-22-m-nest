@@ -4,6 +4,7 @@ import { routes } from '@/utils/constants/routes.const'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { type FunctionComponent } from 'react'
+import MultiSteps from './_components/MultiSteps'
 
 const Onboarding: FunctionComponent = async () => {
   const session = await getServerSession(authOptions)
@@ -15,8 +16,8 @@ const Onboarding: FunctionComponent = async () => {
   return (
     <>
       <Header withBorder layout='simple' />
-      <main className='padding-general-x flex flex-col items-center justify-between pt-[100px]'>
-        <h1>Onboarding</h1>
+      <main className='padding-general-x min-h-[70vh] lg:w-3/5 m-auto mt-[110px] mb-[50px]'>
+        <MultiSteps/>
       </main>
     </>
   )
