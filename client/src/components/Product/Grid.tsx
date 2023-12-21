@@ -23,12 +23,15 @@ const ProductGrid: FunctionComponent<Props> = ({ products, className, isOneRow =
 
   return (
     <div
-      className={`m grid w-full grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] ${className} `}
+      className={`grid w-full grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] ${className} `}
       ref={divRef}
     >
       {(isOneRow ? products.slice(0, columnQuantity) : products).map((product) => (
         <ProductItem key={product.id} product={product} />
       ))}
+      {
+        products.length === 0 && <p className='font-light'>No hay productos todavía</p>
+      }
     </div>
   )
 }
