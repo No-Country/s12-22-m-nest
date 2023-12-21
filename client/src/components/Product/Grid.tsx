@@ -11,7 +11,7 @@ const ProductGrid: FunctionComponent<Props> = ({ products, className }) => (
   <>
     {products.length <= 0 ? (
       <div className='flex w-full items-center justify-start'>
-        <h1 className='text-center text-lg font-normal'>No hay nada por aquí</h1>
+        <p className='text-center text-lg font-normal'>No hay nada por aquí</p>
       </div>
     ) : (
       <div

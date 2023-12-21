@@ -16,7 +16,6 @@ const Page: FunctionComponent = async () => {
   const { data: user } = await getUser(session?.user?.id ?? '')
   if (!user) return null
   const items = accountTabs(user)
-  console.log(items)
   return (
     <main className='padding-general-x flex flex-col items-center gap-10 pb-10 pt-[100px] lg:gap-5 '>
       <Hero session={session} user={user} />

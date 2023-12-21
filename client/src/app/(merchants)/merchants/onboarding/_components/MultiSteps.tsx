@@ -1,13 +1,8 @@
 'use client'
 import { ShopForm } from '@/components'
-import { type User } from '@/interfaces'
 import { useState, type FunctionComponent } from 'react'
 
-interface Props {
-  user: User | null
-}
-
-const MultiSteps: FunctionComponent<Props> = ({ user }) => {
+const MultiSteps: FunctionComponent = () => {
   const arraySteps = [1, 2]
   const [currentStep, setCurrentStep] = useState(1)
 
@@ -31,7 +26,7 @@ const MultiSteps: FunctionComponent<Props> = ({ user }) => {
             ))
         }
       </div>
-      <ShopForm user={user} step={currentStep} nextStep={handleNextStep} previousStep={handlePreviousStep}/>
+      <ShopForm step={currentStep} nextStep={handleNextStep} previousStep={handlePreviousStep}/>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 import { Button, Input } from '@/components'
-import { type ShopFormProps, type User } from '@/interfaces'
+import { type ShopFormProps } from '@/interfaces'
 import { shopValidations } from '@/utils/constants/validations.const'
 import { useState, type FunctionComponent } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -11,13 +11,12 @@ import { CreateShop } from '@/services/shops/createShop.service'
 import Image from 'next/image'
 
 interface Props {
-  user: User | null
   step: number
   nextStep: () => Promise<void>
   previousStep: () => Promise<void>
 }
 
-const ShopForm: FunctionComponent<Props> = ({ user, step, nextStep, previousStep }) => {
+const ShopForm: FunctionComponent<Props> = ({ step, nextStep, previousStep }) => {
   const router = useRouter()
   const { data: session } = useSession()
   const {
