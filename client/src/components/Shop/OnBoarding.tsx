@@ -65,10 +65,10 @@ const ShopForm: FunctionComponent<Props> = ({ step, nextStep, previousStep }) =>
   return (
     <div>
       <div className='pt-1 pb-6'>
-        <h1 className='font-semibold text-2xl text-green-800'>{
+        <h1 className='font-semibold text-xl md:text-2xl text-green-800'>{
           (step === 1 && 'Bienvenido!') || (step === 2 && 'Ya casi terminamos :)')
         }</h1>
-        <p className='font-medium'>{
+        <p className='font-medium text-sm md:text-base'>{
           (step === 1 && 'Registra tu tienda ahora y prepárate para brillar en nuestra plataforma 💼🚀') ||
         (step === 2 && 'Unos datos más y estará todo listo para vender tus productos...')
         }</p>

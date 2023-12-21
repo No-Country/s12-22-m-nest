@@ -16,7 +16,7 @@ const Onboarding: FunctionComponent = async () => {
   return (
     <>
       <Header withBorder layout='simple' />
-      <main className='padding-general-x min-h-[70vh] w-3/5 m-auto mt-[110px] mb-[50px]'>
+      <main className='padding-general-x min-h-[70vh] lg:w-3/5 m-auto mt-[110px] mb-[50px]'>
         <MultiSteps/>
       </main>
     </>
