@@ -34,10 +34,10 @@ LleGo is an innovative web platform designed to transform the shopping and home 
       </p>
       <p align='center'>
         <a href="https://github.com/camyael"  target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Github.svg' height=30/>
+          <img src='https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white' height=30/>
         </a>
         <a href='https://www.linkedin.com/in/camilavillaverde/' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Linkedin.svg' height=30/>
+          <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white' height=30/>
         </a>
       </p>
     </td>
@@ -55,10 +55,10 @@ LleGo is an innovative web platform designed to transform the shopping and home 
       </p>
       <p align='center'>
         <a href='https://github.com/leandroni1983' target='_blank'>
-         <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Github.svg' height=30/>
+         <img src='https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white' height=30/>
         </a>
         <a href='https://www.linkedin.com/in/leandronicolas1983/' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Linkedin.svg' height=30/>
+          <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white' height=30/>
         </a>
       </p>
     </td>
@@ -76,10 +76,10 @@ LleGo is an innovative web platform designed to transform the shopping and home 
       </p>
       <p align='center'>
         <a href='https://github.com/thomasbarenghi' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Github.svg' height=30/>
+          <img src='https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white' height=30/>
         </a>
         <a href='https://www.linkedin.com/in/thomasbarenghi/' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Linkedin.svg' height=30/>
+          <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white' height=30/>
         </a>
       </p>
     </td>
@@ -97,10 +97,10 @@ LleGo is an innovative web platform designed to transform the shopping and home 
       </p>
       <p align='center'>
         <a href='https://github.com/Tommyx66' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Github.svg' height=30/>
+          <img src='https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white' height=30/>
         </a>
         <a href='https://www.linkedin.com/in/ivan-litt/](https://www.linkedin.com/in/tom%C3%A1s-zarriello-074a57199/' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Linkedin.svg' height=30/>
+          <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white' height=30/>
         </a>
       </p>
     </td>
@@ -140,10 +140,10 @@ LleGo is an innovative web platform designed to transform the shopping and home 
       </p>
       <p align='center'>
         <a href='https://github.com/cahov' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Github.svg' height=30/>
+          <img src='https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white' height=30/>
         </a>
         <a href='https://www.linkedin.com/in/cahodev/' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Linkedin.svg' height=30/>
+          <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white' height=30/>
         </a>
       </p>
     </td>
@@ -161,10 +161,10 @@ LleGo is an innovative web platform designed to transform the shopping and home 
       </p>
       <p align='center'>
         <a href='https://github.com/franrodriguez1993' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Github.svg' height=30/>
+          <img src='https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white' height=30/>
         </a>
         <a href='https://www.linkedin.com/in/francojmrodriguez/' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Linkedin.svg' height=30/>
+          <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white' height=30/>
         </a>
       </p>
     </td>
@@ -182,10 +182,10 @@ LleGo is an innovative web platform designed to transform the shopping and home 
       </p>
       <p align='center'>
         <a href='https://github.com/thomasbarenghi' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Github.svg' height=30/>
+          <img src='https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white' height=30/>
         </a>
         <a href='https://www.linkedin.com/in/thomasbarenghi/' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Linkedin.svg' height=30/>
+          <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white' height=30/>
         </a>
       </p>
     </td>
@@ -225,11 +225,11 @@ LleGo is an innovative web platform designed to transform the shopping and home 
         </p> 
       </p>
       <p align='center'>
-        <a href='https://www.behance.net/ireneporro16' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Github%20(1).svg' height=30/>
+        <a href='https://www.notion.so/Portfolio-Ail-n-Martinez-acd244c4c61e41189daf851bbbecbad5?pvs=4' target='_blank'>
+          <img src='https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white' height=30/>
         </a>
         <a href='https://www.linkedin.com/in/ail%C3%A9ndaniela-martinezrosica/' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Linkedin.svg' height=30/>
+          <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white' height=30/>
         </a>
       </p>
     </td>
@@ -247,10 +247,10 @@ LleGo is an innovative web platform designed to transform the shopping and home 
       </p>
       <p align='center'>
         <a href='https://www.behance.net/federicolucero1' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Github%20(1).svg' height=30/>
+          <img src='https://img.shields.io/badge/Behance-1769ff?style=for-the-badge&logo=behance&logoColor=white' height=30/>
         </a>
         <a href='https://www.linkedin.com/in/federicolucero94/' target='_blank'>
-          <img src='https://github.com/YosstinCode/images_readme/blob/main/Button%20Linkedin.svg' height=30/>
+          <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white' height=30/>
         </a>
       </p>
     </td>
