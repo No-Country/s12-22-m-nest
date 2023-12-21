@@ -265,7 +265,11 @@ LleGo is an innovative web platform designed to transform the shopping and home 
 ![Adobe Illustrator](https://img.shields.io/static/v1?style=for-the-badge&message=Adobe+Illustrator&color=222222&logo=Adobe+Illustrator&logoColor=FF9A00&label=)
 
 ---
+## Figma Project
 
+<a href="https://www.figma.com/file/KqTBKIB3xXnveIMIvkojjW/LleGO!?type=design&node-id=18-271&mode=design&t=tkEZEUId6evQygbk-0" target="_blank" rel="noopener noreferrer">Figma Project Link</a>
+
+---
 ## Mockups
 
 ![mock1_1-transformed](https://cdn.discordapp.com/attachments/1187404050992472124/1187406115370184735/iPhone_15.png?ex=6596c51e&is=6584501e&hm=a88f97cd639f59ab6b838db600cecc45eccafafa789a582e5e6ec69685ae9d6e&)
