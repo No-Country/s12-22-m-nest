@@ -6,8 +6,10 @@ import { emailValidations, passwordValidations } from '@/utils/constants/validat
 import { type FunctionComponent } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 const Form: FunctionComponent = () => {
+  const router = useRouter()
   const {
     register,
     formState: { errors, isSubmitting },
@@ -19,7 +21,10 @@ const Form: FunctionComponent = () => {
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {
       const res = await loginService(data.email, data.password)
-      console.log(res)
+      if (res?.url) {
+        toast.success('Ingresando a su Cuenta')
+        router.push(res.url)
+      }
     } catch (error) {
       toast.error('Ocurrió un error')
       console.error(error)

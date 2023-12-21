@@ -29,7 +29,6 @@ export const findActiveOrderByDealer = async (
   id: string,
   orderRepository: Repository<Order>
 ) => {
-  console.log('findActiveOrderByDealer', id)
   const orders = await orderRepository.find({
     where: {
       dealerId: id,
@@ -49,12 +48,13 @@ export const findOrdersByUser = async (
     ...(type === 'customer' && { clientId: userId }),
     ...(type === 'dealer' && { dealerId: userId })
   })
-  console.log('findOrdersByUser', orders)
-  const formatedOrders = orders.map((order) => {
+  const sortedOrders = orders.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+
+  const formattedOrders = sortedOrders.map((order) => {
     return formatOrder(order, null)
   })
 
-  return formatedOrders
+  return formattedOrders
 }
 
 export const updateOrder = async (
@@ -78,6 +78,5 @@ export const updateOrder = async (
   const chat = await findChat(order.chat, chatModel)
   const formatedOrder = formatOrder(order, chat)
   socketOrderService.updateOrder(socketGateway.server, formatedOrder)
-  console.log('formatedOrder', formatedOrder)
   return formatedOrder
 }

@@ -9,6 +9,8 @@ import SocketManager from './SocketManager'
 import { ChatBox, ProductOrderItem } from '@/components'
 import Image from 'next/image'
 import { status, paymentStatus } from './status.lib'
+import Link from 'next/link'
+import { routes } from '@/utils/constants/routes.const'
 
 interface Props {
   order: OrderInterface
@@ -30,7 +32,9 @@ const Template: FunctionComponent<Props> = ({ order: fallbackData, children }) =
       <section className='flex h-full w-full flex-col-reverse lg:flex-row'>
         <div className='padding-general-x flex h-full max-h-[500px] w-full flex-col border-r py-8 !pb-5 lg:max-h-none lg:w-[350px] lg:pt-0'>
           <div className='padding-general-x absolute left-0 top-0 z-10 flex min-h-[100px] items-center lg:relative lg:p-0'>
-            <Image src='/icon/shop-logo-black.svg' alt='Logo' width={120} height={50} />
+            <Link href={routes.customer.HOME}>
+              <Image src='/icon/shop-logo-black.svg' alt='Logo' width={120} height={50} />
+            </Link>
           </div>
           <div className='flex h-auto flex-col gap-5 overflow-hidden '>
             <div className='flex flex-col'>
@@ -63,7 +67,7 @@ const Template: FunctionComponent<Props> = ({ order: fallbackData, children }) =
         </div>
         <div className='relative h-full min-h-[calc(max(65vh,_500px))] flex-grow '>{children}</div>
         {order?.status === 'In Progress' && (
-          <ChatBox mode='customer' orderId={order?.id ?? ''} chat={order?.chat ?? null} />
+          <ChatBox mode='customer' orderId={order?.id ?? ''} chat={order?.chat ?? null} order={order ?? null} />
         )}
       </section>
     </SocketManager>

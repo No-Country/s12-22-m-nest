@@ -13,22 +13,49 @@ export class ProductsService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    console.log(createProductDto)
     return await this.productRepository.save({
       ...createProductDto,
       thumbnail: createProductDto.thumbnail
     })
   }
 
-  async findAll() {
-    const products = await this.productRepository.find({ relations: ['shop'] })
-    return products.map((product) => {
-      product.shop = {
-        ...product.shop,
-        coordinates: JSON.parse(product.shop.coordinates)
+  async findAll(paginate: boolean, page: number = 1, pageSize: number = 10) {
+    if (!paginate) {
+      const products = await this.productRepository.find({ relations: ['shop'] })
+      return products.map((product) => {
+        product.shop = {
+          ...product.shop,
+          coordinates: JSON.parse(product.shop.coordinates)
+        }
+        return product
+      })
+    } else {
+      const [results, total] = await this.productRepository.findAndCount({
+        relations: ['shop'],
+        take: pageSize,
+        skip: (page - 1) * pageSize
+      })
+
+      const paginatedProducts = results.map((product) => {
+        product.shop = {
+          ...product.shop,
+          coordinates: JSON.parse(product.shop.coordinates)
+        }
+        return product
+      })
+
+      const totalPages = Math.ceil(total / pageSize)
+      const remainingPages = totalPages - page
+
+      return {
+        products: paginatedProducts,
+        total,
+        page,
+        pageSize,
+        totalPages,
+        remainingPages
       }
-      return product
-    })
+    }
   }
 
   async findOne(id: string) {
@@ -38,8 +65,6 @@ export class ProductsService {
     })
 
     if (!product) throw new NotFoundException('Product not found')
-
-    console.log(product)
 
     product.shop = {
       ...product.shop,

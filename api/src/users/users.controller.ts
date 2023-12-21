@@ -60,7 +60,6 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() profileImage: Express.Multer.File
   ) {
-    console.log('file', profileImage)
     if (profileImage) {
       updateUserDto.profileImage = (
         await this.cloudinaryService.uploadImage(profileImage)

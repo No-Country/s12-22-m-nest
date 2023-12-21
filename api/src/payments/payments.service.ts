@@ -94,7 +94,6 @@ export class PaymentsService {
     const paymentEventMetadata: Stripe.PaymentIntent =
     paymentEventData.object as Stripe.PaymentIntent
     const metadataOrderId = paymentEventMetadata.metadata.orderId
-    console.log(paymentEventData)
     const order = await findOrder(metadataOrderId, this.orderRepository, true)
     if (stripeEvent.type === 'payment_intent.succeeded') {
       order.paymentStatus = 'Completed'
